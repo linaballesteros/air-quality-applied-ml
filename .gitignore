@@ -1,0 +1,9 @@
+# Local data files (keep documentation)
+data/raw/pm25/*
+!data/raw/pm25/README.md
+# Python and notebooks
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+.env
