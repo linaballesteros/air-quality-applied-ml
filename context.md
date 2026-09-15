@@ -14,7 +14,8 @@ proyecto. El planteamiento extenso inicial se conserva en
 | Entrega | Short-Paper — Entrega 1 |
 | Título tentativo | Predicción de concentraciones de PM2.5 en el Valle de Aburrá mediante aprendizaje automático con datos de la red SIATA |
 | Problema ML | Aprendizaje supervisado de regresión |
-| Pregunta | ¿Es posible predecir, con una hora de anticipación, la concentración de PM2.5 en estaciones seleccionadas del Valle de Aburrá usando mediciones históricas del contaminante y variables temporales mediante modelos supervisados de regresión? |
+| Pregunta | ¿Es posible predecir, con un día de anticipación, la concentración media diaria de PM2.5 por estación en el Valle de Aburrá, a partir de mediciones históricas del contaminante, variables meteorológicas observadas de SIATA y variables temporales, superando a un pronóstico de persistencia tanto en error como en la anticipación de días en Nivel de Prevención? |
+| Aporte | Pronóstico por estación (la norma exige evaluar por punto de monitoreo y el aviso público actual es agregado) y detección del inicio de episodios, que es cuando un aviso sirve para actuar. |
 
 ## Reglas de trabajo
 
@@ -26,6 +27,9 @@ proyecto. El planteamiento extenso inicial se conserva en
 - Los cambios metodológicos se registran en [`docs/decisions.md`](docs/decisions.md).
 - Los PDFs convertidos para consulta están en [`docs/sources`](docs/sources/);
   las citas finales deben verificarse en los originales.
+- Los umbrales normativos provienen de la Resolución 2254 de 2017; el
+  extracto verificado está en
+  [`docs/sources/resolucion_2254_2017_extracto.md`](docs/sources/resolucion_2254_2017_extracto.md).
 
 ## Requisitos verificados de Entrega 1
 
@@ -40,7 +44,7 @@ Fuente: [`docs/sources/shortpaper_entrega1_requisitos.md`](docs/sources/shortpap
   visualizaciones explicadas.
 - Paper con solo 2–3 hallazgos respaldados exactamente por el notebook.
 
-## Fuente de datos verificada
+## Fuente de datos verificada — PM2.5
 
 | Propiedad | Evidencia |
 | --- | --- |
@@ -53,6 +57,22 @@ Fuente: [`docs/sources/shortpaper_entrega1_requisitos.md`](docs/sources/shortpap
 
 El archivo original tiene extensión `.tab`, pero la muestra de enero de 2013
 usa comas. El loader detecta delimitador y codificación; no los supone.
+
+## Fuente de datos verificada — meteorología
+
+| Propiedad | Evidencia |
+| --- | --- |
+| Colección | SIATA, colección *Meteorológica*: 51 estaciones, un dataset por estación |
+| Descripción de la red | *Información de la Red Meteorológica*, DOI `10.83041/NXHIKW` (tabla de estaciones con coordenadas y PDF de generalidades) |
+| Resolución | Un registro por minuto; archivos mensuales de ~2,8 MB por estación |
+| Variables | `t` temperatura, `h` humedad relativa, `pr` presión, `p` precipitación, `vv`/`vv_max` velocidad del viento, `dv`/`dv_max` dirección, bandera `calidad` por variable |
+| Estaciones requeridas | 12 códigos (59, 68, 73, 82, 105, 197, 201, 202, 206, 229, 252, 271), asignados a las 16 estaciones PM2.5 en [`docs/station_matching.md`](docs/station_matching.md) |
+| Cobertura de archivos 2018–2025 | 10 estaciones con 94–96 de 96 meses; 271 termina en 2024-07 (afecta a BEL-FEVE) |
+| Descarga | `python scripts/download_meteo_dataset.py` a `data/raw/meteo/<código>/`, excluido de Git y validado con MD5 |
+| Pendiente | Agregación minuto → hora aplicando la bandera `calidad`, y cobertura válida por variable y estación |
+
+También existen históricos consolidados de PM10, O3, NO2, NO, NOx, CO y SO2
+con el mismo formato que PM2.5. No forman parte del alcance actual.
 
 ## Perfil completo verificado
 
@@ -81,15 +101,44 @@ del periodo activo o de una ventana común.
 
 ## Formulación definida para la Entrega 1
 
-- **Unidad de observación analítica:** una estación en una hora `t`.
-- **Target:** `pm25_t_plus_1`, concentración de PM2.5 de esa estación en la
-  hora siguiente; variable numérica continua en µg/m³.
-- **Predictores disponibles:** PM2.5 observado hasta `t`, código de estación y
-  variables temporales derivadas de `fecha_hora`.
+- **Unidad de observación analítica:** una estación en un día `d`.
+- **Target:** `pm25_mean_d_plus_1`, media de PM2.5 del día calendario
+  siguiente en esa estación, calculada con al menos 18 horas válidas;
+  variable numérica continua en µg/m³.
+- **Predictores disponibles:** PM2.5 observado hasta el final del día `d`
+  (media diaria, medias de días previos, medias horarias del día), variables
+  meteorológicas observadas hasta el final del día `d` en la estación
+  asignada, código de estación y variables temporales derivadas de la fecha.
 - **Tipo de problema:** aprendizaje supervisado de regresión con horizonte de
-  una hora.
-- **Restricción:** ninguna variable de `t+1` puede utilizarse como predictor y
-  la división de datos debe conservar el orden temporal.
+  un día.
+- **Evaluación derivada:** se comparan las predicciones con el umbral de
+  Nivel de Prevención (≥38 µg/m³, Resolución 2254 de 2017, Tabla 4) para
+  medir la anticipación de días en ese nivel, en particular las
+  transiciones (día sin evento seguido de día con evento). ICA Naranja
+  (≥40,5 µg/m³) se reporta como umbral secundario.
+- **Baseline obligatorio:** persistencia (la media de hoy como pronóstico de
+  mañana), evaluada en MAE y en precisión/recall de días en prevención.
+- **Restricción:** ninguna variable del día `d+1` puede utilizarse como
+  predictor y la división de datos debe conservar el orden temporal.
+
+### Hechos verificados sobre eventos (2018–2025, 16 estaciones)
+
+Calculados con la media del día calendario y umbral ≥38 µg/m³; deben
+reproducirse en el notebook antes de citarse en el paper.
+
+| Pregunta | Resultado |
+| --- | --- |
+| Días-estación con target disponible | 44.399 |
+| Días-estación en Nivel de Prevención | 1.090 (2,5 %) |
+| Transiciones (ayer sin evento, hoy con evento) | 438 (40 % de los eventos) |
+| Persistencia como clasificador de "mañana en prevención" | precisión 0,60 y recall 0,60 |
+| Eventos por año | 2018: 140 · 2019: 255 · 2020: 412 · 2021: 26 · 2022: 59 · 2023: 36 · 2024: 158 · 2025: 4 |
+| Días con al menos una estación en prevención | 246; en 110 de ellos solo una estación y en 156 (63 %) tres o menos; en 40 más de diez |
+| Estacionalidad | 179 de 246 días con evento ocurren en febrero–marzo |
+
+Implicaciones: 2025 no puede ser el único periodo de prueba; la evaluación
+debe usar origen móvil (probar por separado 2022, 2023, 2024 y 2025). El
+carácter local de la mayoría de eventos respalda el pronóstico por estación.
 
 ### Ventana y estaciones
 
@@ -100,10 +149,10 @@ target disponibles.
 
 ### Alcance de datos
 
-La Entrega 1 trabaja únicamente con el histórico de PM2.5 y variables
-temporales derivadas. Meteorología y otros contaminantes quedan como posibles
-extensiones; no se crean carpetas ni procesos para fuentes que aún no forman
-parte del alcance.
+La Entrega 1 caracteriza el histórico de PM2.5 (target y predictores
+autorregresivos) y la meteorología de SIATA asignada a cada estación
+(cobertura, calidad y descriptivos). Otros contaminantes quedan fuera del
+alcance.
 
 ## Entregables locales actuales
 
@@ -112,18 +161,33 @@ parte del alcance.
 - Diccionario: [`docs/data_dictionary.md`](docs/data_dictionary.md).
 - Perfil: [`docs/methodology_notes.md`](docs/methodology_notes.md).
 - Decisiones: [`docs/decisions.md`](docs/decisions.md).
+- Cruce de estaciones: [`docs/station_matching.md`](docs/station_matching.md)
+  y [`src/data/stations.py`](src/data/stations.py).
+- Descarga meteorológica: [`scripts/download_meteo_dataset.py`](scripts/download_meteo_dataset.py).
 - Respuestas y plan de EDA: [`docs/eda_plan.md`](docs/eda_plan.md).
 
 ## Estado de la parte de código — Entrega 1
 
-Completada. El notebook está ejecutado, contiene outputs guardados y cubre
-carga, estructura, calidad, faltantes, duplicados, valores extremos,
-distribución, análisis temporal, diferencias entre estaciones, construcción
-del target, relación con el target, hallazgos, limitaciones e implicaciones.
+El notebook ejecutado corresponde a la formulación anterior (target horario
+`pm25_t_plus_1`). Sus secciones sobre fuente, estructura, cobertura, ventana,
+limpieza, patrones temporales y diferencias entre estaciones siguen vigentes.
 
-El siguiente trabajo es incorporar la caracterización y los tres hallazgos en
-Overleaf, verificando que la redacción coincida con
-[`docs/entrega1_contenido.md`](docs/entrega1_contenido.md).
+Pendiente para alinearlo con la formulación actual:
+
+1. Sección 6: construir el target diario `pm25_mean_d_plus_1`.
+2. Sección 11: reemplazar la persistencia horaria por el análisis de eventos
+   (tabla de hechos verificados arriba).
+3. Hallazgo 3: sustituir por el carácter local de los eventos.
+4. Nueva sección de meteorología: cruce de estaciones, cobertura válida por
+   variable tras aplicar `calidad`, descriptivos y una figura.
+5. Limitaciones e implicaciones: BEL-FEVE y MED-SCRI, desbalance entre años,
+   calidad meteorológica.
+
+Después, incorporar la caracterización y los tres hallazgos en Overleaf según
+[`docs/entrega1_contenido.md`](docs/entrega1_contenido.md). La Introducción
+actual del borrador ya describe meteorología como predictor; la sección de
+pregunta de investigación debe reemplazar la plantilla por la pregunta
+vigente.
 
 ## Registro de actualizaciones
 
@@ -137,3 +201,6 @@ Overleaf, verificando que la redacción coincida con
 | 2026-09-14 | Se alineó el notebook con los ejemplos de `Machine_Learning_Applied` y con la guía oficial de la Entrega 1. |
 | 2026-09-14 | Se completó y ejecutó el EDA; 14 celdas de código tienen outputs guardados y no presentan errores. |
 | 2026-09-14 | Se dejó únicamente la estructura de datos PM2.5 y se retiraron las carpetas vacías que no pertenecen al alcance de la Entrega 1. |
+| 2026-09-14 | Se replanteó la pregunta: pronóstico diario por estación con un día de anticipación, meteorología SIATA como predictor y persistencia como baseline; el horizonte horario t+1 se descartó por no aportar valor operativo. |
+| 2026-09-14 | Se verificaron los umbrales de la Resolución 2254 de 2017 (norma 37, Prevención 38–55, ICA Naranja 40,5–65,4) y se cuantificaron los eventos por año y su carácter local. |
+| 2026-09-14 | Se exploró el Dataverse meteorológico, se cruzaron las 16 estaciones PM2.5 con 12 estaciones meteorológicas y se creó el script de descarga. |
