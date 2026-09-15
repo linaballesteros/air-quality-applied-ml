@@ -1,8 +1,10 @@
 # Predicción de PM2.5 en el Valle de Aburrá
 
 Proyecto del curso Aprendizaje de Máquina Aplicado — ST1631 de la Universidad
-EAFIT. Estudia la viabilidad de estimar o anticipar concentraciones horarias
-de PM2.5 con datos públicos de SIATA y aprendizaje supervisado de regresión.
+EAFIT. Estudia si es posible pronosticar, con un día de anticipación, la
+concentración media diaria de PM2.5 por estación en el Valle de Aburrá con
+datos públicos de SIATA (histórico del contaminante y meteorología) y
+aprendizaje supervisado de regresión.
 
 Autores: Lina Sofía Ballesteros Merchán y Alejandro Ríos Muñoz.
 
@@ -11,11 +13,16 @@ Autores: Lina Sofía Ballesteros Merchán y Alejandro Ríos Muñoz.
 Fuente principal: SIATA, *Histórico de Material Particulado - PM2.5*, DOI
 [`10.83041/AUWZWT`](https://datos.siata.gov.co/dataset.xhtml?persistentId=doi:10.83041/AUWZWT).
 
+Meteorología: colección *Meteorológica* de SIATA, una estación por dataset;
+la correspondencia con las estaciones PM2.5 está en
+[`docs/station_matching.md`](docs/station_matching.md).
+
 Los datos crudos no se versionan. Para descargarlos y validar cada archivo con
 el MD5 oficial:
 
 ```bash
 python scripts/download_pm25_dataset.py --all
+python scripts/download_meteo_dataset.py
 ```
 
 ## Instalación
@@ -30,6 +37,7 @@ pip install -r requirements.txt
 
 ```bash
 python scripts/download_pm25_dataset.py --all
+python scripts/download_meteo_dataset.py
 python scripts/profile_pm25.py
 jupyter lab
 ```
@@ -41,9 +49,9 @@ documentado. El estado y las decisiones vigentes se mantienen en
 ## Estructura
 
 ```text
-data/       archivos originales de PM2.5 (excluidos de Git)
-docs/       contexto, decisiones, diccionario y fuentes consultables
+data/       archivos originales de PM2.5, meteorología y redes (excluidos de Git)
+docs/       contexto, decisiones, diccionario, cruce de estaciones y fuentes
 notebooks/  análisis reproducibles de la entrega
-scripts/    descarga y perfil del dataset
-src/        funciones reutilizables de carga y validación
+scripts/    descarga y perfil de los datasets
+src/        funciones reutilizables de carga, validación y correspondencia de estaciones
 ```

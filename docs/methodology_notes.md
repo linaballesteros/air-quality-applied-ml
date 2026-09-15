@@ -38,3 +38,22 @@ cobertura mínima de 90%. La transformación produce:
 El límite inferior negativo es un resultado matemático del criterio IQR, no un
 valor observado. Estos 37.083 casos son **posibles valores extremos**, no
 errores confirmados, y no se eliminan en el EDA.
+
+## Cálculos exploratorios del 2026-09-14 (fuera del notebook)
+
+Realizados con el loader del repositorio sobre la ventana 2018–2025 y las 16
+estaciones, para decidir la formulación. No citar en el paper hasta
+reproducirlos en el notebook.
+
+- Horizonte horario: la correlación entre `pm25(t)` y `pm25(t+h)` cae de 0,80
+  (h=1) a 0,61 (h=3) y 0,43 (h=6); un modelo lineal con rezagos mejora la
+  persistencia solo de 4,97 a 4,59 µg/m³ de MAE en h=1 (test 2025).
+- Horizonte diario: persistencia de la media diaria 2,95 µg/m³ vs. 2,73 con un
+  modelo lineal de rezagos diarios y estacionalidad (test 2025), sin
+  meteorología.
+- Eventos de Nivel de Prevención (≥38 µg/m³, media del día calendario con ≥18
+  horas): 1.090 días-estación, 438 transiciones, persistencia con precisión y
+  recall de 0,60; distribución por año y por número de estaciones afectadas
+  en `context.md`.
+- Con el máximo de la media móvil de 24 h como target, los eventos suben a
+  1.702 y la persistencia a 0,69; se evaluará como sensibilidad.

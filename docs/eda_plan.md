@@ -13,9 +13,11 @@ modelado ni decisiones de imputación anticipadas.
 3. **Granularidad.** Horaria exacta.
 4. **Rango.** 2013-01-01 00:00 a 2026-06-30 23:00.
 5. **Estaciones.** Aparecen 33; no todas operan simultáneamente.
-6. **Target.** La fuente no trae una columna target única. Para la Entrega 1 se
-   transforma a formato largo y se deriva `pm25_t_plus_1`: concentración de la
-   misma estación una hora después.
+6. **Target.** La fuente no trae una columna target única. Se transforma a
+   formato largo, se agrega por estación-día y se deriva
+   `pm25_mean_d_plus_1`: media diaria de la misma estación al día siguiente.
+   (Actualizado el 2026-09-14; el notebook actual todavía construye el target
+   horario anterior.)
 7. **Faltantes.** Hay 1.879.277 mediciones no nulas y 2.024.491 celdas vacías
    sobre la unión de 33 estaciones. El segundo valor mezcla ausencia de una
    estación fuera de su vida útil con fallas durante operación, por lo que no
