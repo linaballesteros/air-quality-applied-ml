@@ -13,7 +13,9 @@
 | 2026-09-14 | Usar el Nivel de Prevención (≥38 µg/m³, Tabla 4) como umbral principal de evaluación e ICA Naranja (≥40,5 µg/m³, Tabla 6) como secundario. | El nivel de prevención es el que activa medidas y es declarable por pronóstico. El valor 37 de la norma no es un umbral de alerta. |
 | 2026-09-14 | Definir la media diaria como media del día calendario con al menos 18 horas válidas. | Es una media de 24 horas, coincide con la unidad diaria de comunicación de alertas y produce un target por estación-día sin ventanas solapadas. La norma usa medias móviles de 24 h para constatación; el máximo de la media móvil del día se evaluará como sensibilidad. |
 | 2026-09-14 | Evaluar con origen móvil: probar por separado en 2022, 2023, 2024 y 2025 entrenando con los años anteriores. | Los eventos son muy desiguales entre años (412 en 2020, 4 en 2025); un único test futuro no permite medir la anticipación de episodios. |
-| 2026-09-14 | Exigir a todo modelo superar a la persistencia en MAE y en precisión/recall de días en prevención, reportando aparte las transiciones. | La persistencia acierta el 60 % de los días en prevención; el aporte de un modelo solo es demostrable en los inicios de episodio. |
+| 2026-09-14 | Exigir a todo modelo superar a la persistencia en MAE y en precisión/recall de días en prevención, reportando aparte los inicios de episodio. | La persistencia acierta el 60 % de los días en prevención; el aporte de un modelo debe demostrarse sobre todo en los inicios de episodio. |
+| 2026-09-14 | Comparar modelos y persistencia en los inicios de episodio con el mismo número de avisos (igual presupuesto de alertas o igual precisión), no con el umbral fijo de 38 µg/m³. | Con umbral 38 la persistencia no anticipa inicios por definición, pero como el PM2.5 sube gradualmente (mediana de 32,7 µg/m³ el día previo a un inicio), una persistencia con umbral de aviso 30 captura el 74 % de los inicios; una regresión que minimiza el error medio se encoge hacia la media y con umbral 38 avisa menos eventos que la persistencia. La regla de aviso de la Entrega 2 será un umbral calibrado o una probabilidad de exceder 38. |
+| 2026-09-14 | Formular la pregunta como cuantificación del aporte de la meteorología observada, no como supuesto de que aporta. | En una prueba lineal con origen móvil 2022–2025 la meteorología redujo el MAE de 3,15 a 3,11 µg/m³ y elevó el AUC de inicios de 0,961 a 0,964; un aporte pequeño es un resultado válido que señalaría la necesidad de pronóstico meteorológico. |
 | 2026-09-14 | Conservar BEL-FEVE (meteorológica 271 sin archivos desde 2024-08) y MED-SCRI (meteorológica 201 a 5,8 km) y reportarlos como limitación. | Excluirlas reduce la cobertura espacial; su efecto se medirá con un análisis de sensibilidad. |
 | 2026-09-14 | Trabajar inicialmente con 2018–2025 y 16 estaciones con cobertura ≥90%. | Conserva ocho años completos y entre 92,67% y 97,41% de cobertura por estación. |
 | 2026-09-14 | No imputar faltantes en el EDA; excluir solo pares sin medición actual o target de la tabla supervisada. | Mantiene transparentes los datos observados y deja 1.050.341 pares utilizables. |
@@ -34,6 +36,7 @@
   `context.md` antes de citarlos.
 - Definir la fecha de corte de entrenamiento y validación dentro de cada
   origen móvil.
+- Filtrar las 7 horas con presión de 0 hPa que la bandera de calidad no marcó.
 - Evaluar sensibilidad a ceros, valores extremos, definición de media diaria
   (calendario vs. máximo de media móvil) y exclusión de BEL-FEVE y MED-SCRI,
   sin usar información del periodo de prueba.

@@ -48,17 +48,19 @@ oportunidad restante. La selección inicial más coherente es:
 - Parra-Sánchez et al. (2020): datos SIATA, calidad del aire y salud pública.
 
 La oportunidad del proyecto es un pronóstico por estación, con un día de
-anticipación, evaluado explícitamente contra la persistencia y en su
-capacidad de anticipar el inicio de episodios, usando el histórico público
-actualizado y una metodología temporal reproducible de alcance de curso.
+anticipación, evaluado explícitamente contra la persistencia (a igual número
+de avisos en los inicios de episodio) y que cuantifica el valor incremental
+de la meteorología observada, usando el histórico público actualizado y una
+metodología temporal reproducible de alcance de curso.
 
 ## 5. Pregunta de investigación
 
 > ¿Es posible predecir, con un día de anticipación, la concentración media
-> diaria de PM2.5 por estación en el Valle de Aburrá, a partir de mediciones
-> históricas del contaminante, variables meteorológicas observadas de SIATA y
-> variables temporales, superando a un pronóstico de persistencia tanto en
-> error como en la anticipación de días en Nivel de Prevención?
+> diaria de PM2.5 por estación en el Valle de Aburrá a partir del historial
+> del contaminante y variables temporales, y en qué medida las variables
+> meteorológicas observadas de SIATA mejoran esa predicción frente a un
+> pronóstico de persistencia, en error y en anticipación de días en Nivel de
+> Prevención?
 
 Es aprendizaje supervisado de regresión porque el target
 `pm25_mean_d_plus_1` es una concentración numérica continua en µg/m³. La
@@ -124,7 +126,9 @@ para el paper son:
    justifica un pronóstico por estación. De los 1.090 días-estación en
    prevención, 438 (40%) son inicios de episodio; un pronóstico de
    persistencia obtiene MAE de 3,58 µg/m³ y precisión y recall de 0,60 como
-   aviso, pero por construcción nunca anticipa un inicio.
+   aviso con umbral 38; como los episodios suben gradualmente, el nivel de hoy
+   ya anticipa parte de los inicios, y el aporte de un modelo debe
+   demostrarse con el mismo número de avisos.
 
 Todas las cifras están calculadas en el notebook (umbral ≥38 µg/m³, media del
 día calendario con ≥18 horas válidas). Estos resultados respaldan la viabilidad del problema, pero no

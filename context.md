@@ -14,8 +14,8 @@ proyecto. El planteamiento extenso inicial se conserva en
 | Entrega | Short-Paper — Entrega 1 |
 | Título tentativo | Predicción de concentraciones de PM2.5 en el Valle de Aburrá mediante aprendizaje automático con datos de la red SIATA |
 | Problema ML | Aprendizaje supervisado de regresión |
-| Pregunta | ¿Es posible predecir, con un día de anticipación, la concentración media diaria de PM2.5 por estación en el Valle de Aburrá, a partir de mediciones históricas del contaminante, variables meteorológicas observadas de SIATA y variables temporales, superando a un pronóstico de persistencia tanto en error como en la anticipación de días en Nivel de Prevención? |
-| Aporte | Pronóstico por estación (la norma exige evaluar por punto de monitoreo y el aviso público actual es agregado) y detección del inicio de episodios, que es cuando un aviso sirve para actuar. |
+| Pregunta | ¿Es posible predecir, con un día de anticipación, la concentración media diaria de PM2.5 por estación en el Valle de Aburrá a partir del historial del contaminante y variables temporales, y en qué medida las variables meteorológicas observadas de SIATA mejoran esa predicción frente a un pronóstico de persistencia, en error y en anticipación de días en Nivel de Prevención? |
+| Aporte | Pronóstico por estación (la norma exige evaluar por punto de monitoreo y el aviso público actual es agregado), evaluación rigurosa contra la persistencia con igual número de avisos, y cuantificación del valor incremental de la meteorología observada; un aporte pequeño también es un resultado útil (señalaría la necesidad de pronóstico meteorológico). |
 
 ## Reglas de trabajo
 
@@ -118,7 +118,10 @@ del periodo activo o de una ventana común.
   transiciones (día sin evento seguido de día con evento). ICA Naranja
   (≥40,5 µg/m³) se reporta como umbral secundario.
 - **Baseline obligatorio:** persistencia (la media de hoy como pronóstico de
-  mañana), evaluada en MAE y en precisión/recall de días en prevención.
+  mañana), evaluada en MAE y en precisión/recall de días en prevención. En
+  los inicios de episodio la comparación se hace con el mismo número de
+  avisos: una persistencia con umbral de aviso más bajo también captura
+  inicios, porque el PM2.5 sube gradualmente.
 - **Restricción:** ninguna variable del día `d+1` puede utilizarse como
   predictor y la división de datos debe conservar el orden temporal.
 
@@ -209,3 +212,4 @@ pregunta vigente.
 | 2026-09-14 | Se exploró el Dataverse meteorológico, se cruzaron las 16 estaciones PM2.5 con 12 estaciones meteorológicas y se creó el script de descarga. |
 | 2026-09-14 | Se descargaron 1.131 archivos meteorológicos (3,0 GB), se implementó el loader con decodificación de `calidad` y agregación horaria, y se cuantificó la cobertura válida por variable. |
 | 2026-09-14 | Se reescribió y ejecutó el notebook con el target diario, el análisis de eventos de prevención y la sección de meteorología; hallazgos, limitaciones e implicaciones actualizados. |
+| 2026-09-14 | Prueba exploratoria (lineal, origen móvil 2022–2025): la meteorología observada mejora el MAE ~1 % sobre el historial de PM2.5 y poco el ordenamiento de inicios; la pregunta pasa a cuantificar ese aporte y la comparación con persistencia se fija a igual número de avisos. |

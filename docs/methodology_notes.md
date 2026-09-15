@@ -57,3 +57,9 @@ reproducirlos en el notebook.
   en `context.md`.
 - Con el máximo de la media móvil de 24 h como target, los eventos suben a
   1.702 y la persistencia a 0,69; se evaluará como sensibilidad.
+- Aporte de la meteorología (lineal, origen móvil 2022–2025, 34.908 filas con
+  meteorología completa): MAE persistencia 3,42; solo historial PM2.5 3,15;
+  historial + meteorología 3,11. AUC para ordenar inicios entre días con hoy
+  <38: 0,958 / 0,961 / 0,964. El día previo a un inicio la mediana de PM2.5 es
+  32,7 µg/m³ (16,0 en días sin inicio), la lluvia 0,06 mm (1,09) y la humedad
+  mínima 44,5 % (50,5 %).
