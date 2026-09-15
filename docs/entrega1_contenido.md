@@ -136,7 +136,9 @@ constituyen todavía una evaluación de modelos ni prueban relaciones causales.
 
 ## 8. Referencias y trazabilidad
 
-- Mínimo tres fuentes académicas u oficiales.
+- Mínimo tres fuentes académicas u oficiales; `paper/referencias.bib` tiene
+  siete (cinco citadas en el borrador, dos disponibles: Gómez Comba 2017 y
+  Joharestani et al. 2019).
 - Toda cifra del paper debe aparecer calculada en el notebook.
 - Usar los PDFs originales para la referencia bibliográfica y los Markdown de
   `docs/sources/` únicamente como ayuda de consulta.

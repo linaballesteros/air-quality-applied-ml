@@ -209,9 +209,10 @@ secciones que redactó frente a lo que cambió:
 - El párrafo del planteamiento que habla de "concentración horaria" y de
   "otros contaminantes" debe alinearse: unidad diaria, sin otros
   contaminantes en el alcance.
-- La cita `ganan2026spatiotemporal` no tiene PDF en `docs/sources/papers/`;
-  localizar la fuente o retirarla. Las claves del `.bib` están vacías y deben
-  completarse desde los PDF originales.
+- `paper/referencias.bib` ya contiene las siete referencias de Overleaf.
+  `ganan2026spatiotemporal` (tesis, UNAL 2026) no tiene copia en
+  `docs/sources/papers/`; si se conserva la cita, añadir el PDF o el enlace
+  allí para trazabilidad.
 
 **Alejandro — resto del paper.** Trabajos relacionados, pregunta de
 investigación (sección III sigue siendo plantilla), caracterización de los
@@ -243,3 +244,4 @@ o probabilidad de exceder 38) según
 | 2026-09-14 | Se reescribió y ejecutó el notebook con el target diario, el análisis de eventos de prevención y la sección de meteorología; hallazgos, limitaciones e implicaciones actualizados. |
 | 2026-09-14 | Prueba exploratoria (lineal, origen móvil 2022–2025): la meteorología observada mejora el MAE ~1 % sobre el historial de PM2.5 y poco el ordenamiento de inicios; la pregunta pasa a cuantificar ese aporte y la comparación con persistencia se fija a igual número de avisos. |
 | 2026-09-14 | Se movió el borrador a `paper/main.tex` con `referencias.bib`, se documentó la puesta en marcha completa y se repartieron los siguientes pasos. |
+| 2026-09-14 | Se copiaron a `paper/referencias.bib` las siete referencias que están en Overleaf; `paper/` queda como registro local del artículo. |

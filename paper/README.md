@@ -2,8 +2,14 @@
 
 - `main.tex`: borrador IEEEtran (antes `paper_hasta_el_momento.md`, movido sin
   cambios de contenido el 2026-09-14).
-- `referencias.bib`: claves citadas en `main.tex`, pendientes de completar
-  con los datos bibliográficos de los PDF originales.
+- `referencias.bib`: siete entradas bibliográficas (añadidas el 2026-09-14),
+  copia de las que están en Overleaf. `main.tex` cita hoy cinco de ellas
+  (`baena2019red`, `parra2020analitica`, `grisales2022relacion`,
+  `kleine2017modeling`, `ganan2026spatiotemporal`); `gomez2017contaminacion`
+  y `joharestani2019pm25` están disponibles para trabajos relacionados.
+
+Este directorio es el registro local de lo que hay en Overleaf: cuando se
+cambie algo allí, copiarlo aquí en el mismo commit.
 
 ## Compilar
 
