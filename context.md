@@ -171,26 +171,26 @@ alcance.
 
 ## Estado de la parte de código — Entrega 1
 
-El notebook ejecutado corresponde a la formulación anterior (target horario
-`pm25_t_plus_1`). Sus secciones sobre fuente, estructura, cobertura, ventana,
-limpieza, patrones temporales y diferencias entre estaciones siguen vigentes.
+Completada y alineada con la formulación diaria. El notebook
+[`notebooks/01_eda_pm25.ipynb`](notebooks/01_eda_pm25.ipynb) está ejecutado
+sin errores (47 celdas, ejecutado con `.venv`) y cubre: fuente, estructura,
+cobertura, ventana, target diario `pm25_mean_d_plus_1`, limpieza,
+distribución, patrones temporales, diferencias entre estaciones, persistencia
+diaria y días en Nivel de Prevención (por año, inicios de episodio, extensión
+espacial), meteorología asignada (cruce, cobertura válida por variable,
+descriptivos, correlaciones diarias y un episodio de ejemplo), hallazgos,
+limitaciones e implicaciones. Todas las cifras de la tabla de hechos
+verificados de este archivo se reproducen en el notebook.
 
-Pendiente para alinearlo con la formulación actual:
+Pendiente antes de modelar: resolver los huecos meteorológicos documentados
+en [`docs/station_matching.md`](docs/station_matching.md) y validar las
+presiones de 0 hPa que la bandera de calidad no marcó.
 
-1. Sección 6: construir el target diario `pm25_mean_d_plus_1`.
-2. Sección 11: reemplazar la persistencia horaria por el análisis de eventos
-   (tabla de hechos verificados arriba).
-3. Hallazgo 3: sustituir por el carácter local de los eventos.
-4. Nueva sección de meteorología: cruce de estaciones, cobertura válida por
-   variable tras aplicar `calidad`, descriptivos y una figura.
-5. Limitaciones e implicaciones: BEL-FEVE y MED-SCRI, desbalance entre años,
-   calidad meteorológica.
-
-Después, incorporar la caracterización y los tres hallazgos en Overleaf según
-[`docs/entrega1_contenido.md`](docs/entrega1_contenido.md). La Introducción
-actual del borrador ya describe meteorología como predictor; la sección de
-pregunta de investigación debe reemplazar la plantilla por la pregunta
-vigente.
+El siguiente trabajo es incorporar la caracterización y los tres hallazgos en
+Overleaf según [`docs/entrega1_contenido.md`](docs/entrega1_contenido.md). La
+Introducción actual del borrador ya describe meteorología como predictor; la
+sección de pregunta de investigación debe reemplazar la plantilla por la
+pregunta vigente.
 
 ## Registro de actualizaciones
 
@@ -208,3 +208,4 @@ vigente.
 | 2026-09-14 | Se verificaron los umbrales de la Resolución 2254 de 2017 (norma 37, Prevención 38–55, ICA Naranja 40,5–65,4) y se cuantificaron los eventos por año y su carácter local. |
 | 2026-09-14 | Se exploró el Dataverse meteorológico, se cruzaron las 16 estaciones PM2.5 con 12 estaciones meteorológicas y se creó el script de descarga. |
 | 2026-09-14 | Se descargaron 1.131 archivos meteorológicos (3,0 GB), se implementó el loader con decodificación de `calidad` y agregación horaria, y se cuantificó la cobertura válida por variable. |
+| 2026-09-14 | Se reescribió y ejecutó el notebook con el target diario, el análisis de eventos de prevención y la sección de meteorología; hallazgos, limitaciones e implicaciones actualizados. |

@@ -97,13 +97,13 @@ válidas, se obtuvieron 44.399 registros estación-día con target disponible.
 La variable objetivo `pm25_mean_d_plus_1`, media de PM2.5 del día siguiente
 en la misma estación expresada en µg/m³, es numérica continua. Como
 predictores meteorológicos se asignó a cada estación PM2.5 la estación
-meteorológica de SIATA más cercana (14 de 16 a menos de 3 km), con registros
+meteorológica de SIATA más cercana (15 de 16 a 3 km o menos), con registros
 minutales de temperatura, humedad, presión, precipitación y viento agregados
 a resolución horaria tras descartar los minutos marcados como dudosos por la
 bandera de calidad de SIATA; la cobertura válida es de 88–98% de las horas
 en la mayoría de variables y estaciones, con huecos estructurales en el
 viento de una estación, la presión de otra y la precipitación de una tercera
-(ver `station_matching.md`; reproducir en el notebook antes de citar).
+(sección 12 del notebook y `station_matching.md`).
 
 ## 7. Insights preliminares del EDA
 
@@ -112,7 +112,8 @@ para el paper son:
 
 1. **Cobertura suficiente:** las 16 estaciones seleccionadas tienen entre
    92,67% y 97,41% de cobertura durante 2018–2025 y generan 44.399 registros
-   estación-día con target disponible.
+   estación-día con target disponible; 15 de ellas tienen meteorología SIATA
+   a 3 km o menos con 88–98% de horas válidas en la mayoría de variables.
 2. **Estructura temporal:** el promedio horario máximo aparece a las 08:00
    (25,79 µg/m³) y el mínimo a las 15:00 (13,48 µg/m³); marzo alcanza el mayor
    promedio mensual (28,05 µg/m³), y 179 de los 246 días con alguna estación
@@ -122,12 +123,11 @@ para el paper son:
    prevención (63%), tres estaciones o menos están afectadas, lo que
    justifica un pronóstico por estación. De los 1.090 días-estación en
    prevención, 438 (40%) son inicios de episodio; un pronóstico de
-   persistencia obtiene precisión y recall de 0,60 y, por construcción, nunca
-   anticipa un inicio.
+   persistencia obtiene MAE de 3,58 µg/m³ y precisión y recall de 0,60 como
+   aviso, pero por construcción nunca anticipa un inicio.
 
-Las cifras del hallazgo 3 fueron calculadas con umbral ≥38 µg/m³ y media del
-día calendario; deben reproducirse en el notebook antes de incluirse en el
-paper. Estos resultados respaldan la viabilidad del problema, pero no
+Todas las cifras están calculadas en el notebook (umbral ≥38 µg/m³, media del
+día calendario con ≥18 horas válidas). Estos resultados respaldan la viabilidad del problema, pero no
 constituyen todavía una evaluación de modelos ni prueban relaciones causales.
 
 ## 8. Referencias y trazabilidad
