@@ -1,6 +1,10 @@
 # Local data files (keep documentation)
 data/raw/pm25/*
 !data/raw/pm25/README.md
+data/raw/meteo/*
+!data/raw/meteo/README.md
+data/raw/network/
+data/interim/
 # Python and notebooks
 __pycache__/
 *.py[cod]
