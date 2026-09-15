@@ -24,13 +24,23 @@ agrega por estación y día calendario para obtener `pm25_mean` y, dentro de
 cada estación y respetando el tiempo, se desplaza un día hacia atrás para
 crear el target `pm25_mean_d_plus_1`.
 
-## Meteorología (pendiente de agregación)
+## Meteorología horaria (`data/interim/meteo_hourly.csv`)
 
-Archivos minutales por estación con columnas `codigo`, `fecha_hora`, `h`,
-`t`, `pr`, `vv`, `vv_max`, `dv`, `dv_max`, `p` y `calidad`; ver
-[`../data/raw/meteo/README.md`](../data/raw/meteo/README.md) y la
-correspondencia en [`station_matching.md`](station_matching.md). Las
-variables horarias derivadas se documentarán aquí cuando exista el loader.
+Derivada de los archivos minutales por estación (`codigo`, `fecha_hora`,
+`h`, `t`, `pr`, `vv`, `vv_max`, `dv`, `dv_max`, `p`, `calidad`; ver
+[`../data/raw/meteo/README.md`](../data/raw/meteo/README.md)) con
+`src/data/load_meteo.py`. La hora `HH:00` resume los minutos `HH:00`–`HH:59`;
+cada variable requiere 45 minutos válidos (no `-999` ni marcados dudosos).
+
+| Campo | Tipo | Descripción | Unidad | Observaciones |
+| --- | --- | --- | --- | --- |
+| `codigo` | `int` | Código de la estación meteorológica. | No aplica | Se une a PM2.5 mediante [`station_matching.md`](station_matching.md). |
+| `fecha_hora` | `datetime64` | Inicio de la hora agregada. | Hora local | Zona horaria no declarada por SIATA. |
+| `t`, `h`, `pr`, `vv` | `float64` | Media horaria de temperatura, humedad relativa, presión y velocidad del viento. | °C, %, hPa, m/s | |
+| `vv_max` | `float64` | Máximo de las ráfagas minutales. | m/s | |
+| `p` | `float64` | Suma de la precipitación minutal, sin reescalar por minutos faltantes. | mm | Subestima si faltan minutos dentro de la hora. |
+| `dv` | `float64` | Dirección resultante del viento (vector medio ponderado por `vv`). | grados | `dv_max` no se agrega. |
+| `n_<variable>` | `int` | Minutos válidos usados en cada agregado. | No aplica | Permite recalcular con otro umbral. |
 
 ## Ejemplo de lectura de columnas originales
 

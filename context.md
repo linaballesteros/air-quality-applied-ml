@@ -69,7 +69,8 @@ usa comas. El loader detecta delimitador y codificación; no los supone.
 | Estaciones requeridas | 12 códigos (59, 68, 73, 82, 105, 197, 201, 202, 206, 229, 252, 271), asignados a las 16 estaciones PM2.5 en [`docs/station_matching.md`](docs/station_matching.md) |
 | Cobertura de archivos 2018–2025 | 10 estaciones con 94–96 de 96 meses; 271 termina en 2024-07 (afecta a BEL-FEVE) |
 | Descarga | `python scripts/download_meteo_dataset.py` a `data/raw/meteo/<código>/`, excluido de Git y validado con MD5 |
-| Pendiente | Agregación minuto → hora aplicando la bandera `calidad`, y cobertura válida por variable y estación |
+| Agregación | `python scripts/build_meteo_hourly.py` aplica la bandera `calidad` (gramática verificada contra 64 valores observados), exige 45 minutos válidos por hora y escribe `data/interim/meteo_hourly.csv` (801.839 filas) |
+| Cobertura válida 2018–2025 | 88–98 % de las horas en la mayoría de variables y estaciones; huecos estructurales en viento de 206 (33 %), presión de 252 (15 %), lluvia de 229 (74 %) y todo 271 desde 2024-08; detalle y alternativas en [`docs/station_matching.md`](docs/station_matching.md) |
 
 También existen históricos consolidados de PM10, O3, NO2, NO, NOx, CO y SO2
 con el mismo formato que PM2.5. No forman parte del alcance actual.
@@ -164,6 +165,8 @@ alcance.
 - Cruce de estaciones: [`docs/station_matching.md`](docs/station_matching.md)
   y [`src/data/stations.py`](src/data/stations.py).
 - Descarga meteorológica: [`scripts/download_meteo_dataset.py`](scripts/download_meteo_dataset.py).
+- Loader meteorológico: [`src/data/load_meteo.py`](src/data/load_meteo.py) y
+  [`scripts/build_meteo_hourly.py`](scripts/build_meteo_hourly.py).
 - Respuestas y plan de EDA: [`docs/eda_plan.md`](docs/eda_plan.md).
 
 ## Estado de la parte de código — Entrega 1
@@ -204,3 +207,4 @@ vigente.
 | 2026-09-14 | Se replanteó la pregunta: pronóstico diario por estación con un día de anticipación, meteorología SIATA como predictor y persistencia como baseline; el horizonte horario t+1 se descartó por no aportar valor operativo. |
 | 2026-09-14 | Se verificaron los umbrales de la Resolución 2254 de 2017 (norma 37, Prevención 38–55, ICA Naranja 40,5–65,4) y se cuantificaron los eventos por año y su carácter local. |
 | 2026-09-14 | Se exploró el Dataverse meteorológico, se cruzaron las 16 estaciones PM2.5 con 12 estaciones meteorológicas y se creó el script de descarga. |
+| 2026-09-14 | Se descargaron 1.131 archivos meteorológicos (3,0 GB), se implementó el loader con decodificación de `calidad` y agregación horaria, y se cuantificó la cobertura válida por variable. |

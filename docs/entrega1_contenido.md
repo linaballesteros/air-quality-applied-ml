@@ -99,8 +99,11 @@ en la misma estación expresada en µg/m³, es numérica continua. Como
 predictores meteorológicos se asignó a cada estación PM2.5 la estación
 meteorológica de SIATA más cercana (14 de 16 a menos de 3 km), con registros
 minutales de temperatura, humedad, presión, precipitación y viento agregados
-a resolución horaria. [Cifras de cobertura meteorológica: completar desde el
-notebook.]
+a resolución horaria tras descartar los minutos marcados como dudosos por la
+bandera de calidad de SIATA; la cobertura válida es de 88–98% de las horas
+en la mayoría de variables y estaciones, con huecos estructurales en el
+viento de una estación, la presión de otra y la precipitación de una tercera
+(ver `station_matching.md`; reproducir en el notebook antes de citar).
 
 ## 7. Insights preliminares del EDA
 
