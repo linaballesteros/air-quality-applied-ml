@@ -29,30 +29,43 @@ python scripts/download_meteo_dataset.py
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\activate        # Windows
+source .venv/bin/activate       # Linux / macOS
 pip install -r requirements.txt
 ```
 
-## Reproducción
+## Puesta en marcha en una máquina nueva
+
+Ejecutar en este orden desde la raíz del repositorio (tiempos aproximados):
 
 ```bash
-python scripts/download_pm25_dataset.py --all
-python scripts/download_meteo_dataset.py
-python scripts/profile_pm25.py
-python scripts/build_meteo_hourly.py
-jupyter lab
+python scripts/download_pm25_dataset.py --all   # 162 archivos, 15 MB, ~1 min
+python scripts/download_meteo_dataset.py        # 1.131 archivos, 3 GB, ~10 min
+python scripts/build_meteo_hourly.py            # tabla horaria en data/interim, ~2 min
+python -m unittest discover -q                  # 13 pruebas
+jupyter lab                                     # abrir notebooks/01_eda_pm25.ipynb
 ```
 
-Abrir `notebooks/01_eda_pm25.ipynb` para reproducir la inspección y el EDA
-documentado. El estado y las decisiones vigentes se mantienen en
-[`context.md`](context.md).
+Ninguna descarga se repite si el archivo ya existe con el MD5 correcto. El
+notebook está guardado con sus salidas; puede leerse sin ejecutarlo, pero
+para reejecutarlo se necesitan las tres primeras líneas.
+
+## Dónde está cada cosa
+
+- Estado, pregunta vigente, cifras verificadas y siguientes pasos:
+  [`context.md`](context.md).
+- Qué debe decir cada sección del paper: [`docs/entrega1_contenido.md`](docs/entrega1_contenido.md).
+- Borrador del paper y referencias: [`paper/`](paper/).
+- Decisiones metodológicas con justificación: [`docs/decisions.md`](docs/decisions.md).
 
 ## Estructura
 
 ```text
 data/       archivos originales de PM2.5, meteorología y redes (excluidos de Git)
-docs/       contexto, decisiones, diccionario, cruce de estaciones y fuentes
-notebooks/  análisis reproducibles de la entrega
-scripts/    descarga y perfil de los datasets
+docs/       decisiones, diccionario, cruce de estaciones, guía de la entrega y fuentes
+notebooks/  EDA ejecutado de la Entrega 1
+paper/      borrador IEEEtran del short paper y referencias
+scripts/    descarga, perfil y agregación de los datasets
 src/        funciones reutilizables de carga, validación y correspondencia de estaciones
+tests/      pruebas unitarias de los loaders
 ```

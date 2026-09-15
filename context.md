@@ -189,11 +189,40 @@ Pendiente antes de modelar: resolver los huecos meteorológicos documentados
 en [`docs/station_matching.md`](docs/station_matching.md) y validar las
 presiones de 0 hPa que la bandera de calidad no marcó.
 
-El siguiente trabajo es incorporar la caracterización y los tres hallazgos en
-Overleaf según [`docs/entrega1_contenido.md`](docs/entrega1_contenido.md). La
-Introducción actual del borrador ya describe meteorología como predictor; la
-sección de pregunta de investigación debe reemplazar la plantilla por la
-pregunta vigente.
+## Siguientes pasos por persona
+
+El borrador del paper está en [`paper/main.tex`](paper/main.tex) (movido
+desde `paper_hasta_el_momento.md` sin cambios de contenido). La guía sección
+por sección es [`docs/entrega1_contenido.md`](docs/entrega1_contenido.md).
+
+**Lina — título, introducción y planteamiento del problema.** Revisar las
+secciones que redactó frente a lo que cambió:
+
+- La pregunta ya no es horaria ni "estimación": es pronóstico de la media
+  diaria por estación con un día de anticipación (ver tabla "Proyecto").
+- El planteamiento debe apoyarse en la Resolución 2254 de 2017 (evaluación
+  por punto de monitoreo, declaración por pronóstico, Nivel de Prevención
+  38–55 µg/m³); extracto verificado en
+  [`docs/sources/resolucion_2254_2017_extracto.md`](docs/sources/resolucion_2254_2017_extracto.md).
+- La introducción ya menciona meteorología como predictor; debe quedar claro
+  que el proyecto **cuantifica** cuánto aporta, no lo da por hecho.
+- El párrafo del planteamiento que habla de "concentración horaria" y de
+  "otros contaminantes" debe alinearse: unidad diaria, sin otros
+  contaminantes en el alcance.
+- La cita `ganan2026spatiotemporal` no tiene PDF en `docs/sources/papers/`;
+  localizar la fuente o retirarla. Las claves del `.bib` están vacías y deben
+  completarse desde los PDF originales.
+
+**Alejandro — resto del paper.** Trabajos relacionados, pregunta de
+investigación (sección III sigue siendo plantilla), caracterización de los
+datos e insights preliminares, con las cifras del notebook y de la tabla de
+hechos verificados de este archivo. Tres hallazgos, no más.
+
+**Antes de la Entrega 2 (cualquiera de los dos).** Resolver los huecos
+meteorológicos de [`docs/station_matching.md`](docs/station_matching.md),
+filtrar las 7 presiones de 0 hPa y fijar la regla de aviso (umbral calibrado
+o probabilidad de exceder 38) según
+[`docs/decisions.md`](docs/decisions.md).
 
 ## Registro de actualizaciones
 
@@ -213,3 +242,4 @@ pregunta vigente.
 | 2026-09-14 | Se descargaron 1.131 archivos meteorológicos (3,0 GB), se implementó el loader con decodificación de `calidad` y agregación horaria, y se cuantificó la cobertura válida por variable. |
 | 2026-09-14 | Se reescribió y ejecutó el notebook con el target diario, el análisis de eventos de prevención y la sección de meteorología; hallazgos, limitaciones e implicaciones actualizados. |
 | 2026-09-14 | Prueba exploratoria (lineal, origen móvil 2022–2025): la meteorología observada mejora el MAE ~1 % sobre el historial de PM2.5 y poco el ordenamiento de inicios; la pregunta pasa a cuantificar ese aporte y la comparación con persistencia se fija a igual número de avisos. |
+| 2026-09-14 | Se movió el borrador a `paper/main.tex` con `referencias.bib`, se documentó la puesta en marcha completa y se repartieron los siguientes pasos. |
