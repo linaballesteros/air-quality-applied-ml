@@ -39,6 +39,7 @@ pip install -r requirements.txt
 python scripts/download_pm25_dataset.py --all
 python scripts/download_meteo_dataset.py
 python scripts/profile_pm25.py
+python scripts/build_meteo_hourly.py
 jupyter lab
 ```
 
