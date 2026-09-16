@@ -149,25 +149,33 @@ limitaciones de un pronóstico diario localizado.
 \section{Trabajos relacionados}
 \label{sec:trabajos}
 
-En esta sección se presentarán entre dos y cuatro trabajos relacionados
-con el problema seleccionado.
+Baena-Salazar et al.\ entrenaron una red neuronal artificial para
+pronosticar la concentración diaria de PM$_{2.5}$ con un día de anticipación
+en tres estaciones del Valle de Aburrá, entre ellas ITA-CONC, a partir de
+variables meteorológicas (incluida la altura de la capa de mezcla), la
+precipitación acumulada de tres días y el PM$_{2.5}$ de uno a tres días
+antes \cite{baena2019red}. Validado en los primeros 91 días de 2016, el
+modelo alcanzó $r^{2}$ entre 0,806 (ITA-CONC) y 0,864 (MED-UNNV); el
+PM$_{2.5}$ del día anterior fue la entrada de mayor peso (34,2\,\%).
 
-Para cada trabajo se recomienda explicar brevemente:
+Kleine Deters et al.\ modelaron el PM$_{2.5}$ diario de dos sitios de Quito
+con seis años de viento y precipitación \cite{kleine2017modeling}: árboles
+potenciados y máquinas de soporte vectorial separaron con alta confiabilidad
+los niveles bajos de los altos, y la regresión fue mejor bajo condiciones
+meteorológicas extremas. Su enfoque es contemporáneo, no un pronóstico.
 
-\begin{itemize}
-    \item Qué problema abordaron los autores.
-    \item Qué conjunto de datos utilizaron.
-    \item Qué técnica o modelo de Machine Learning aplicaron.
-    \item Qué resultados principales obtuvieron.
-\end{itemize}
+Parra-Sánchez et al.\ combinaron meteorología y PM$_{2.5}$ de SIATA
+(2014--2016) con registros de atención en salud de Medellín; con promedios
+diarios que exigen 75\,\% de datos válidos, encontraron asociaciones entre
+el PM$_{2.5}$ y las atenciones por IRA, EPOC y asma con rezagos de 0 a 7
+días \cite{parra2020analitica}.
 
-Finalmente, se debe explicar qué oportunidad queda abierta a partir de
-los trabajos existentes y cómo el proyecto propuesto se relaciona con
-ellos.
-
-Cuando se seleccionen las fuentes académicas reales del proyecto,
-se agregarán aquí las citas correspondientes.
-
+Estos trabajos muestran que el pronóstico diario con meteorología es
+factible en el Valle de Aburrá y que el nivel del día anterior es la señal
+dominante. Queda abierta la evaluación por estación, sobre varios años y con
+datos abiertos actualizados, comparando contra la persistencia y
+cuantificando cuánto aporta la meteorología observada sobre el historial del
+contaminante; ese es el espacio de este proyecto.
 
 % =================================================
 % III. PREGUNTA DE INVESTIGACIÓN
@@ -176,36 +184,28 @@ se agregarán aquí las citas correspondientes.
 \section{Pregunta de investigación}
 \label{sec:pregunta}
 
-La pregunta de investigación principal del proyecto será formulada
-de manera que pueda responderse empíricamente utilizando los datos
-disponibles.
-
-Una estructura posible es:
-
 \begin{quote}
-\textit{¿Es posible predecir [variable objetivo] a partir de
-[variables predictoras] mediante técnicas de Machine Learning con
-un desempeño adecuado para [caso de uso]?}
+\textit{¿Es posible predecir, con un día de anticipación, la concentración
+media diaria de PM$_{2.5}$ por estación en el Valle de Aburrá a partir del
+historial del contaminante y variables temporales, y en qué medida las
+variables meteorológicas observadas de SIATA mejoran esa predicción frente
+a un pronóstico de persistencia, en error y en anticipación de días en
+Nivel de Prevención?}
 \end{quote}
 
-Una vez seleccionado el problema definitivo, esta pregunta deberá
-ajustarse específicamente al dominio y a los datos utilizados.
-
-El problema corresponde a una tarea de aprendizaje
-\textbf{supervisado o no supervisado}.
-
-Si se trata de aprendizaje supervisado, se deberá indicar además si es
-un problema de:
-
-\begin{itemize}
-    \item Clasificación, o
-    \item Regresión.
-\end{itemize}
-
-Si se trata de aprendizaje no supervisado, se deberá indicar si el
-objetivo principal es, por ejemplo, realizar segmentación o agrupamiento
-de observaciones.
-
+La pregunta plantea un problema de \textbf{aprendizaje supervisado de
+regresión}: la variable objetivo es la concentración media diaria de
+PM$_{2.5}$ del día siguiente, numérica y continua, en $\mu$g/m$^3$. La
+Resolución 2254 de 2017 fija el Nivel de Prevención para PM$_{2.5}$ en una
+media de 24 horas de 38 a 55~$\mu$g/m$^3$, exige evaluarlo por punto de
+monitoreo y admite declararlo por pronóstico \cite{minambiente2017resolucion2254}.
+Por ello, además del error de la predicción numérica, se evaluará si la
+predicción cae del lado correcto de ese umbral; esto es una lectura derivada
+de la regresión, no un segundo problema de clasificación. El pronóstico de
+persistencia (repetir la media de hoy como pronóstico de mañana) es el
+modelo de referencia que cualquier modelo deberá superar, y la comparación
+en los inicios de episodio se hará con el mismo número de avisos, porque
+el PM$_{2.5}$ suele subir gradualmente antes de alcanzar el umbral.
 
 % =================================================
 % IV. CARACTERIZACIÓN DE LOS DATOS
@@ -214,57 +214,86 @@ de observaciones.
 \section{Caracterización de los datos}
 \label{sec:datos}
 
-El conjunto de datos utilizado en este proyecto proviene de
-\textit{[indicar fuente del dataset]}.
+\subsection{Histórico de PM$_{2.5}$}
 
-El dataset contiene aproximadamente \textbf{XX registros} y
-\textbf{XX variables}. Cada observación representa
-\textit{[explicar qué representa una fila del dataset]}.
+La fuente principal es el dataset público \textit{Material Particulado --
+PM2.5} del repositorio de datos de SIATA
+\cite{siata2026pm25}, versión 4.0, publicado como 162 archivos mensuales
+que cubren de enero de 2013 a junio de 2026. En formato original cada fila
+es una hora y cada columna una estación de monitoreo: 118.296 filas y 33
+códigos históricos de estación, con 30 variantes de esquema por altas y
+retiros de estaciones. No hay filas ni marcas de tiempo duplicadas, el índice
+horario no tiene huecos y no aparecen valores negativos.
 
-Las variables incluyen información relacionada con
-\textit{[describir de manera general los principales grupos de variables]}.
+Para el análisis se tomó la ventana 2018--2025 (ocho años completos) y las
+16 estaciones con cobertura horaria de al menos 90\,\% en ese periodo (entre
+92,67\,\% y 97,41\,\%). Los datos se transformaron a formato largo, una fila
+por estación-hora (1.122.048 registros), y luego se agregaron por estación y
+día calendario, calculando la media diaria solo cuando el día tiene al menos
+18 horas válidas. Resultan 46.752 combinaciones estación-día, de las cuales
+1.600 (3,4\,\%) no reciben media por falta de horas y 44.399 cuentan con la
+media del día y con la del día siguiente. No se imputaron faltantes ni se
+eliminaron valores extremos.
 
-La variable objetivo del proyecto es:
+La \textbf{variable objetivo} es \texttt{pm25\_mean\_d\_plus\_1}: la
+concentración media de PM$_{2.5}$ de la misma estación en el día calendario
+siguiente, en $\mu$g/m$^3$, numérica y continua. Su distribución
+(Fig.~\ref{fig:target}) es asimétrica a la derecha, con media de 17,89,
+mediana de 16,33 y desviación estándar de 7,75~$\mu$g/m$^3$, entre 2,04 y
+73,67~$\mu$g/m$^3$. Un total de 1.852 registros (4,17\,\%) supera el límite
+IQR de 34,02~$\mu$g/m$^3$ y 1.090 (2,46\,\%) alcanzan el Nivel de Prevención;
+no se eliminan porque son los episodios que interesa anticipar. La
+Tabla~\ref{tab:dataset} resume el conjunto de datos.
 
-\begin{quote}
-\texttt{nombre\_variable\_objetivo}
-\end{quote}
-
-Esta variable es de tipo \textit{[numérica / categórica / binaria]}.
-
-Si el problema es de clasificación, la variable objetivo contiene
-\textbf{XX clases}. La distribución de dichas clases deberá analizarse
-para determinar si el conjunto de datos se encuentra balanceado o
-desbalanceado.
-
-Si el problema es de regresión, se deberá analizar la distribución de
-la variable objetivo, incluyendo medidas descriptivas y posibles valores
-atípicos.
-
-La Tabla~\ref{tab:dataset} resume las características principales
-del conjunto de datos.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\columnwidth]{figuras/distribucion_target.png}
+    \caption{Distribución de la variable objetivo (media diaria de
+    PM$_{2.5}$ del día siguiente) en las 16 estaciones, 2018--2025.}
+    \label{fig:target}
+\end{figure}
 
 \begin{table}[htbp]
 \centering
 \caption{Características generales del conjunto de datos}
 \label{tab:dataset}
-
 \begin{tabular}{ll}
 \toprule
 \textbf{Característica} & \textbf{Valor} \\
 \midrule
-Número de registros & XX \\
-Número de variables & XX \\
-Variable objetivo & \texttt{target} \\
-Tipo de variable objetivo & Categórica / Numérica \\
-Tipo de problema & Clasificación / Regresión \\
-Valores faltantes & XX \% \\
-Registros duplicados & XX \\
+Fuente & SIATA, DOI 10.83041/AUWZWT, v4.0 \\
+Periodo publicado & 2013-01 a 2026-06, horario \\
+Ventana analizada & 2018--2025, 16 estaciones \\
+Unidad de observación & estación-día \\
+Registros estación-día & 46.752 (44.399 con target) \\
+Variable objetivo & \texttt{pm25\_mean\_d\_plus\_1} \\
+Tipo de variable objetivo & numérica continua ($\mu$g/m$^3$) \\
+Tipo de problema & regresión supervisada \\
+Media / mediana del target & 17,89 / 16,33 $\mu$g/m$^3$ \\
+Registros $\geq$ 38 $\mu$g/m$^3$ & 1.090 (2,46\,\%) \\
+Días sin media ($<$18 h válidas) & 1.600 (3,4\,\%) \\
+Registros duplicados & 0 \\
 \bottomrule
 \end{tabular}
-
 \end{table}
 
+\subsection{Meteorología}
+
+Los predictores meteorológicos provienen de la colección
+\textit{Meteorológica} del mismo repositorio, donde cada estación es un
+dataset independiente con registros cada minuto de temperatura, humedad
+relativa, presión, precipitación y velocidad y dirección del viento, más una
+bandera de calidad por variable \cite{siata2026meteo}. A cada estación de
+PM$_{2.5}$ se le asignó la estación meteorológica más cercana instalada
+antes de 2018 (12 estaciones distintas); 15 de las 16 quedan a 3~km o menos
+y la restante (MED-SCRI) a 5,8~km. Los registros minutales se agregaron a
+resolución horaria descartando los marcados como dudosos y exigiendo 45
+minutos válidos por hora. En la mayoría de estaciones y variables la
+cobertura válida está entre 88\,\% y 98\,\% de las horas de la ventana; hay
+huecos estructurales en el viento de la estación 206 (32,8\,\%), la presión
+de la 252 (14,6\,\%) y la precipitación de la 229 (74,3\,\%), y la estación
+271 no tiene datos desde agosto de 2024. Estos casos se documentan como
+limitación y se resolverán al construir los predictores.
 
 % =================================================
 % V. INSIGHTS PRELIMINARES
@@ -273,72 +302,82 @@ Registros duplicados & XX \\
 \section{Insights preliminares del análisis exploratorio}
 \label{sec:eda}
 
-El análisis exploratorio de los datos permite evaluar la calidad
-del conjunto de datos y determinar si existen patrones suficientes
-para abordar la pregunta de investigación planteada.
+El análisis exploratorio completo (carga, estructura, cobertura, faltantes,
+duplicados, valores extremos, patrones temporales, diferencias entre
+estaciones, eventos de prevención y meteorología) está en el notebook que
+acompaña este documento. Se resumen los tres hallazgos que más respaldan la
+viabilidad de la pregunta.
 
-En el documento se presentarán únicamente los dos o tres hallazgos
-más importantes obtenidos durante el EDA. El análisis completo,
-incluyendo limpieza de datos, estadísticas descriptivas,
-visualizaciones, valores nulos, duplicados y valores atípicos,
-se encontrará en el notebook entregado junto con este documento.
+\subsection{Cobertura suficiente en las dos fuentes}
 
+Las 16 estaciones seleccionadas alcanzan entre 92,67\,\% y 97,41\,\% de
+cobertura horaria en 2018--2025 y producen 44.399 registros estación-día con
+target disponible; 15 de ellas cuentan con meteorología a 3~km o menos, con
+88--98\,\% de horas válidas en la mayoría de variables. El volumen es
+suficiente para entrenar y evaluar con particiones temporales sin imputar
+datos.
 
-\subsection{Distribución de la variable objetivo}
+\subsection{Estructura temporal marcada}
 
-El primer aspecto analizado corresponde a la distribución de la
-variable objetivo.
+El promedio horario de PM$_{2.5}$ es máximo a las 08:00 (25,79~$\mu$g/m$^3$)
+y mínimo a las 15:00 (13,48~$\mu$g/m$^3$), y marzo tiene el mayor promedio
+mensual (28,05~$\mu$g/m$^3$). Los días con alguna estación en Nivel de
+Prevención se concentran en febrero y marzo (179 de 246,
+Fig.~\ref{fig:eventos}). Las variables de calendario son, por tanto,
+predictores necesarios, y los eventos son muy desiguales entre años
+(Tabla~\ref{tab:eventos}): 412 días-estación en 2020 y solo 4 en 2025, lo
+que obliga a evaluar sobre varios años de prueba.
 
-Aquí se deberá indicar si la variable se encuentra balanceada,
-desbalanceada o si presenta alguna característica importante que
-pueda afectar posteriormente el entrenamiento de los modelos.
+\begin{table}[htbp]
+\centering
+\caption{Días-estación en Nivel de Prevención ($\geq$ 38 $\mu$g/m$^3$) por
+año, 16 estaciones}
+\label{tab:eventos}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Año} & \textbf{Registros} & \textbf{En prevención} & \textbf{Inicios de episodio} \\
+\midrule
+2018 & 5.477 & 140 & 73 \\
+2019 & 5.698 & 255 & 128 \\
+2020 & 5.677 & 412 & 89 \\
+2021 & 5.607 & 26 & 25 \\
+2022 & 5.546 & 59 & 30 \\
+2023 & 5.465 & 36 & 26 \\
+2024 & 5.520 & 158 & 63 \\
+2025 & 5.409 & 4 & 4 \\
+\midrule
+Total & 44.399 & 1.090 & 438 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
+\subsection{Los episodios son locales y la persistencia es un rival exigente}
 
-% =================================================
-% EJEMPLO DE FIGURA
-% =================================================
+En 246 días al menos una estación estuvo en Nivel de Prevención; en 110 de
+ellos (44,7\,\%) fue una sola estación y en 156 (63,4\,\%) fueron tres o menos
+(Fig.~\ref{fig:eventos}). Los episodios son en su mayoría fenómenos
+locales, lo que justifica un pronóstico por estación frente a un aviso
+agregado para todo el valle. Al mismo tiempo, la media diaria de hoy y la de
+mañana tienen correlación 0,805, y la persistencia obtiene un MAE de
+3,58~$\mu$g/m$^3$ y precisión y recall de 0,60 como aviso de prevención con
+umbral 38: es un modelo de referencia difícil de superar. De los 1.090
+días-estación en prevención, 438 (40,2\,\%) son inicios de episodio, el
+momento en que un aviso resulta útil; como el PM$_{2.5}$ suele subir de
+forma gradual, el aporte de un modelo sobre la persistencia deberá
+demostrarse con el mismo número de avisos. Las correlaciones de rangos entre
+la meteorología diaria y el PM$_{2.5}$ del día siguiente son débiles pero
+con el signo esperado (presión $-0{,}16$, lluvia $-0{,}16$, viento
+$-0{,}07$), por lo que cuantificar ese aporte es parte de la pregunta y un
+aporte pequeño sería también un resultado informativo.
 
-% Cuando tengan una gráfica, pueden descomentar este bloque:
-%
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[width=\columnwidth]
-%     {figuras/distribucion_target.png}
-%     \caption{Distribución de la variable objetivo.}
-%     \label{fig:target}
-% \end{figure}
-
-
-\subsection{Relaciones entre variables}
-
-El análisis exploratorio también permitirá identificar posibles
-relaciones entre las variables predictoras y la variable objetivo.
-
-En esta subsección se describirán uno o dos patrones particularmente
-relevantes para justificar la viabilidad del problema planteado.
-
-Por ejemplo, puede analizarse si una determinada variable presenta
-diferencias claras entre las clases del target o si existe una
-correlación aparente entre determinadas variables numéricas.
-
-
-\subsection{Calidad de los datos}
-
-Finalmente, se analizarán aspectos relacionados con la calidad de
-los datos, tales como:
-
-\begin{itemize}
-    \item Valores faltantes.
-    \item Registros duplicados.
-    \item Posibles valores atípicos.
-    \item Variables con poca variabilidad.
-    \item Variables que podrían requerir transformación.
-\end{itemize}
-
-Estos hallazgos serán importantes posteriormente para definir las
-decisiones de preprocesamiento y construcción de los modelos de
-Machine Learning.
-
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\columnwidth]{figuras/extension_eventos.png}
+    \caption{Izquierda: número de estaciones en Nivel de Prevención en cada
+    uno de los 246 días con al menos un evento. Derecha: días de evento por
+    mes, 2018--2025.}
+    \label{fig:eventos}
+\end{figure}
 
 % =================================================
 % REFERENCIAS
