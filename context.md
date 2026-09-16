@@ -203,10 +203,15 @@ aporte meteorológico y el alcance exclusivo de PM2.5. Se incorporó el sustento
 de la Resolución 2254 de 2017 y se retiró del texto la cita a
 `ganan2026spatiotemporal`, cuya fuente primaria no está archivada.
 
-**Alejandro — resto del paper.** Trabajos relacionados, pregunta de
-investigación (sección III sigue siendo plantilla), caracterización de los
-datos e insights preliminares, con las cifras del notebook y de la tabla de
-hechos verificados de este archivo. Tres hallazgos, no más.
+**Alejandro — resto del paper.** Hecho el 2026-09-15: secciones II
+(trabajos relacionados, 257 palabras), III (pregunta), IV (caracterización
+con Tabla I y Fig. 1) y V (tres insights con Tabla II y Fig. 2) en
+`paper/main.tex`; figuras exportadas del notebook a `paper/figuras/`. Se
+añadieron al `.bib` las entradas `siata2026pm25` y `siata2026meteo`; la
+Resolución 2254 se cita con la entrada `minambiente2017resolucion2254` que
+añadió Lina. Gañán 2026 no se resumió en trabajos relacionados por no tener
+PDF verificable y Lina retiró su cita de la introducción; la entrada sigue
+en el `.bib` sin usarse.
 
 **Antes de la Entrega 2 (cualquiera de los dos).** Resolver los huecos
 meteorológicos de [`docs/station_matching.md`](docs/station_matching.md),
@@ -235,3 +240,4 @@ o probabilidad de exceder 38) según
 | 2026-09-14 | Se movió el borrador a `paper/main.tex` con `referencias.bib`, se documentó la puesta en marcha completa y se repartieron los siguientes pasos. |
 | 2026-09-14 | Se copiaron a `paper/referencias.bib` las siete referencias que están en Overleaf; `paper/` queda como registro local del artículo. |
 | 2026-09-14 | Se completó la parte de Lina: introducción y planteamiento alineados con el pronóstico diario por estación; se añadió la Resolución 2254 de 2017 a la bibliografía y se retiró una cita sin fuente primaria trazable. |
+| 2026-09-15 | Se añadió al notebook la distribución y los atípicos del target diario; se redactaron las secciones II–V del paper con cifras del notebook y se verificó la compilación. |
