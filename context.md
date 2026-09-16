@@ -195,24 +195,13 @@ El borrador del paper está en [`paper/main.tex`](paper/main.tex) (movido
 desde `paper_hasta_el_momento.md` sin cambios de contenido). La guía sección
 por sección es [`docs/entrega1_contenido.md`](docs/entrega1_contenido.md).
 
-**Lina — título, introducción y planteamiento del problema.** Revisar las
-secciones que redactó frente a lo que cambió:
-
-- La pregunta ya no es horaria ni "estimación": es pronóstico de la media
-  diaria por estación con un día de anticipación (ver tabla "Proyecto").
-- El planteamiento debe apoyarse en la Resolución 2254 de 2017 (evaluación
-  por punto de monitoreo, declaración por pronóstico, Nivel de Prevención
-  38–55 µg/m³); extracto verificado en
-  [`docs/sources/resolucion_2254_2017_extracto.md`](docs/sources/resolucion_2254_2017_extracto.md).
-- La introducción ya menciona meteorología como predictor; debe quedar claro
-  que el proyecto **cuantifica** cuánto aporta, no lo da por hecho.
-- El párrafo del planteamiento que habla de "concentración horaria" y de
-  "otros contaminantes" debe alinearse: unidad diaria, sin otros
-  contaminantes en el alcance.
-- `paper/referencias.bib` ya contiene las siete referencias de Overleaf.
-  `ganan2026spatiotemporal` (tesis, UNAL 2026) no tiene copia en
-  `docs/sources/papers/`; si se conserva la cita, añadir el PDF o el enlace
-  allí para trazabilidad.
+**Lina — título, introducción y planteamiento del problema: completado.** El
+título se mantuvo porque cumple el límite de 20 palabras. La introducción y el
+planteamiento quedaron alineados con el pronóstico de la media diaria por
+estación a un día, la comparación con persistencia, la cuantificación del
+aporte meteorológico y el alcance exclusivo de PM2.5. Se incorporó el sustento
+de la Resolución 2254 de 2017 y se retiró del texto la cita a
+`ganan2026spatiotemporal`, cuya fuente primaria no está archivada.
 
 **Alejandro — resto del paper.** Trabajos relacionados, pregunta de
 investigación (sección III sigue siendo plantilla), caracterización de los
@@ -245,3 +234,4 @@ o probabilidad de exceder 38) según
 | 2026-09-14 | Prueba exploratoria (lineal, origen móvil 2022–2025): la meteorología observada mejora el MAE ~1 % sobre el historial de PM2.5 y poco el ordenamiento de inicios; la pregunta pasa a cuantificar ese aporte y la comparación con persistencia se fija a igual número de avisos. |
 | 2026-09-14 | Se movió el borrador a `paper/main.tex` con `referencias.bib`, se documentó la puesta en marcha completa y se repartieron los siguientes pasos. |
 | 2026-09-14 | Se copiaron a `paper/referencias.bib` las siete referencias que están en Overleaf; `paper/` queda como registro local del artículo. |
+| 2026-09-14 | Se completó la parte de Lina: introducción y planteamiento alineados con el pronóstico diario por estación; se añadió la Resolución 2254 de 2017 a la bibliografía y se retiró una cita sin fuente primaria trazable. |

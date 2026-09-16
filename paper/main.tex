@@ -62,30 +62,30 @@ Medellín, Colombia
 \label{sec:introduccion}
 
 La contaminación atmosférica constituye un problema ambiental y de salud
-pública debido a la exposición de la población a contaminantes capaces de
-afectar los sistemas respiratorio y cardiovascular. Entre ellos, el material
-particulado fino PM$_{2.5}$ corresponde a partículas con un diámetro
-aerodinámico inferior a 2.5 $\mu$m, cuyo tamaño reducido favorece su
-penetración en las zonas profundas del sistema respiratorio
-\cite{grisales2022relacion}. La exposición a este contaminante ha sido
-relacionada con diferentes afectaciones respiratorias, lo que hace
-especialmente relevante su seguimiento en entornos urbanos con episodios de
-deterioro de la calidad del aire \cite{parra2020analitica}.
+pública. El material particulado fino PM$_{2.5}$ está compuesto por partículas
+con diámetro aerodinámico inferior a 2.5 $\mu$m, cuyo tamaño favorece su
+penetración en zonas profundas del sistema respiratorio. Su exposición se ha
+relacionado con diferentes afectaciones respiratorias, por lo que resulta
+especialmente relevante vigilarlo en entornos urbanos
+\cite{grisales2022relacion,parra2020analitica}.
 
-Esta problemática es de gran importancia en el Valle de Aburrá, pues la
-configuración geográfica del territorio, caracterizada por un valle estrecho
-rodeado de montañas, junto con determinadas condiciones meteorológicas, puede
-dificultar la dispersión de los contaminantes y favorecer su acumulación
-\cite{baena2019red}. Estudios realizados en la región han encontrado evidencia
-de la relación entre las concentraciones de PM$_{2.5}$ y diferentes eventos
-de salud. Parra-Sánchez et al. identificaron asociaciones entre este
-contaminante y las atenciones médicas por infección respiratoria aguda,
-enfermedad pulmonar obstructiva crónica y asma en Medellín
-\cite{parra2020analitica}. De manera similar, Grisales-Romero et al.
-reportaron incrementos significativos de enfermedad respiratoria aguda en
-menores de cinco años y adultos de 65 años o más en municipios del Valle de
-Aburrá ante aumentos en la concentración de PM$_{2.5}$
-\cite{grisales2022relacion}.
+En el Valle de Aburrá, la configuración de un valle estrecho rodeado de
+montañas, junto con determinadas condiciones meteorológicas, puede dificultar
+la dispersión de contaminantes y favorecer su acumulación
+\cite{baena2019red}. Estudios locales han asociado mayores concentraciones de
+PM$_{2.5}$ con atenciones por infección respiratoria aguda, enfermedad
+pulmonar obstructiva crónica y asma, así como con incrementos de enfermedad
+respiratoria aguda en menores de cinco años y adultos de 65 años o más
+\cite{parra2020analitica,grisales2022relacion}.
+
+La anticipación es relevante porque el marco colombiano no se limita a
+constatar la calidad del aire. La Resolución 2254 de 2017 establece que los
+niveles deben evaluarse por punto de monitoreo, fija para PM$_{2.5}$ un Nivel
+de Prevención desde 38 $\mu$g/m$^3$ en 24 horas y permite declarar un nivel
+con anticipación cuando un modelo de pronóstico indique esa condición
+\cite{minambiente2017resolucion2254}. En consecuencia, un pronóstico localizado
+puede aportar información complementaria a la medición observada y resultar
+más pertinente que un único valor agregado para todo el valle.
 
 El comportamiento del PM$_{2.5}$ no depende únicamente de las emisiones, sino
 también de condiciones meteorológicas que intervienen en su transporte,
@@ -95,48 +95,52 @@ concentraciones \cite{kleine2017modeling}. En el contexto local,
 Baena-Salazar et al. desarrollaron una red neuronal artificial para
 pronosticar la concentración diaria de PM$_{2.5}$ en el Valle de Aburrá con
 un día de anticipación a partir de información meteorológica y de calidad del
-aire \cite{baena2019red}. Trabajos más recientes también han explorado el
-pronóstico horario y espaciotemporal de PM$_{2.5}$ en Medellín mediante
-técnicas de aprendizaje de máquina \cite{ganan2026spatiotemporal}. Estos
-antecedentes muestran que la información histórica disponible puede utilizarse
-para estudiar relaciones predictivas entre las condiciones ambientales y las
-concentraciones del contaminante.
+aire \cite{baena2019red}. Estos antecedentes justifican examinar la
+meteorología como fuente de información predictiva, pero no permiten suponer
+que siempre mejore un pronóstico basado en el historial del contaminante.
+
+Este proyecto estudia si los registros públicos de SIATA permiten predecir,
+con un día de anticipación, la concentración media diaria de PM$_{2.5}$ en
+cada estación del Valle de Aburrá. Para ello se plantea una tarea de regresión
+que utiliza el historial del contaminante, variables temporales y meteorología
+observada hasta el día anterior. El desempeño se contrastará con un pronóstico
+de persistencia y se cuantificará por separado el aporte incremental de la
+meteorología, tanto en el error de concentración como en la anticipación de
+días que alcanzan el Nivel de Prevención.
 
 
 
 \subsection{Planteamiento del problema}
 \label{sec:problema}
 
-El monitoreo de la calidad del aire permite conocer las concentraciones de
-PM$_{2.5}$ registradas en distintos puntos del Valle de Aburrá; sin embargo,
-para la gestión preventiva de episodios de contaminación resulta relevante
-contar con herramientas capaces de anticipar su comportamiento. Esta necesidad
-adquiere especial importancia debido a que las concentraciones del contaminante
-están condicionadas tanto por las emisiones como por factores meteorológicos
-que afectan su transporte, dispersión y acumulación
-\cite{baena2019red,kleine2017modeling}. En el contexto local, además, se ha
-documentado la relación entre mayores concentraciones de PM$_{2.5}$ y eventos
-de salud respiratoria, particularmente en grupos de población vulnerables
-\cite{parra2020analitica,grisales2022relacion}.
+El monitoreo de la calidad del aire permite conocer las concentraciones ya
+registradas en los distintos puntos del Valle de Aburrá, pero la gestión
+preventiva requiere información sobre su evolución probable. Esta brecha es
+especialmente relevante porque la Resolución 2254 de 2017 exige evaluar los
+niveles de concentración por punto de monitoreo y admite su declaración
+anticipada mediante pronóstico \cite{minambiente2017resolucion2254}. El
+proyecto aborda esa necesidad como un ejercicio predictivo por estación; no
+pretende sustituir los procedimientos oficiales de alerta.
 
-Por tanto, el problema abordado en este proyecto consiste en determinar si es
-posible estimar la concentración horaria de PM$_{2.5}$ en estaciones del
-Valle de Aburrá a partir de información ambiental disponible. Para ello se
-utilizarán registros históricos de la red SIATA, considerando como posibles
-variables predictoras información meteorológica, variables temporales y
-mediciones de otros contaminantes atmosféricos que puedan integrarse de manera
-consistente con los registros de PM$_{2.5}$. La disponibilidad de estas
-mediciones hace posible formular el problema como una tarea de aprendizaje
-supervisado de regresión, cuya variable objetivo será la concentración horaria
-de PM$_{2.5}$ expresada en $\mu$g/m$^3$.
+En concreto, se busca determinar si es posible pronosticar la media diaria de
+PM$_{2.5}$ del día siguiente en cada estación a partir de información
+disponible hasta el final del día actual. La variable objetivo,
+\texttt{pm25\_mean\_d\_plus\_1}, es una concentración numérica continua
+expresada en $\mu$g/m$^3$, por lo que el problema se formula como aprendizaje
+supervisado de regresión. Los predictores se limitan al historial de
+PM$_{2.5}$, variables temporales y mediciones meteorológicas observadas de la
+estación SIATA asignada; otros contaminantes quedan fuera del alcance.
 
-Un modelo con capacidad para anticipar estas concentraciones podría complementar
-los procesos actuales de monitoreo al proporcionar información previa sobre el
-comportamiento esperado del contaminante. Esto podría ser útil para apoyar la
-toma de decisiones de las autoridades ambientales y fortalecer mecanismos de
-prevención y alerta frente a episodios de deterioro de la calidad del aire,
-con especial relevancia para poblaciones susceptibles a sus efectos
-respiratorios.
+El desempeño se comparará con la persistencia, es decir, usar la media del día
+actual como pronóstico del siguiente. Además del error de concentración, se
+evaluará de forma derivada la anticipación de días con media igual o superior
+a 38 $\mu$g/m$^3$, umbral inferior del Nivel de Prevención, prestando atención
+a los inicios de episodio y comparando métodos con igual número de avisos. Se
+contrastarán modelos con y sin variables meteorológicas para medir cuánto
+aportan estas últimas, sin asumir de antemano que producirán una mejora. Los
+resultados podrían servir como evidencia reproducible para autoridades
+ambientales, investigadores y población susceptible sobre el alcance y las
+limitaciones de un pronóstico diario localizado.
 
 % =================================================
 % II. TRABAJOS RELACIONADOS
