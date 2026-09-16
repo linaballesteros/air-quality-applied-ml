@@ -7,7 +7,11 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[spanish,es-noquoting]{babel}
+\usepackage[spanish,es-noquoting,es-nodecimaldot]{babel}
+\addto\captionsspanish{%
+  \renewcommand{\tablename}{Tabla}%
+  \renewcommand{\figurename}{Fig.}%
+}
 
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
@@ -63,7 +67,7 @@ Medellín, Colombia
 
 La contaminación atmosférica constituye un problema ambiental y de salud
 pública. El material particulado fino PM$_{2.5}$ está compuesto por partículas
-con diámetro aerodinámico inferior a 2.5 $\mu$m, cuyo tamaño favorece su
+con diámetro aerodinámico inferior a 2,5~$\mu$m, cuyo tamaño favorece su
 penetración en zonas profundas del sistema respiratorio. Su exposición se ha
 relacionado con diferentes afectaciones respiratorias, por lo que resulta
 especialmente relevante vigilarlo en entornos urbanos
@@ -81,7 +85,7 @@ respiratoria aguda en menores de cinco años y adultos de 65 años o más
 La anticipación es relevante porque el marco colombiano no se limita a
 constatar la calidad del aire. La Resolución 2254 de 2017 establece que los
 niveles deben evaluarse por punto de monitoreo, fija para PM$_{2.5}$ un Nivel
-de Prevención desde 38 $\mu$g/m$^3$ en 24 horas y permite declarar un nivel
+de Prevención desde 38~$\mu$g/m$^3$ en 24 horas y permite declarar un nivel
 con anticipación cuando un modelo de pronóstico indique esa condición
 \cite{minambiente2017resolucion2254}. En consecuencia, un pronóstico localizado
 puede aportar información complementaria a la medición observada y resultar
@@ -95,18 +99,14 @@ concentraciones \cite{kleine2017modeling}. En el contexto local,
 Baena-Salazar et al. desarrollaron una red neuronal artificial para
 pronosticar la concentración diaria de PM$_{2.5}$ en el Valle de Aburrá con
 un día de anticipación a partir de información meteorológica y de calidad del
-aire \cite{baena2019red}. Estos antecedentes justifican examinar la
-meteorología como fuente de información predictiva, pero no permiten suponer
-que siempre mejore un pronóstico basado en el historial del contaminante.
+aire \cite{baena2019red}; en ese modelo, el PM$_{2.5}$ del día anterior fue
+la entrada de mayor peso, lo que deja abierta la pregunta de cuánto añade la
+meteorología al historial del propio contaminante.
 
-Este proyecto estudia si los registros públicos de SIATA permiten predecir,
-con un día de anticipación, la concentración media diaria de PM$_{2.5}$ en
-cada estación del Valle de Aburrá. Para ello se plantea una tarea de regresión
-que utiliza el historial del contaminante, variables temporales y meteorología
-observada hasta el día anterior. El desempeño se contrastará con un pronóstico
-de persistencia y se cuantificará por separado el aporte incremental de la
-meteorología, tanto en el error de concentración como en la anticipación de
-días que alcanzan el Nivel de Prevención.
+Este proyecto estudia si los registros públicos de SIATA permiten
+pronosticar, con un día de anticipación, la concentración media diaria de
+PM$_{2.5}$ en cada estación del Valle de Aburrá, y cuánto aporta a ese
+pronóstico la meteorología observada.
 
 
 
@@ -122,9 +122,9 @@ anticipada mediante pronóstico \cite{minambiente2017resolucion2254}. El
 proyecto aborda esa necesidad como un ejercicio predictivo por estación; no
 pretende sustituir los procedimientos oficiales de alerta.
 
-En concreto, se busca determinar si es posible pronosticar la media diaria de
-PM$_{2.5}$ del día siguiente en cada estación a partir de información
-disponible hasta el final del día actual. La variable objetivo,
+Se busca pronosticar la media diaria de PM$_{2.5}$ del día siguiente en
+cada estación a partir de información disponible hasta el final del día
+actual. La variable objetivo,
 \texttt{pm25\_mean\_d\_plus\_1}, es una concentración numérica continua
 expresada en $\mu$g/m$^3$, por lo que el problema se formula como aprendizaje
 supervisado de regresión. Los predictores se limitan al historial de
@@ -134,10 +134,10 @@ estación SIATA asignada; otros contaminantes quedan fuera del alcance.
 El desempeño se comparará con la persistencia, es decir, usar la media del día
 actual como pronóstico del siguiente. Además del error de concentración, se
 evaluará de forma derivada la anticipación de días con media igual o superior
-a 38 $\mu$g/m$^3$, umbral inferior del Nivel de Prevención, prestando atención
-a los inicios de episodio y comparando métodos con igual número de avisos. Se
-contrastarán modelos con y sin variables meteorológicas para medir cuánto
-aportan estas últimas, sin asumir de antemano que producirán una mejora. Los
+a 38~$\mu$g/m$^3$, umbral inferior del Nivel de Prevención, prestando atención
+a los inicios de episodio y comparando métodos con igual número de avisos,
+con umbrales fijados fuera del periodo de prueba. Se contrastarán modelos con
+y sin variables meteorológicas para medir cuánto aportan estas últimas. Los
 resultados podrían servir como evidencia reproducible para autoridades
 ambientales, investigadores y población susceptible sobre el alcance y las
 limitaciones de un pronóstico diario localizado.
@@ -162,20 +162,20 @@ Kleine Deters et al.\ modelaron el PM$_{2.5}$ diario de dos sitios de Quito
 con seis años de viento y precipitación \cite{kleine2017modeling}: árboles
 potenciados y máquinas de soporte vectorial separaron con alta confiabilidad
 los niveles bajos de los altos, y la regresión fue mejor bajo condiciones
-meteorológicas extremas. Su enfoque es contemporáneo, no un pronóstico.
+meteorológicas extremas. Su modelo estima el PM$_{2.5}$ a partir de las
+condiciones del mismo día, por lo que no constituye un pronóstico a un día.
 
-Parra-Sánchez et al.\ combinaron meteorología y PM$_{2.5}$ de SIATA
-(2014--2016) con registros de atención en salud de Medellín; con promedios
-diarios que exigen 75\,\% de datos válidos, encontraron asociaciones entre
-el PM$_{2.5}$ y las atenciones por IRA, EPOC y asma con rezagos de 0 a 7
-días \cite{parra2020analitica}.
+Parra-Sánchez et al.\ cruzaron meteorología y PM$_{2.5}$ de SIATA
+(2014--2016) con atenciones en salud de Medellín, usando promedios diarios
+con al menos 75\,\% de datos válidos, y hallaron asociaciones con IRA, EPOC
+y asma con rezagos de 0 a 7 días \cite{parra2020analitica}.
 
-Estos trabajos muestran que el pronóstico diario con meteorología es
-factible en el Valle de Aburrá y que el nivel del día anterior es la señal
-dominante. Queda abierta la evaluación por estación, sobre varios años y con
-datos abiertos actualizados, comparando contra la persistencia y
-cuantificando cuánto aporta la meteorología observada sobre el historial del
-contaminante; ese es el espacio de este proyecto.
+El pronóstico diario con meteorología es, entonces, factible en el Valle de
+Aburrá, y el nivel del día anterior es la señal dominante. Los trabajos
+locales usan pocas estaciones y periodos cortos, no reportan comparación con
+la persistencia ni separan el aporte de la meteorología del historial del
+contaminante. Este proyecto evalúa ambas cosas por estación, sobre ocho años
+de datos abiertos.
 
 % =================================================
 % III. PREGUNTA DE INVESTIGACIÓN
@@ -200,8 +200,7 @@ continua, en $\mu$g/m$^3$. La comparación con el umbral de 38~$\mu$g/m$^3$
 del Nivel de Prevención es una lectura derivada de esa predicción numérica,
 no un segundo problema de clasificación; la referencia de desempeño y la
 regla de comparación a igual número de avisos se definieron en la
-Sección~\ref{sec:problema}. La pregunta es respondible con los datos
-caracterizados a continuación.
+Sección~\ref{sec:problema}.
 
 % =================================================
 % IV. CARACTERIZACIÓN DE LOS DATOS
@@ -288,8 +287,12 @@ minutos válidos por hora. En la mayoría de estaciones y variables la
 cobertura válida está entre 88\,\% y 98\,\% de las horas de la ventana; hay
 huecos estructurales en el viento de la estación 206 (32,8\,\%), la presión
 de la 252 (14,6\,\%) y la precipitación de la 229 (74,3\,\%), y la estación
-271 no tiene datos desde agosto de 2024. Estos casos se documentan como
-limitación y se resolverán al construir los predictores.
+271 no tiene datos desde agosto de 2024. Para estos casos se decidirá,
+por variable y estación, entre usar una estación meteorológica alternativa
+del mismo sitio (la 397 opera junto a la 206 desde 2019), tomar la variable
+de una estación vecina cuando es espacialmente suave, como la presión, o
+excluir la combinación con cobertura insuficiente; en ningún caso se imputará
+con información del periodo de prueba.
 
 % =================================================
 % V. INSIGHTS PRELIMINARES
@@ -312,9 +315,9 @@ viabilidad de la pregunta.
 Las 16 estaciones seleccionadas alcanzan entre 92,67\,\% y 97,41\,\% de
 cobertura horaria en 2018--2025 y producen 44.399 registros estación-día con
 target disponible; 15 de ellas cuentan con meteorología a 3~km o menos, con
-88--98\,\% de horas válidas en la mayoría de variables. El volumen es
-suficiente para entrenar y evaluar con particiones temporales sin imputar
-datos.
+88--98\,\% de horas válidas en la mayoría de variables. El volumen de
+PM$_{2.5}$ permite particiones temporales por año; la estrategia frente a los
+faltantes meteorológicos es la descrita en la Sección~\ref{sec:datos}.
 
 \subsection{Estructura temporal marcada}
 
@@ -322,10 +325,10 @@ El promedio horario de PM$_{2.5}$ es máximo a las 08:00 (25,79~$\mu$g/m$^3$)
 y mínimo a las 15:00 (13,48~$\mu$g/m$^3$), y marzo tiene el mayor promedio
 mensual (28,05~$\mu$g/m$^3$). Los días con alguna estación en Nivel de
 Prevención se concentran en febrero y marzo (179 de 246,
-Fig.~\ref{fig:eventos}). Las variables de calendario son, por tanto,
-predictores necesarios, y los eventos son muy desiguales entre años
-(Tabla~\ref{tab:eventos}): 412 días-estación en 2020 y solo 4 en 2025, lo
-que obliga a evaluar sobre varios años de prueba.
+Fig.~\ref{fig:eventos}). Estos patrones justifican evaluar variables de
+calendario como predictores. Los eventos son, además, muy desiguales entre
+años (Tabla~\ref{tab:eventos}): 412 días-estación en 2020 y solo 4 en 2025,
+lo que obliga a evaluar sobre varios años de prueba.
 
 \begin{table}[htbp]
 \centering
@@ -350,7 +353,7 @@ Total & 44.399 & 1.090 & 438 \\
 \end{tabular}
 \end{table}
 
-\subsection{Los episodios son locales y la persistencia es un rival exigente}
+\subsection{Los episodios son locales y la persistencia es una línea base difícil de superar}
 
 En 246 días al menos una estación estuvo en Nivel de Prevención; en 110 de
 ellos (44,7\,\%) fue una sola estación y en 156 (63,4\,\%) fueron tres o menos
@@ -359,15 +362,15 @@ locales, lo que justifica un pronóstico por estación frente a un aviso
 agregado para todo el valle. Al mismo tiempo, la media diaria de hoy y la de
 mañana tienen correlación 0,805, y la persistencia obtiene un MAE de
 3,58~$\mu$g/m$^3$ y precisión y recall de 0,60 como aviso de prevención con
-umbral 38: es un modelo de referencia difícil de superar. De los 1.090
+umbral 38: es una línea base competitiva. De los 1.090
 días-estación en prevención, 438 (40,2\,\%) son inicios de episodio, el
 momento en que un aviso resulta útil; como el PM$_{2.5}$ suele subir de
 forma gradual, el aporte de un modelo sobre la persistencia deberá
 demostrarse con el mismo número de avisos. Las correlaciones de rangos entre
 la meteorología diaria y el PM$_{2.5}$ del día siguiente son débiles pero
 con el signo esperado (presión $-0{,}16$, lluvia $-0{,}16$, viento
-$-0{,}07$), por lo que cuantificar ese aporte es parte de la pregunta y un
-aporte pequeño sería también un resultado informativo.
+$-0{,}07$). Estas asociaciones débiles hacen necesario evaluar empíricamente
+si la meteorología mejora el desempeño frente a la persistencia.
 
 \begin{figure}[htbp]
     \centering

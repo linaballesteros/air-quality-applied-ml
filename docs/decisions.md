@@ -36,6 +36,10 @@
   `context.md` antes de citarlos.
 - Definir la fecha de corte de entrenamiento y validación dentro de cada
   origen móvil.
+- El umbral de aviso que iguala el número de avisos entre modelo y
+  persistencia se calibra únicamente con train/validación y se congela antes
+  de tocar el periodo de prueba; ajustarlo sobre el test sería fuga de
+  información (observación de la revisión externa del 2026-09-16).
 - Filtrar las 7 horas con presión de 0 hPa que la bandera de calidad no marcó.
 - Evaluar sensibilidad a ceros, valores extremos, definición de media diaria
   (calendario vs. máximo de media móvil) y exclusión de BEL-FEVE y MED-SCRI,
