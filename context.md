@@ -217,10 +217,10 @@ en el `.bib` sin usarse.
 completo compila con IEEEtran en 4 páginas con referencias y todas las
 citas resuelven. La sección III se recortó para no repetir lo que el
 planteamiento ya establece (target, tipo de problema, persistencia, igual
-número de avisos). Pendiente final para la entrega: una lectura de corrido
-del PDF por ambos, subir a Overleaf `main.tex`, `referencias.bib` y
-`figuras/`, y verificar que el repositorio público enlazado contenga el
-notebook ejecutado.
+número de avisos). Overleaf ya está actualizado y la sección V enlaza el
+repositorio en un pie de página. El repositorio se hará público el día
+anterior a la entrega (19 de septiembre); hasta entonces el enlace del paper
+no abre para terceros.
 
 **Antes de la Entrega 2 (cualquiera de los dos).** Resolver los huecos
 meteorológicos de [`docs/station_matching.md`](docs/station_matching.md),
