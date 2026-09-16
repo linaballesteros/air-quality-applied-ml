@@ -2,11 +2,13 @@
 
 - `main.tex`: borrador IEEEtran (antes `paper_hasta_el_momento.md`, movido sin
   cambios de contenido el 2026-09-14).
-- `referencias.bib`: siete entradas bibliográficas (añadidas el 2026-09-14),
-  copia de las que están en Overleaf. `main.tex` cita hoy cinco de ellas
-  (`baena2019red`, `parra2020analitica`, `grisales2022relacion`,
-  `kleine2017modeling`, `ganan2026spatiotemporal`); `gomez2017contaminacion`
-  y `joharestani2019pm25` están disponibles para trabajos relacionados.
+- `referencias.bib`: diez entradas. `main.tex` cita siete (`grisales2022relacion`,
+  `parra2020analitica`, `baena2019red`, `minambiente2017resolucion2254`,
+  `kleine2017modeling`, `siata2026pm25`, `siata2026meteo`); quedan sin usar
+  `ganan2026spatiotemporal` (cita retirada por no tener fuente primaria
+  archivada), `gomez2017contaminacion` y `joharestani2019pm25`.
+- `figuras/`: PNG exportados del notebook ejecutado (`distribucion_target`,
+  `extension_eventos`).
 
 Este directorio es el registro local de lo que hay en Overleaf: cuando se
 cambie algo allí, copiarlo aquí en el mismo commit.

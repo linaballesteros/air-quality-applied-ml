@@ -194,18 +194,14 @@ Nivel de Prevención?}
 \end{quote}
 
 La pregunta plantea un problema de \textbf{aprendizaje supervisado de
-regresión}: la variable objetivo es la concentración media diaria de
-PM$_{2.5}$ del día siguiente, numérica y continua, en $\mu$g/m$^3$. La
-Resolución 2254 de 2017 fija el Nivel de Prevención para PM$_{2.5}$ en una
-media de 24 horas de 38 a 55~$\mu$g/m$^3$, exige evaluarlo por punto de
-monitoreo y admite declararlo por pronóstico \cite{minambiente2017resolucion2254}.
-Por ello, además del error de la predicción numérica, se evaluará si la
-predicción cae del lado correcto de ese umbral; esto es una lectura derivada
-de la regresión, no un segundo problema de clasificación. El pronóstico de
-persistencia (repetir la media de hoy como pronóstico de mañana) es el
-modelo de referencia que cualquier modelo deberá superar, y la comparación
-en los inicios de episodio se hará con el mismo número de avisos, porque
-el PM$_{2.5}$ suele subir gradualmente antes de alcanzar el umbral.
+regresión}: la variable objetivo, \texttt{pm25\_mean\_d\_plus\_1}, es la
+concentración media diaria de PM$_{2.5}$ del día siguiente, numérica y
+continua, en $\mu$g/m$^3$. La comparación con el umbral de 38~$\mu$g/m$^3$
+del Nivel de Prevención es una lectura derivada de esa predicción numérica,
+no un segundo problema de clasificación; la referencia de desempeño y la
+regla de comparación a igual número de avisos se definieron en la
+Sección~\ref{sec:problema}. La pregunta es respondible con los datos
+caracterizados a continuación.
 
 % =================================================
 % IV. CARACTERIZACIÓN DE LOS DATOS

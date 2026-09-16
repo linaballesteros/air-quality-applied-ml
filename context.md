@@ -213,6 +213,15 @@ añadió Lina. Gañán 2026 no se resumió en trabajos relacionados por no tener
 PDF verificable y Lina retiró su cita de la introducción; la entrada sigue
 en el `.bib` sin usarse.
 
+**Integración (2026-09-16).** Se fusionaron ambas partes: el borrador
+completo compila con IEEEtran en 4 páginas con referencias y todas las
+citas resuelven. La sección III se recortó para no repetir lo que el
+planteamiento ya establece (target, tipo de problema, persistencia, igual
+número de avisos). Pendiente final para la entrega: una lectura de corrido
+del PDF por ambos, subir a Overleaf `main.tex`, `referencias.bib` y
+`figuras/`, y verificar que el repositorio público enlazado contenga el
+notebook ejecutado.
+
 **Antes de la Entrega 2 (cualquiera de los dos).** Resolver los huecos
 meteorológicos de [`docs/station_matching.md`](docs/station_matching.md),
 filtrar las 7 presiones de 0 hPa y fijar la regla de aviso (umbral calibrado
@@ -241,3 +250,4 @@ o probabilidad de exceder 38) según
 | 2026-09-14 | Se copiaron a `paper/referencias.bib` las siete referencias que están en Overleaf; `paper/` queda como registro local del artículo. |
 | 2026-09-14 | Se completó la parte de Lina: introducción y planteamiento alineados con el pronóstico diario por estación; se añadió la Resolución 2254 de 2017 a la bibliografía y se retiró una cita sin fuente primaria trazable. |
 | 2026-09-15 | Se añadió al notebook la distribución y los atípicos del target diario; se redactaron las secciones II–V del paper con cifras del notebook y se verificó la compilación. |
+| 2026-09-16 | Se integraron los cambios de Lina (introducción y planteamiento) con las secciones II–V; se recortó la sección III, se unificó la cita de la Resolución 2254 y se verificó la compilación completa. |
