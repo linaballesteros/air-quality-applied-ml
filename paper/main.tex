@@ -41,7 +41,6 @@
 
 \title{Predicción de concentraciones de PM2.5 en el Valle de Aburrá mediante aprendizaje automático con datos de la red SIATA}
 
-% Reemplazar con sus nombres completos
 \author{
 \IEEEauthorblockN{
 Lina Sofía Ballesteros Merchán,
@@ -227,7 +226,10 @@ por estación-hora (1.122.048 registros), y luego se agregaron por estación y
 día calendario, calculando la media diaria solo cuando el día tiene al menos
 18 horas válidas. Resultan 46.752 combinaciones estación-día, de las cuales
 1.600 (3,4\,\%) no reciben media por falta de horas y 44.399 cuentan con la
-media del día y con la del día siguiente. No se imputaron faltantes ni se
+media del día y con la del día siguiente. Los 753 registros restantes tienen
+media propia válida, pero su día siguiente no alcanza las 18 horas: quince
+corresponden al 31 de diciembre de 2025, en el borde de la ventana, y 738 a
+días internos sin cobertura suficiente. No se imputaron faltantes ni se
 eliminaron valores extremos.
 
 La \textbf{variable objetivo} es \texttt{pm25\_mean\_d\_plus\_1}: la

@@ -11,12 +11,15 @@
   para completar el EDA de la Entrega 1.
 - [`entrega1_contenido.md`](entrega1_contenido.md): correspondencia entre los
   requisitos oficiales y el contenido concreto del proyecto.
+- [`guion_presentacion.md`](guion_presentacion.md): guion de la presentación,
+  preguntas frecuentes y chuleta de cifras.
 - [`station_matching.md`](station_matching.md): asignación verificada de una
   estación meteorológica a cada estación PM2.5.
 - [`sources/resolucion_2254_2017_extracto.md`](sources/resolucion_2254_2017_extracto.md): umbrales y artículos de la norma de calidad del aire usados en el proyecto.
 - [`sources/shortpaper_entrega1_requisitos.md`](sources/shortpaper_entrega1_requisitos.md): conversión de la guía oficial de la Entrega 1.
 - [`sources/siata_informe_operacion_agosto_2019.md`](sources/siata_informe_operacion_agosto_2019.md): informe oficial usado para verificar la unidad, el carácter horario y varios códigos de estación.
-- [`sources/papers/`](sources/papers/): conversiones Markdown de los PDFs académicos originales ubicados en `../fuentes/`.
+- [`sources/papers/`](sources/papers/): conversiones Markdown para consulta de
+  los artículos académicos usados en el proyecto.
 
 Las conversiones facilitan la consulta y búsqueda. Para citar en el paper,
 usar siempre los datos bibliográficos del PDF original o de una fuente

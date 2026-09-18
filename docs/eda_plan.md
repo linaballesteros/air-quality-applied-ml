@@ -16,8 +16,6 @@ modelado ni decisiones de imputación anticipadas.
 6. **Target.** La fuente no trae una columna target única. Se transforma a
    formato largo, se agrega por estación-día y se deriva
    `pm25_mean_d_plus_1`: media diaria de la misma estación al día siguiente.
-   (Actualizado el 2026-09-14; el notebook actual todavía construye el target
-   horario anterior.)
 7. **Faltantes.** Hay 1.879.277 mediciones no nulas y 2.024.491 celdas vacías
    sobre la unión de 33 estaciones. El segundo valor mezcla ausencia de una
    estación fuera de su vida útil con fallas durante operación, por lo que no
@@ -39,8 +37,8 @@ modelado ni decisiones de imputación anticipadas.
 14. **Rango seleccionado.** 2018–2025 comprende ocho años completos y 16
     estaciones con cobertura ≥90%.
 15. **Variables de entrada actuales.** Mediciones de PM2.5 disponibles hasta
-    la hora `t`, `station_id` y variables temporales. Otras fuentes quedan
-    fuera del alcance actual.
+    el final del día `d`, `station_id` y variables temporales. Otras fuentes
+    quedan fuera del alcance actual.
 
 ## Secuencia exacta del EDA
 
@@ -91,16 +89,19 @@ modelado ni decisiones de imputación anticipadas.
 - No afirmar picos estacionales sin intervalos y cobertura suficiente.
 
 **Salida:** evidencia para justificar variables temporales y rezagos del
-forecasting `t+1` ya definido.
+pronóstico diario ya definido.
 
 ### 6. Construir el target sin fuga temporal
 
 - Ordenar por `station_id` y `fecha_hora`.
-- Crear `pm25_t_plus_1` con el valor de la hora siguiente dentro de cada
-  estación.
-- Verificar que entre predictor y target haya exactamente una hora.
-- Excluir del modelado filas sin target, documentando cuántas se pierden.
-- Reservar el periodo de prueba al final del tiempo; no usar partición aleatoria.
+- Agregar la media diaria por estación y día calendario, exigiendo al menos 18
+  horas válidas.
+- Crear `pm25_mean_d_plus_1` con la media diaria del día calendario siguiente
+  dentro de cada estación.
+- Verificar que entre predictor y target haya exactamente un día calendario.
+- Excluir del modelado filas sin media de hoy o sin target, documentando
+  cuántas se pierden.
+- Reservar el periodo de prueba por origen móvil; no usar partición aleatoria.
 
 **Salida:** definición empírica e inequívoca del problema de regresión.
 

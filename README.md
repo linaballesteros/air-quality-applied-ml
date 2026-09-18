@@ -42,7 +42,7 @@ Ejecutar en este orden desde la raíz del repositorio (tiempos aproximados):
 python scripts/download_pm25_dataset.py --all   # 162 archivos, 15 MB, ~1 min
 python scripts/download_meteo_dataset.py        # 1.131 archivos, 3 GB, ~10 min
 python scripts/build_meteo_hourly.py            # tabla horaria en data/interim, ~2 min
-python -m unittest discover -q                  # 13 pruebas
+python -m unittest discover -q                  # 11 pruebas
 jupyter lab                                     # abrir notebooks/01_eda_pm25.ipynb
 ```
 

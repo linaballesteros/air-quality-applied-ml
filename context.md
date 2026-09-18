@@ -148,8 +148,9 @@ carácter local de la mayoría de eventos respalda el pronóstico por estación.
 
 Para la Entrega 1 se usa 2018–2025: contiene ocho años completos y 16
 estaciones con cobertura entre 92,67% y 97,41%. La tabla larga contiene
-1.122.048 combinaciones estación-hora y 1.050.341 pares con medición actual y
-target disponibles.
+1.122.048 combinaciones estación-hora; agregada por día deja 46.752
+combinaciones estación-día, 45.152 con media diaria válida y 44.399 con media
+de hoy y target de mañana disponibles.
 
 ### Alcance de datos
 
@@ -171,19 +172,21 @@ alcance.
 - Loader meteorológico: [`src/data/load_meteo.py`](src/data/load_meteo.py) y
   [`scripts/build_meteo_hourly.py`](scripts/build_meteo_hourly.py).
 - Respuestas y plan de EDA: [`docs/eda_plan.md`](docs/eda_plan.md).
+- Guion de presentación: [`docs/guion_presentacion.md`](docs/guion_presentacion.md).
 
 ## Estado de la parte de código — Entrega 1
 
 Completada y alineada con la formulación diaria. El notebook
 [`notebooks/01_eda_pm25.ipynb`](notebooks/01_eda_pm25.ipynb) está ejecutado
-sin errores (47 celdas, ejecutado con `.venv`) y cubre: fuente, estructura,
+sin errores (51 celdas, ejecutado con `.venv`) y cubre: fuente, estructura,
 cobertura, ventana, target diario `pm25_mean_d_plus_1`, limpieza,
 distribución, patrones temporales, diferencias entre estaciones, persistencia
 diaria y días en Nivel de Prevención (por año, inicios de episodio, extensión
 espacial), meteorología asignada (cruce, cobertura válida por variable,
 descriptivos, correlaciones diarias y un episodio de ejemplo), hallazgos,
 limitaciones e implicaciones. Todas las cifras de la tabla de hechos
-verificados de este archivo se reproducen en el notebook.
+verificados de este archivo se reproducen en el notebook. La sección 16
+regenera las figuras del paper en `paper/figuras/`.
 
 Pendiente antes de modelar: resolver los huecos meteorológicos documentados
 en [`docs/station_matching.md`](docs/station_matching.md) y validar las
@@ -252,3 +255,4 @@ o probabilidad de exceder 38) según
 | 2026-09-15 | Se añadió al notebook la distribución y los atípicos del target diario; se redactaron las secciones II–V del paper con cifras del notebook y se verificó la compilación. |
 | 2026-09-16 | Se integraron los cambios de Lina (introducción y planteamiento) con las secciones II–V; se recortó la sección III, se unificó la cita de la Resolución 2254 y se verificó la compilación completa. |
 | 2026-09-16 | Revisión externa del borrador: se suavizaron afirmaciones categóricas del EDA, se explicó el manejo de faltantes meteorológicos, se eliminó redundancia entre introducción, planteamiento y pregunta, y se corrigió la tipografía (decimal en modo matemático, "Tabla"/"Fig." en captions). La pregunta de investigación no cambió. |
+| 2026-09-17 | Revisión previa a la entrega: el notebook exporta las figuras del paper de forma reproducible (sección 16, PNG idénticos a los versionados), el paper explica los 753 registros con media sin target, se corrigieron cifras desactualizadas en `context.md`, `eda_plan.md`, `methodology_notes.md` y `docs/README.md`, el README reporta 11 pruebas y `requirements.txt` incluye `numpy`. |
