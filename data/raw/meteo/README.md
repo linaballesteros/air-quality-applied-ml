@@ -27,4 +27,4 @@ python scripts/download_meteo_dataset.py
 ```
 
 El script valida el MD5 publicado por Dataverse y no repite descargas
-correctas. Los archivos están excluidos de Git. No editar los datos crudos.
+correctas.

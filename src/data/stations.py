@@ -2,13 +2,13 @@
 
 Las distancias se calcularon el 2026-09-14 con las coordenadas oficiales de
 los datasets *Información de la Red de Calidad del Aire* (doi:10.83041/XTI3FH)
-e *Información de la Red Meteorológica* (doi:10.83041/NXHIKW). La
-justificación de cada asignación está en ``docs/station_matching.md``.
+e *Información de la Red Meteorológica* (doi:10.83041/NXHIKW). El notebook
+reproduce la tabla de asignaciones, distancias y cobertura.
 """
 
 from __future__ import annotations
 
-# Ventana analítica vigente (ver context.md).
+# Ventana analítica del proyecto.
 ANALYSIS_START = "2018-01"
 ANALYSIS_END = "2025-12"
 

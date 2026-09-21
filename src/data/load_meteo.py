@@ -126,7 +126,7 @@ def mask_doubtful(frame: pd.DataFrame) -> pd.DataFrame:
 def aggregate_hourly(frame: pd.DataFrame, *, min_minutes: int = 45) -> pd.DataFrame:
     """Agrega registros minutales a una fila por estación y hora.
 
-    La hora ``HH:00`` resume los minutos ``HH:00``–``HH:59``. Cada variable
+    La hora ``HH:00`` resume los minutos ``HH:00``-``HH:59``. Cada variable
     se agrega solo si tiene al menos ``min_minutes`` minutos válidos:
     medias de ``t``, ``h``, ``pr`` y ``vv``; máximo de ``vv_max``; suma de
     ``p`` sin reescalar; dirección resultante de ``dv`` ponderada por ``vv``.
