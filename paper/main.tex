@@ -14,8 +14,19 @@
 }
 
 \usepackage{cite}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath}
 \usepackage{graphicx}
+
+% Tipografía: EB Garamond para texto y matemáticas, en vez de la Times que
+% IEEEtran usa por defecto; se lee mejor en pantalla. El orden lo indica la
+% documentación de ebgaramond-maths: primero newtxmath, después
+% ebgaramond-maths (que ya carga ebgaramond con estas opciones).
+% - lining, tabular: cifras de altura uniforme y alineadas en las tablas.
+% - scale=1.03: EB Garamond es pequeña; este ajuste la acerca al cuerpo de
+%   la Times original. Si se quiere volver a la tipografía IEEE de fábrica,
+%   basta con comentar las dos líneas siguientes y devolver amssymb arriba.
+\usepackage[cmintegrals,cmbraces]{newtxmath}
+\usepackage[lining,tabular,scale=1.03]{ebgaramond-maths}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{textcomp}
@@ -95,10 +106,10 @@ también de condiciones meteorológicas que intervienen en su transporte,
 dispersión y acumulación. Variables como la temperatura, la humedad, la
 precipitación y el viento han sido utilizadas para estudiar y predecir sus
 concentraciones \cite{kleine2017modeling}. En el contexto local,
-Baena-Salazar et al. desarrollaron una red neuronal artificial para
-pronosticar la concentración diaria de PM$_{2.5}$ en el Valle de Aburrá con
-un día de anticipación a partir de información meteorológica y de calidad del
-aire \cite{baena2019red}; en ese modelo, el PM$_{2.5}$ del día anterior fue
+Baena-Salazar et al.\ \cite{baena2019red} desarrollaron una red neuronal
+artificial para pronosticar la concentración diaria de PM$_{2.5}$ en el Valle
+de Aburrá con un día de anticipación a partir de información meteorológica y
+de calidad del aire; en ese modelo, el PM$_{2.5}$ del día anterior fue
 la entrada de mayor peso, lo que deja abierta la pregunta de cuánto añade la
 meteorología al historial del propio contaminante.
 
@@ -106,7 +117,6 @@ Este proyecto estudia si los registros públicos de SIATA permiten
 pronosticar, con un día de anticipación, la concentración media diaria de
 PM$_{2.5}$ en cada estación del Valle de Aburrá, y cuánto aporta a ese
 pronóstico la meteorología observada.
-
 
 
 \subsection{Planteamiento del problema}
@@ -148,26 +158,27 @@ limitaciones de un pronóstico diario localizado.
 \section{Trabajos relacionados}
 \label{sec:trabajos}
 
-Baena-Salazar et al.\ entrenaron una red neuronal artificial para
-pronosticar la concentración diaria de PM$_{2.5}$ con un día de anticipación
-en tres estaciones del Valle de Aburrá, entre ellas ITA-CONC, a partir de
-variables meteorológicas (incluida la altura de la capa de mezcla), la
-precipitación acumulada de tres días y el PM$_{2.5}$ de uno a tres días
-antes \cite{baena2019red}. Validado en los primeros 91 días de 2016, el
-modelo alcanzó $r^{2}$ entre 0,806 (ITA-CONC) y 0,864 (MED-UNNV); el
+Baena-Salazar et al.\ \cite{baena2019red} entrenaron una red neuronal
+artificial para pronosticar la concentración diaria de PM$_{2.5}$ con un día
+de anticipación en tres estaciones del Valle de Aburrá, entre ellas ITA-CONC,
+a partir de variables meteorológicas (incluida la altura de la capa de
+mezcla), la precipitación acumulada de tres días y el PM$_{2.5}$ de uno a
+tres días antes. Validado en los primeros 91 días de 2016, el modelo
+alcanzó $r^{2}$ entre 0,806 (ITA-CONC) y 0,864 (MED-UNNV); el
 PM$_{2.5}$ del día anterior fue la entrada de mayor peso (34,2\,\%).
 
-Kleine Deters et al.\ modelaron el PM$_{2.5}$ diario de dos sitios de Quito
-con seis años de viento y precipitación \cite{kleine2017modeling}: árboles
-potenciados y máquinas de soporte vectorial separaron con alta confiabilidad
-los niveles bajos de los altos, y la regresión fue mejor bajo condiciones
-meteorológicas extremas. Su modelo estima el PM$_{2.5}$ a partir de las
-condiciones del mismo día, por lo que no constituye un pronóstico a un día.
+Kleine Deters et al.\ \cite{kleine2017modeling} modelaron el PM$_{2.5}$
+diario de dos sitios de Quito con seis años de viento y precipitación:
+árboles potenciados y máquinas de soporte vectorial separaron con alta
+confiabilidad los niveles bajos de los altos, y la regresión fue mejor bajo
+condiciones meteorológicas extremas. Su modelo estima el PM$_{2.5}$ a partir
+de las condiciones del mismo día, por lo que no constituye un pronóstico a un
+día.
 
-Parra-Sánchez et al.\ cruzaron meteorología y PM$_{2.5}$ de SIATA
-(2014--2016) con atenciones en salud de Medellín, usando promedios diarios
-con al menos 75\,\% de datos válidos, y hallaron asociaciones con IRA, EPOC
-y asma con rezagos de 0 a 7 días \cite{parra2020analitica}.
+Parra-Sánchez et al.\ \cite{parra2020analitica} cruzaron meteorología y
+PM$_{2.5}$ de SIATA (2014--2016) con atenciones en salud de Medellín, usando
+promedios diarios con al menos 75\,\% de datos válidos, y hallaron
+asociaciones con IRA, EPOC y asma con rezagos de 0 a 7 días.
 
 El pronóstico diario con meteorología es, entonces, factible en el Valle de
 Aburrá, y el nivel del día anterior es la señal dominante. Los trabajos
@@ -244,7 +255,7 @@ Tabla~\ref{tab:dataset} resume el conjunto de datos.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\columnwidth]{figuras/distribucion_target.png}
+    \includegraphics[width=\columnwidth]{figuras/distribucion_target.pdf}
     \caption{Distribución de la variable objetivo (media diaria de
     PM$_{2.5}$ del día siguiente) en las 16 estaciones, 2018--2025.}
     \label{fig:target}
@@ -321,6 +332,15 @@ target disponible; 15 de ellas cuentan con meteorología a 3~km o menos, con
 PM$_{2.5}$ permite particiones temporales por año; la estrategia frente a los
 faltantes meteorológicos es la descrita en la Sección~\ref{sec:datos}.
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{figuras/extension_eventos.pdf}
+    \caption{Arriba: número de estaciones en Nivel de Prevención en cada
+    uno de los 246 días con al menos un evento. Abajo: días de evento por
+    mes, 2018--2025.}
+    \label{fig:eventos}
+\end{figure}
+
 \subsection{Estructura temporal marcada}
 
 El promedio horario de PM$_{2.5}$ es máximo a las 08:00 (25,79~$\mu$g/m$^3$)
@@ -374,14 +394,6 @@ con el signo esperado (presión $-0{,}16$, lluvia $-0{,}16$, viento
 $-0{,}07$). Estas asociaciones débiles hacen necesario evaluar empíricamente
 si la meteorología mejora el desempeño frente a la persistencia.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\columnwidth]{figuras/extension_eventos.png}
-    \caption{Izquierda: número de estaciones en Nivel de Prevención en cada
-    uno de los 246 días con al menos un evento. Derecha: días de evento por
-    mes, 2018--2025.}
-    \label{fig:eventos}
-\end{figure}
 
 % =================================================
 % REFERENCIAS

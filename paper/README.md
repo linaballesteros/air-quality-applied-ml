@@ -7,8 +7,10 @@
   `kleine2017modeling`, `siata2026pm25`, `siata2026meteo`); quedan sin usar
   `ganan2026spatiotemporal` (cita retirada por no tener fuente primaria
   archivada), `gomez2017contaminacion` y `joharestani2019pm25`.
-- `figuras/`: PNG exportados del notebook ejecutado (`distribucion_target`,
-  `extension_eventos`).
+- `figuras/`: PDF vectoriales exportados del notebook ejecutado
+  (`distribucion_target`, `extension_eventos`). Se dibujan al ancho real de
+  una columna IEEE (3,5 pulgadas) para incluirlos sin reducir, así el texto
+  de los ejes se mantiene nítido y legible.
 
 Este directorio es el registro local de lo que hay en Overleaf: cuando se
 cambie algo allí, copiarlo aquí en el mismo commit.
@@ -20,8 +22,9 @@ cd paper
 latexmk -pdf main.tex
 ```
 
-Requiere una distribución LaTeX con la clase `IEEEtran` y `babel` en
-español. Los artefactos de compilación están excluidos de Git. En Overleaf
+Requiere una distribución LaTeX con la clase `IEEEtran`, `babel` en español y
+los paquetes de tipografía `ebgaramond-maths` y `newtx` (ambos vienen en TeX
+Live completo y en Overleaf). Los artefactos de compilación están excluidos de Git. En Overleaf
 basta con subir `main.tex` y `referencias.bib`.
 
 ## Qué debe reflejar el texto
