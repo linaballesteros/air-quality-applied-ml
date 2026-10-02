@@ -225,6 +225,14 @@ repositorio en un pie de página. El repositorio se hará público el día
 anterior a la entrega (19 de septiembre); hasta entonces el enlace del paper
 no abre para terceros.
 
+**Feedback de la Entrega 1 (recibido 2026-10-01).** El profesor recomienda
+Gradient Boosting, ventanas de tiempo, SHAP y comparar con Baena-Salazar et
+al., sugiere dividir la pregunta en dos y pide explicar la composición de
+estaciones, la ventana 2018–2025, los faltantes (con diagrama de flujo) y la
+Tabla II. Plan de trabajo y respuestas con cifras verificadas en
+[`feedback-delivery-01/`](feedback-delivery-01/README.md) (carpeta interna,
+no se lleva a `main`).
+
 **Antes de la Entrega 2 (cualquiera de los dos).** Resolver los huecos
 meteorológicos de [`docs/station_matching.md`](docs/station_matching.md),
 filtrar las 7 presiones de 0 hPa y fijar la regla de aviso (umbral calibrado
@@ -257,3 +265,4 @@ o probabilidad de exceder 38) según
 | 2026-09-16 | Revisión externa del borrador: se suavizaron afirmaciones categóricas del EDA, se explicó el manejo de faltantes meteorológicos, se eliminó redundancia entre introducción, planteamiento y pregunta, y se corrigió la tipografía (decimal en modo matemático, "Tabla"/"Fig." en captions). La pregunta de investigación no cambió. |
 | 2026-09-17 | Revisión previa a la entrega: el notebook exporta las figuras del paper de forma reproducible (sección 16, PNG idénticos a los versionados), el paper explica los 753 registros con media sin target, se corrigieron cifras desactualizadas en `context.md`, `eda_plan.md`, `methodology_notes.md` y `docs/README.md`, el README reporta 11 pruebas y `requirements.txt` incluye `numpy`. |
 | 2026-09-20 | Revisión externa de formato: las figuras del paper pasan a PDF vectorial dibujado al ancho de columna IEEE (antes PNG reducidos), la Fig. 2 apila sus dos paneles y se coloca junto a su primera mención, las citas de la sección II aparecen junto al nombre de los autores y el documento usa EB Garamond (`ebgaramond-maths` + `newtxmath`) en vez de la Times de IEEEtran. Compila en 4 páginas con referencias y sin citas sin resolver. |
+| 2026-10-01 | Se registró el feedback de la Entrega 1 en `feedback-delivery-01/`: plan para la entrega final (XGBoost con ventanas de tiempo, SHAP, comparación con Baena-Salazar, dos preguntas) y respuestas a las dudas. Verificado: la red tenía 5–9 estaciones hasta 2016 (solo 3 con ≥90 % en 2013–2025) y, en el periodo de validación de Baena-Salazar, la persistencia alcanza r² 0,796 (ITA-CONC) y 0,811 (MED-UNNV) frente a 0,806 y 0,864 de su red neuronal. |
