@@ -79,7 +79,7 @@ flowchart TD
 ```
 
 Los faltantes meteorológicos (25 % de los registros sin el día completo) se
-dejan como vacíos: XGBoost los admite sin imputar. En el paper conviene
+dejan como vacíos: `HistGradientBoostingRegressor` de scikit-learn los admite sin imputar. En el paper conviene
 dibujar este diagrama en TikZ o exportarlo como PDF vectorial, al ancho de
 una columna.
 
@@ -160,8 +160,8 @@ exigente y el estudio local no se comparó con ella.
 **Propuesta para la entrega final:**
 
 1. Réplica en su periodo: ITA-CONC y MED-UNNV, entrenar con 2013–2015 y
-   probar en enero–marzo de 2016, comparando persistencia, XGBoost con
-   rezagos de PM2.5 y (si SIATA publica meteorología de esos años) XGBoost
+   probar en enero–marzo de 2016, comparando persistencia, Gradient Boosting
+   con rezagos de PM2.5 y (si SIATA publica meteorología de esos años) Gradient Boosting
    con meteorología.
 2. En nuestra ventana 2018–2025, reportar también r² y MAPE para que las
    cifras sean comparables con las suyas.
