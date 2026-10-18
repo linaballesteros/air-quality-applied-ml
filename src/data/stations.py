@@ -32,6 +32,17 @@ PM25_TO_METEO: dict[str, int] = {
     "MED-SCRI": 201,
 }
 
+# Réplica de Baena-Salazar et al. (2019): estaciones PM2.5 de su estudio que
+# siguen en el dataset, con la meteorológica instalada en el mismo sitio antes
+# de 2013 (206 a 0,09 km de ITA-CONC; 203 a 0,32 km de MED-UNNV). MED-MANT,
+# la tercera estación del estudio, no aparece en el histórico de PM2.5.
+BAENA_START = "2013-01"
+BAENA_END = "2016-03"
+BAENA_PM25_TO_METEO: dict[str, int] = {
+    "ITA-CONC": 206,
+    "MED-UNNV": 203,
+}
+
 # DOI del dataset Dataverse de cada estación meteorológica requerida.
 METEO_DATASETS: dict[int, str] = {
     59: "doi:10.83041/6KPPNT",
@@ -42,6 +53,7 @@ METEO_DATASETS: dict[int, str] = {
     197: "doi:10.83041/RJPIBG",
     201: "doi:10.83041/9DJJ26",
     202: "doi:10.83041/A6AUIK",
+    203: "doi:10.83041/JLGFGB",
     206: "doi:10.83041/OM9XPU",
     229: "doi:10.83041/LBFT8T",
     252: "doi:10.83041/1AHV46",

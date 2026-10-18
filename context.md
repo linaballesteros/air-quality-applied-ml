@@ -212,9 +212,10 @@ resultados. Pendiente preguntar al profesor si se exige abstract.
 - Origen móvil, métricas y regla de aviso:
   [`src/models/evaluation.py`](src/models/evaluation.py).
 - [`notebooks/02_modelado.ipynb`](notebooks/02_modelado.ipynb) ejecutado
-  (secciones 1–12): persistencia, Gradient Boosting sin y con meteorología,
-  bootstrap, avisos a igual presupuesto, error en días críticos y SHAP
-  (sección 11, con la comparación de pesos de Baena-Salazar en 11.1).
+  (secciones 1–13): persistencia, Gradient Boosting sin y con meteorología,
+  bootstrap, avisos a igual presupuesto, error en días críticos, SHAP
+  (sección 11, con la comparación de pesos de Baena-Salazar en 11.1) y
+  réplica del periodo de validación de Baena-Salazar (sección 12).
 
 **Cifras vigentes (2022–2025, fuera de muestra).**
 
@@ -230,21 +231,24 @@ importancia, rezagos y ventanas 19,9 %, calendario 18,2 %, meteorología
 8,6 %, estación 3,9 %. Con entradas tipo Baena-Salazar el PM2.5 de hoy
 concentra el 65,7 % (ellos: 34,2 %).
 
+Réplica de Baena-Salazar (ene–mar 2016, ITA-CONC / MED-UNNV, r² como
+correlación al cuadrado): ellos 0,806 / 0,864; persistencia 0,796 / 0,811;
+GB con meteorología que predice el nivel 0,726 / 0,517 (22 días superan el
+máximo de entrenamiento y los árboles no extrapolan); la variante que
+predice el cambio 0,802 / 0,822, con MAPE de 14,2 % / 11,5 % (ellos:
+18,5 % / 12,4 %).
+
 **Para retomar.** Con los datos ya descargados (ver README), activar
 `.venv`, ejecutar `python -m unittest discover -q` (20 pruebas) y abrir
-`notebooks/02_modelado.ipynb`; se ejecuta completo en unos dos minutos.
+`notebooks/02_modelado.ipynb`; se ejecuta completo en unos tres minutos. La
+sección 12 necesita además la meteorología 2013–2016 de las estaciones 203 y
+206 (comando en el README).
 
 **Siguientes pasos, en orden.**
 
 1. ~~SHAP~~: hecho el 2026-10-18 (sección 11).
-2. **Réplica de Baena-Salazar** (nueva sección 12; hoy la 12 es "Siguientes pasos"). ITA-CONC y MED-UNNV,
-   entrenar con 2013–2015 y probar del 1 de enero al 31 de marzo de 2016.
-   Comparar persistencia y Gradient Boosting solo con PM2.5 usando sus
-   métricas (r² y error porcentual, reportado como MAPE). Cifras de
-   referencia en [`feedback-delivery-01/respuestas.md`](feedback-delivery-01/respuestas.md) §6.
-   Primero comprobar si SIATA publica meteorología 2013–2016 de esas
-   estaciones; `build_features` sirve tal cual cambiando la ventana.
-3. **Sensibilidad** (sección 13, opcional si falta tiempo): excluir
+2. ~~Réplica de Baena-Salazar~~: hecha el 2026-10-18 (sección 12).
+3. **Sensibilidad** (nueva sección 13, opcional si falta tiempo): excluir
    BEL-FEVE y MED-SCRI, y probar la estación 397 para el viento de ITA-CONC.
 4. **Diagramas de flujo**: datos (borrador Mermaid en `respuestas.md` §3) y
    metodología (tabla de predictores → origen móvil → tres pronósticos →
@@ -257,9 +261,17 @@ concentra el 65,7 % (ellos: 34,2 %).
 6. **Presentación**: cuatro bloques, reutilizando las figuras del paper;
    en el EDA, explicar la composición de estaciones (`respuestas.md` §1).
 
-**Decisiones abiertas.** Si se usa el semestre 2026 como prueba final
-adicional (exige descargar meteorología 2026) y cómo cubrir los huecos
-meteorológicos de `docs/station_matching.md`.
+**Decisiones abiertas.**
+
+- **Nivel o cambio.** En la réplica de 2016 el modelo que predice el nivel
+  falla en los días por encima del rango de entrenamiento; predecir el
+  cambio respecto a hoy lo corrige, pero en 2022–2025 es algo peor (MAE
+  2,79 frente a 2,74) y en validación empatan. Hoy el modelo principal
+  predice el nivel y la variante se reporta en la réplica. Decidir si se
+  mantiene así, si se cambia o si se reportan ambas en el paper.
+- Si se usa el semestre 2026 como prueba final adicional (exige descargar
+  meteorología 2026).
+- Cómo cubrir los huecos meteorológicos de `docs/station_matching.md`.
 
 ## Siguientes pasos por persona
 
@@ -336,3 +348,4 @@ La regla de aviso quedó fijada el 2026-10-17 (ver `docs/decisions.md`).
 | 2026-10-17 | Tabla de predictores con ventanas de tiempo en `src/features/build_features.py` (5 pruebas nuevas, 16 en total) y notebook `02_modelado.ipynb` ejecutado: reproduce los 44.399 registros del EDA; persistencia por año de prueba con MAE de 2,95 a 3,61 µg/m³ y R² de 0,44 a 0,65; las presiones de 0 hPa se tratan como faltantes. |
 | 2026-10-17 | Modelado con origen móvil en `02_modelado.ipynb` y `src/models/evaluation.py` (20 pruebas). En 2022–2025 el MAE baja de 3,37 (persistencia) a 2,76 (Gradient Boosting sin meteorología) y 2,73 µg/m³ (con meteorología); ambas mejoras con IC 95 % por bootstrap de bloques que excluye el cero, la de la meteorología en las 16 estaciones. A igual presupuesto de avisos, Gradient Boosting anticipa 28–30 de 123 inicios de episodio y la persistencia ninguno. La meteorología reduce el error en días en prevención de 6,85 a 6,53 µg/m³. |
 | 2026-10-18 | SHAP en `02_modelado.ipynb` (sección 11): el PM2.5 del día `d` es la entrada dominante (49,5 %; 65,7 % con entradas tipo Baena-Salazar, que reportó 34,2 %), seguido de la media de siete días, el día de la semana y el mes; la meteorología suma 8,6 %. La estación pasó a one-hot porque SHAP no reproduce las divisiones categóricas nativas; las cifras del modelado cambiaron en centésimas (MAE con meteorología 2,74 µg/m³; mejora por meteorología en 14 de 16 estaciones). |
+| 2026-10-18 | Réplica del periodo de validación de Baena-Salazar et al. (sección 12 de `02_modelado.ipynb`) con ITA-CONC/206 y MED-UNNV/203 (se añadió la 203 a `src/data/stations.py` y se descargó su meteorología 2013-01 a 2016-03 y la de la 206). El modelo de nivel pierde frente a la persistencia porque 22 de 175 días superan el máximo de entrenamiento; predecir el cambio lo corrige (r² 0,80/0,82, MAPE 14,2/11,5 %). Queda abierta la elección entre nivel y cambio. |

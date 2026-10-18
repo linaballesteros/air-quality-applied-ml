@@ -46,6 +46,14 @@ python -m unittest discover -q                  # 20 pruebas
 jupyter lab                                     # abrir notebooks/01_eda_pm25.ipynb
 ```
 
+La réplica de Baena-Salazar et al. (sección 12 de `02_modelado.ipynb`)
+necesita además la meteorología 2013–2016 de dos estaciones (78 archivos,
+unos 210 MB):
+
+```bash
+python scripts/download_meteo_dataset.py --stations 203,206 --start 2013-01 --end 2016-03 --skip-network
+```
+
 Ninguna descarga se repite si el archivo ya existe con el MD5 correcto. El
 notebook está guardado con sus salidas; puede leerse sin ejecutarlo, pero
 para reejecutarlo se necesitan las tres primeras líneas.

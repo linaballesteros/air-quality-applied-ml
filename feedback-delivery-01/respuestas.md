@@ -157,7 +157,20 @@ usó MAPE) y su r² podría incluir el periodo de calibración. Aun así, el
 resultado refuerza el argumento del paper: la persistencia es un baseline
 exigente y el estudio local no se comparó con ella.
 
-**Propuesta para la entrega final:**
+**Resultado de la réplica (2026-10-18, sección 12 de `02_modelado.ipynb`).**
+Con meteorología de la 206 y la 203 y el mismo diseño (entrenar 2013–2015,
+probar ene–mar 2016):
+
+| Estación | Baena-Salazar r² / error | Persistencia r² / MAPE | GB nivel r² | GB cambio r² / MAPE |
+| --- | --- | --- | --- | --- |
+| ITA-CONC | 0,806 / 18,5 % | 0,796 / 15,6 % | 0,726 | 0,802 / 14,2 % |
+| MED-UNNV | 0,864 / 12,4 % | 0,811 / 14,1 % | 0,517 | 0,822 / 11,5 % |
+
+El modelo de nivel falla porque 22 de los 175 días de prueba superan el
+máximo de entrenamiento y los árboles no extrapolan. La variante que predice
+el cambio se probó después de ver el resultado.
+
+**Propuesta original (cumplida):**
 
 1. Réplica en su periodo: ITA-CONC y MED-UNNV, entrenar con 2013–2015 y
    probar en enero–marzo de 2016, comparando persistencia, Gradient Boosting

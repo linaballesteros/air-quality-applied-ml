@@ -103,8 +103,9 @@ Cada tarea apunta a una observación concreta.
       [`respuestas.md` §4](respuestas.md#4-tabla-ii-explicación-ampliada)).
 - [ ] Secciones nuevas: **Metodología**, **Resultados**, **Discusión**
       (comparación con todos los trabajos relacionados) y **Conclusiones**.
-- [ ] Dentro de la discusión, **comparación con Baena-Salazar** (diseño y
-      resultado preliminar en [`respuestas.md` §6](respuestas.md#6-comparación-con-baena-salazar-et-al)).
+- [ ] Dentro de la discusión, **comparación con Baena-Salazar** (réplica
+      hecha en la sección 12 de `02_modelado.ipynb`; resumen en
+      [`respuestas.md` §6](respuestas.md#6-comparación-con-baena-salazar-et-al)).
 
 ### D. Notebook
 
