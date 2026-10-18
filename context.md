@@ -262,12 +262,9 @@ sección 12 necesita además la meteorología 2013–2016 de las estaciones 203 
 
 **Decisiones abiertas.**
 
-- **Nivel o cambio.** En la réplica de 2016 el modelo que predice el nivel
-  falla en los días por encima del rango de entrenamiento; predecir el
-  cambio respecto a hoy lo corrige, pero en 2022–2025 es algo peor (MAE
-  2,79 frente a 2,74) y en validación empatan. Hoy el modelo principal
-  predice el nivel y la variante se reporta en la réplica. Decidir si se
-  mantiene así, si se cambia o si se reportan ambas en el paper.
+- ~~Nivel o cambio~~: resuelto el 2026-10-18, se mantiene el nivel
+  (justificación y cifras en `docs/decisions.md`). Lo de 2016 va a la
+  discusión como limitación.
 - Si se usa el semestre 2026 como prueba final adicional (exige descargar
   meteorología 2026).
 - Cómo cubrir los huecos meteorológicos de `docs/station_matching.md`.
