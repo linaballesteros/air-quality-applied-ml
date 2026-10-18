@@ -22,3 +22,5 @@ paper/*.out
 paper/*.pdf
 paper/*.synctex.gz
 paper/*.toc
+paper/figuras/diagramas/*.aux
+paper/figuras/diagramas/*.log

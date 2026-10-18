@@ -1,0 +1,30 @@
+% Origen móvil: qué años entrenan y cuál se predice en cada corrida.
+% Protocolo de notebooks/02_modelado.ipynb (sección 6).
+\documentclass[border=2pt]{standalone}
+\input{estilo}
+
+\begin{document}
+\begin{tikzpicture}[x=8.6mm, y=-4.6mm,
+    celda/.style={draw=white, line width=0.8pt, minimum width=8.6mm, minimum height=4.6mm,
+      inner sep=0pt, font=\fontsize{5.5}{6}\selectfont},
+    etiqueta/.style={font=\fontsize{6}{7}\selectfont}]
+  \foreach \c [count=\i from 0] in {2018,...,2025}
+    \node[etiqueta, text=gris] at (\i+1, 0) {\c};
+  \foreach \y [count=\r from 1] in {2019,...,2025} {
+    \pgfmathtruncatemacro{\pred}{\y-2017}
+    \ifnum\y<2022 \def\colorpred{gris!45}\def\textopred{valida}
+    \else \def\colorpred{modelo!80}\def\textopred{prueba}\fi
+    \node[etiqueta, anchor=east] at (0.45, \r) {predice \y};
+    \foreach \i in {1,...,8} {
+      \ifnum\i<\pred \node[celda, fill=pm!70, text=white] at (\i, \r) {entrena};
+      \else\ifnum\i=\pred \node[celda, fill=\colorpred, text=white] at (\i, \r) {\textopred};
+      \else \node[celda, fill=gris!10] at (\i, \r) {};
+      \fi\fi
+    }
+  }
+  \node[etiqueta, text width=72mm, align=flush left, anchor=north west] at (0.5, 7.7)
+    {Cada corrida entrena con los años anteriores y predice uno. El umbral de
+     aviso de cada año de prueba se fija con las predicciones de los años
+     previos, antes de ver el año de prueba.};
+\end{tikzpicture}
+\end{document}

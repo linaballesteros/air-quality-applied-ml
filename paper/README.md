@@ -11,6 +11,17 @@
   (`distribucion_target`, `extension_eventos`). Se dibujan al ancho real de
   una columna IEEE (3,5 pulgadas) para incluirlos sin reducir, así el texto
   de los ejes se mantiene nítido y legible.
+- `figuras/diagramas/`: fuentes TikZ de los diagramas de flujo
+  (`flujo_datos`, `flujo_metodologia`, `origen_movil`) y su estilo común.
+  Se compilan con pdflatex y el PDF se mueve a `figuras/`:
+
+  ```bash
+  cd paper/figuras/diagramas
+  for f in flujo_datos flujo_metodologia origen_movil; do
+    pdflatex -interaction=nonstopmode $f.tex && mv $f.pdf ..
+  done
+  rm -f *.aux *.log
+  ```
 
 Este directorio es el registro local de lo que hay en Overleaf: cuando se
 cambie algo allí, copiarlo aquí en el mismo commit.

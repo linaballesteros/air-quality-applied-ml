@@ -96,9 +96,11 @@ Cada tarea apunta a una observación concreta.
       [`respuestas.md` §5](respuestas.md#5-dos-preguntas-de-investigación)).
 - [ ] Explicar **por qué 2018–2025** y no todo el histórico (texto en
       [`respuestas.md` §2](respuestas.md#2-por-qué-la-ventana-20182025-y-no-todos-los-años)).
-- [ ] Añadir un **diagrama de flujo** de datos: de archivos mensuales a la
+- [x] Añadir un **diagrama de flujo** de datos: de archivos mensuales a la
       tabla supervisada, con cuántos registros se pierden en cada paso y
       por qué (cifras en [`respuestas.md` §3](respuestas.md#3-faltantes-qué-había-y-qué-se-hizo)).
+      Hecho en `paper/figuras/flujo_datos.pdf`; falta incluirlo en
+      `main.tex`.
 - [ ] Ampliar el párrafo de la **Tabla II** (borrador en
       [`respuestas.md` §4](respuestas.md#4-tabla-ii-explicación-ampliada)).
 - [ ] Secciones nuevas: **Metodología**, **Resultados**, **Discusión**
@@ -120,7 +122,8 @@ Cada tarea apunta a una observación concreta.
 - [ ] Cuatro bloques: introducción y problema, EDA con insights,
       metodología con diagramas de flujo, resultados.
 - [ ] Reutilizar las figuras del paper (mismos PDF) para que las cifras
-      coincidan.
+      coincidan. Diagramas de metodología listos:
+      `paper/figuras/flujo_metodologia.pdf` y `origen_movil.pdf`.
 
 ### F. Pendientes que ya existían y siguen abiertos
 

@@ -75,13 +75,14 @@ flowchart TD
     M["Meteorología minutal SIATA<br/>12 estaciones"] -->|"descartar minutos dudosos (calidad)<br/>y exigir 45 min válidos por hora"| N["801.839 filas horarias"]
     N -->|"media diaria con ≥ 18 h"| O["Meteorología diaria"]
     O --> F
-    F --> G["33.134 registros con<br/>meteorología completa del día"]
+    F --> G["32.455 registros (73,1 %) con<br/>meteorología completa del día"]
 ```
 
-Los faltantes meteorológicos (25 % de los registros sin el día completo) se
-dejan como vacíos: `HistGradientBoostingRegressor` de scikit-learn los admite sin imputar. En el paper conviene
-dibujar este diagrama en TikZ o exportarlo como PDF vectorial, al ancho de
-una columna.
+Los faltantes meteorológicos (27 % de los registros sin el día completo) se
+dejan como vacíos: `HistGradientBoostingRegressor` de scikit-learn los admite sin imputar. La versión
+para el paper está en `paper/figuras/flujo_datos.pdf` (fuente TikZ en
+`paper/figuras/diagramas/`). La cifra de 32.455 incluye la lluvia
+acumulada de 3 días y viene de la sección 4 de `02_modelado.ipynb`.
 
 ## 4. Tabla II: explicación ampliada
 

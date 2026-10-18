@@ -1,0 +1,24 @@
+% Estilo común de los diagramas: letra sin serifa, como las figuras del
+% notebook, y ancho máximo de una columna IEEE (8,9 cm). Compilar con pdflatex.
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tgheros}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, fit, backgrounds, calc}
+
+\definecolor{pm}{HTML}{1F77B4}
+\definecolor{meteo}{HTML}{2CA02C}
+\definecolor{modelo}{HTML}{FF7F0E}
+\definecolor{perdida}{HTML}{B22222}
+\definecolor{gris}{HTML}{6E6E6E}
+
+\tikzset{
+  caja/.style={draw=#1, fill=#1!8, rounded corners=2pt, line width=0.6pt,
+    align=center, inner sep=3pt, font=\fontsize{6.5}{7.8}\selectfont},
+  caja/.default=gris,
+  flecha/.style={-{Stealth[length=4pt]}, line width=0.6pt, draw=gris},
+  nota/.style={font=\fontsize{5.8}{7}\selectfont, text=perdida, align=left},
+  titulo/.style={font=\fontsize{6.5}{7.8}\selectfont\bfseries, text=#1},
+}
+\newcommand{\menos}[1]{\textcolor{perdida}{\fontsize{5.8}{7}\selectfont #1}}

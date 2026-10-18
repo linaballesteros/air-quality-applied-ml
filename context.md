@@ -250,10 +250,9 @@ sección 12 necesita además la meteorología 2013–2016 de las estaciones 203 
 2. ~~Réplica de Baena-Salazar~~: hecha el 2026-10-18 (sección 12).
 3. **Sensibilidad** (nueva sección 13, opcional si falta tiempo): excluir
    BEL-FEVE y MED-SCRI, y probar la estación 397 para el viento de ITA-CONC.
-4. **Diagramas de flujo**: datos (borrador Mermaid en `respuestas.md` §3) y
-   metodología (tabla de predictores → origen móvil → tres pronósticos →
-   umbral calibrado → métricas y SHAP). Exportar como PDF vectorial para el
-   paper y la presentación.
+4. ~~Diagramas de flujo~~: hechos el 2026-10-18 en TikZ
+   (`paper/figuras/diagramas/`, PDF en `paper/figuras/`): `flujo_datos`,
+   `flujo_metodologia` y `origen_movil`, al ancho de una columna IEEE.
 5. **Paper** (`paper/main.tex`): dividir la pregunta en dos (borrador en
    `respuestas.md` §5), aplicar los textos de §2 y §4, y escribir
    metodología, resultados, discusión y conclusiones. Las figuras deben
@@ -349,3 +348,4 @@ La regla de aviso quedó fijada el 2026-10-17 (ver `docs/decisions.md`).
 | 2026-10-17 | Modelado con origen móvil en `02_modelado.ipynb` y `src/models/evaluation.py` (20 pruebas). En 2022–2025 el MAE baja de 3,37 (persistencia) a 2,76 (Gradient Boosting sin meteorología) y 2,73 µg/m³ (con meteorología); ambas mejoras con IC 95 % por bootstrap de bloques que excluye el cero, la de la meteorología en las 16 estaciones. A igual presupuesto de avisos, Gradient Boosting anticipa 28–30 de 123 inicios de episodio y la persistencia ninguno. La meteorología reduce el error en días en prevención de 6,85 a 6,53 µg/m³. |
 | 2026-10-18 | SHAP en `02_modelado.ipynb` (sección 11): el PM2.5 del día `d` es la entrada dominante (49,5 %; 65,7 % con entradas tipo Baena-Salazar, que reportó 34,2 %), seguido de la media de siete días, el día de la semana y el mes; la meteorología suma 8,6 %. La estación pasó a one-hot porque SHAP no reproduce las divisiones categóricas nativas; las cifras del modelado cambiaron en centésimas (MAE con meteorología 2,74 µg/m³; mejora por meteorología en 14 de 16 estaciones). |
 | 2026-10-18 | Réplica del periodo de validación de Baena-Salazar et al. (sección 12 de `02_modelado.ipynb`) con ITA-CONC/206 y MED-UNNV/203 (se añadió la 203 a `src/data/stations.py` y se descargó su meteorología 2013-01 a 2016-03 y la de la 206). El modelo de nivel pierde frente a la persistencia porque 22 de 175 días superan el máximo de entrenamiento; predecir el cambio lo corrige (r² 0,80/0,82, MAPE 14,2/11,5 %). Queda abierta la elección entre nivel y cambio. |
+| 2026-10-18 | Diagramas de flujo en TikZ para paper y presentación (`paper/figuras/flujo_datos.pdf`, `flujo_metodologia.pdf` y `origen_movil.pdf`; fuentes en `paper/figuras/diagramas/`). El de datos corrige los registros con meteorología completa a 32.455 (73,1 %), la cifra del notebook de modelado. |
