@@ -172,7 +172,8 @@ alcance.
 - Loader meteorológico: [`src/data/load_meteo.py`](src/data/load_meteo.py) y
   [`scripts/build_meteo_hourly.py`](scripts/build_meteo_hourly.py).
 - Respuestas y plan de EDA: [`docs/eda_plan.md`](docs/eda_plan.md).
-- Guion de presentación: [`docs/guion_presentacion.md`](docs/guion_presentacion.md).
+- Notebook de modelado: [`notebooks/02_modelado.ipynb`](notebooks/02_modelado.ipynb).
+- Predictores y evaluación: [`src/features/`](src/features/) y [`src/models/`](src/models/).
 
 ## Estado de la parte de código — Entrega 1
 
@@ -192,6 +193,76 @@ Pendiente antes de modelar: resolver los huecos meteorológicos documentados
 en [`docs/station_matching.md`](docs/station_matching.md) y validar las
 presiones de 0 hPa que la bandera de calidad no marcó (resuelto el
 2026-10-17: se tratan como faltantes en `src/features`).
+
+## Estado y cómo retomar — entrega final
+
+Última actualización: 2026-10-17. Esta sección es el punto de partida para
+cualquiera de los dos; el detalle del feedback y la lista completa de tareas
+están en [`feedback-delivery-01/README.md`](feedback-delivery-01/README.md).
+
+**Requisitos.** Paper final: metodología, resultados, discusión (comparar
+con los trabajos relacionados) y conclusiones. Presentación: introducción
+con el problema, EDA con insights, metodología con diagramas de flujo y
+resultados. Pendiente preguntar al profesor si se exige abstract.
+
+**Hecho.**
+
+- Tabla de predictores con ventanas de tiempo:
+  [`src/features/build_features.py`](src/features/build_features.py).
+- Origen móvil, métricas y regla de aviso:
+  [`src/models/evaluation.py`](src/models/evaluation.py).
+- [`notebooks/02_modelado.ipynb`](notebooks/02_modelado.ipynb) ejecutado
+  (secciones 1–10): persistencia, Gradient Boosting sin y con meteorología,
+  bootstrap, avisos a igual presupuesto y error en días críticos.
+
+**Cifras vigentes (2022–2025, fuera de muestra).**
+
+| Resultado | Persistencia | GB sin meteo | GB con meteo |
+| --- | --- | --- | --- |
+| MAE (µg/m³) | 3,37 | 2,76 | 2,73 |
+| R² | 0,56 | 0,71 | 0,72 |
+| MAE en días en prevención | 5,88 | 6,85 | 6,53 |
+| Inicios avisados a igual presupuesto (de 123) | 0 | 30 | 28 |
+
+**Para retomar.** Con los datos ya descargados (ver README), activar
+`.venv`, ejecutar `python -m unittest discover -q` (20 pruebas) y abrir
+`notebooks/02_modelado.ipynb`; se ejecuta completo en unos dos minutos.
+
+**Siguientes pasos, en orden.**
+
+1. **SHAP** (nueva sección 11 de `02_modelado.ipynb`). Entrenar el modelo
+   con meteorología en 2018–2021 (el mismo del año de prueba 2022, o repetir
+   por cada año), aplicar `shap.TreeExplainer` sobre el año de prueba y
+   reportar: gráfico de resumen, porcentaje del valor absoluto medio de SHAP
+   de cada variable y, en particular, el de `pm25_mean` (PM2.5 de hoy, que es
+   "el día anterior" respecto al pronosticado) frente al 34,2 % de
+   Baena-Salazar et al. Agrupar también por bloque (PM2.5 de hoy, ventanas,
+   meteorología, calendario, estación). Ya se verificó que `TreeExplainer`
+   funciona con `HistGradientBoostingRegressor` y faltantes. Advertir en el
+   texto que SHAP y los pesos de una red neuronal no son el mismo método.
+2. **Réplica de Baena-Salazar** (sección 12). ITA-CONC y MED-UNNV,
+   entrenar con 2013–2015 y probar del 1 de enero al 31 de marzo de 2016.
+   Comparar persistencia y Gradient Boosting solo con PM2.5 usando sus
+   métricas (r² y error porcentual, reportado como MAPE). Cifras de
+   referencia en [`feedback-delivery-01/respuestas.md`](feedback-delivery-01/respuestas.md) §6.
+   Primero comprobar si SIATA publica meteorología 2013–2016 de esas
+   estaciones; `build_features` sirve tal cual cambiando la ventana.
+3. **Sensibilidad** (sección 13, opcional si falta tiempo): excluir
+   BEL-FEVE y MED-SCRI, y probar la estación 397 para el viento de ITA-CONC.
+4. **Diagramas de flujo**: datos (borrador Mermaid en `respuestas.md` §3) y
+   metodología (tabla de predictores → origen móvil → tres pronósticos →
+   umbral calibrado → métricas y SHAP). Exportar como PDF vectorial para el
+   paper y la presentación.
+5. **Paper** (`paper/main.tex`): dividir la pregunta en dos (borrador en
+   `respuestas.md` §5), aplicar los textos de §2 y §4, y escribir
+   metodología, resultados, discusión y conclusiones. Las figuras deben
+   salir del notebook, como en la Entrega 1.
+6. **Presentación**: cuatro bloques, reutilizando las figuras del paper;
+   en el EDA, explicar la composición de estaciones (`respuestas.md` §1).
+
+**Decisiones abiertas.** Si se usa el semestre 2026 como prueba final
+adicional (exige descargar meteorología 2026) y cómo cubrir los huecos
+meteorológicos de `docs/station_matching.md`.
 
 ## Siguientes pasos por persona
 
@@ -235,10 +306,8 @@ Tabla II. Plan de trabajo y respuestas con cifras verificadas en
 no se lleva a `main`).
 
 **Antes de la Entrega 2 (cualquiera de los dos).** Resolver los huecos
-meteorológicos de [`docs/station_matching.md`](docs/station_matching.md),
-fijar la regla de aviso (umbral calibrado
-o probabilidad de exceder 38) según
-[`docs/decisions.md`](docs/decisions.md).
+meteorológicos de [`docs/station_matching.md`](docs/station_matching.md).
+La regla de aviso quedó fijada el 2026-10-17 (ver `docs/decisions.md`).
 
 ## Registro de actualizaciones
 
@@ -268,3 +337,4 @@ o probabilidad de exceder 38) según
 | 2026-09-20 | Revisión externa de formato: las figuras del paper pasan a PDF vectorial dibujado al ancho de columna IEEE (antes PNG reducidos), la Fig. 2 apila sus dos paneles y se coloca junto a su primera mención, las citas de la sección II aparecen junto al nombre de los autores y el documento usa EB Garamond (`ebgaramond-maths` + `newtxmath`) en vez de la Times de IEEEtran. Compila en 4 páginas con referencias y sin citas sin resolver. |
 | 2026-10-01 | Se registró el feedback de la Entrega 1 en `feedback-delivery-01/`: plan para la entrega final (XGBoost con ventanas de tiempo, SHAP, comparación con Baena-Salazar, dos preguntas) y respuestas a las dudas. Verificado: la red tenía 5–9 estaciones hasta 2016 (solo 3 con ≥90 % en 2013–2025) y, en el periodo de validación de Baena-Salazar, la persistencia alcanza r² 0,796 (ITA-CONC) y 0,811 (MED-UNNV) frente a 0,806 y 0,864 de su red neuronal. |
 | 2026-10-17 | Tabla de predictores con ventanas de tiempo en `src/features/build_features.py` (5 pruebas nuevas, 16 en total) y notebook `02_modelado.ipynb` ejecutado: reproduce los 44.399 registros del EDA; persistencia por año de prueba con MAE de 2,95 a 3,61 µg/m³ y R² de 0,44 a 0,65; las presiones de 0 hPa se tratan como faltantes. |
+| 2026-10-17 | Modelado con origen móvil en `02_modelado.ipynb` y `src/models/evaluation.py` (20 pruebas). En 2022–2025 el MAE baja de 3,37 (persistencia) a 2,76 (Gradient Boosting sin meteorología) y 2,73 µg/m³ (con meteorología); ambas mejoras con IC 95 % por bootstrap de bloques que excluye el cero, la de la meteorología en las 16 estaciones. A igual presupuesto de avisos, Gradient Boosting anticipa 28–30 de 123 inicios de episodio y la persistencia ninguno. La meteorología reduce el error en días en prevención de 6,85 a 6,53 µg/m³. |

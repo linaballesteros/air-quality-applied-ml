@@ -23,6 +23,10 @@
 | 2026-10-17 | Tratar como faltantes las 7 horas con presión de 0 hPa antes de la media diaria. | No son físicas (la presión en el valle ronda 840 hPa) y la bandera de calidad no las marca. |
 | 2026-10-17 | Predictores con ventanas de tiempo: media de hoy y de 1 a 6 días antes, medias móviles de 3 y 7 días, desviación de 7 días, cambio respecto a ayer, máximo horario y media de 18–23 h del día `d`; meteorología diaria con lluvia de 3 días; mes y día de la semana del día pronosticado. | Recomendación del profesor (ventanas de tiempo) y entradas de Baena-Salazar et al. (PM2.5 de 1–3 días antes, lluvia acumulada de 3 días). Todo se observa hasta el final de `d`; una prueba unitaria lo verifica. |
 | 2026-10-17 | Usar `HistGradientBoostingRegressor` de scikit-learn y conservar los registros con predictores faltantes. | El curso usa Gradient Boosting de scikit-learn; esta variante admite faltantes sin imputar, y exigir meteorología completa descartaría el 27 % de la tabla supervisada. |
+| 2026-10-17 | Origen móvil anual: cada año de 2019 a 2025 se predice con un modelo entrenado solo con los años anteriores; 2022–2025 son años de prueba y 2019–2021 solo validación. | Resuelve el corte de entrenamiento/validación pendiente. Las predicciones fuera de muestra de años previos sirven para elegir hiperparámetros y calibrar avisos sin tocar el año de prueba. |
+| 2026-10-17 | Hiperparámetros elegidos con el MAE de 2019–2021 y comunes a los dos modelos: `learning_rate=0.03`, `max_iter=300`, `max_leaf_nodes=7`, `min_samples_leaf=50`. | Las configuraciones probadas (tasa 0,03–0,1; 100–500 iteraciones; 7–31 hojas; 50–200 muestras por hoja) difieren en centésimas de µg/m³; usar la misma en ambos modelos aísla el efecto de la meteorología. |
+| 2026-10-17 | Regla de aviso: el umbral de cada método se fija para que, en los años anteriores al de prueba, emita tantos avisos como eventos hubo, y se congela antes del año de prueba. | Implementa la comparación a igual número de avisos sin fuga de información (revisión externa del 2026-09-16). Para la persistencia el umbral resulta ≈38 µg/m³; para Gradient Boosting ≈35 µg/m³. |
+| 2026-10-17 | Estimar la incertidumbre de las diferencias de MAE con bootstrap por bloques de 14 días. | Los errores de días cercanos y estaciones vecinas están correlacionados; remuestrear días sueltos subestimaría la incertidumbre. |
 
 ## Decisiones reemplazadas
 
@@ -37,12 +41,6 @@
   cuantificar la cobertura válida por variable y estación.
 - Reproducir en el notebook los conteos de eventos y transiciones de
   `context.md` antes de citarlos.
-- Definir la fecha de corte de entrenamiento y validación dentro de cada
-  origen móvil.
-- El umbral de aviso que iguala el número de avisos entre modelo y
-  persistencia se calibra únicamente con train/validación y se congela antes
-  de tocar el periodo de prueba; ajustarlo sobre el test sería fuga de
-  información (observación de la revisión externa del 2026-09-16).
 - Evaluar sensibilidad a ceros, valores extremos, definición de media diaria
   (calendario vs. máximo de media móvil) y exclusión de BEL-FEVE y MED-SCRI,
   sin usar información del periodo de prueba.

@@ -76,15 +76,15 @@ Cada tarea apunta a una observación concreta.
       de PM2.5 de 1 a 7 días, medias y desviación móviles de 3 y 7 días,
       máximo y media de las últimas horas del día `d`, meteorología del día
       `d` y lluvia acumulada de 3 días (entrada que usó Baena-Salazar).
-- [ ] Entrenar **`HistGradientBoostingRegressor`** de scikit-learn
+- [x] Entrenar **`HistGradientBoostingRegressor`** de scikit-learn
       (decidido el 2026-10-17; se verificó que `shap.TreeExplainer` lo
       admite con faltantes) con origen móvil: probar en
       2022, 2023, 2024 y 2025 entrenando con los años anteriores.
       `HistGradientBoostingRegressor` acepta faltantes sin imputar, lo que encaja con la decisión
       de no imputar.
-- [ ] Comparar tres configuraciones: persistencia, Gradient Boosting sin
+- [x] Comparar tres configuraciones: persistencia, Gradient Boosting sin
       meteorología y Gradient Boosting con meteorología (responde las dos preguntas, ver C).
-- [ ] Calibrar el umbral de aviso solo con train/validación y comparar con
+- [x] Calibrar el umbral de aviso solo con train/validación y comparar con
       persistencia a igual número de avisos (decisión vigente).
 - [ ] **SHAP** (`shap.TreeExplainer`) sobre el modelo con meteorología:
       porcentaje de importancia del PM2.5 de ayer frente al 34,2 % de
