@@ -27,6 +27,7 @@
 | 2026-10-17 | Hiperparámetros elegidos con el MAE de 2019–2021 y comunes a los dos modelos: `learning_rate=0.03`, `max_iter=300`, `max_leaf_nodes=7`, `min_samples_leaf=50`. | Las configuraciones probadas (tasa 0,03–0,1; 100–500 iteraciones; 7–31 hojas; 50–200 muestras por hoja) difieren en centésimas de µg/m³; usar la misma en ambos modelos aísla el efecto de la meteorología. |
 | 2026-10-17 | Regla de aviso: el umbral de cada método se fija para que, en los años anteriores al de prueba, emita tantos avisos como eventos hubo, y se congela antes del año de prueba. | Implementa la comparación a igual número de avisos sin fuga de información (revisión externa del 2026-09-16). Para la persistencia el umbral resulta ≈38 µg/m³; para Gradient Boosting ≈35 µg/m³. |
 | 2026-10-17 | Estimar la incertidumbre de las diferencias de MAE con bootstrap por bloques de 14 días. | Los errores de días cercanos y estaciones vecinas están correlacionados; remuestrear días sueltos subestimaría la incertidumbre. |
+| 2026-10-18 | Codificar la estación con 16 columnas indicadoras (one-hot) en lugar de la variable categórica nativa de `HistGradientBoostingRegressor`. | `shap.TreeExplainer` no reproduce las divisiones categóricas nativas (la suma de SHAP difería de la predicción en 0,61 µg/m³ en promedio); con one-hot es exacta y el MAE de 2022–2025 pasa de 2,73 a 2,74 µg/m³. Los hiperparámetros se eligieron con la codificación categórica; con one-hot el MAE de validación 2019–2021 es casi igual (3,18), así que no se volvieron a ajustar. |
 
 ## Decisiones reemplazadas
 

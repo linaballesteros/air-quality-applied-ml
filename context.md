@@ -212,17 +212,23 @@ resultados. Pendiente preguntar al profesor si se exige abstract.
 - Origen móvil, métricas y regla de aviso:
   [`src/models/evaluation.py`](src/models/evaluation.py).
 - [`notebooks/02_modelado.ipynb`](notebooks/02_modelado.ipynb) ejecutado
-  (secciones 1–10): persistencia, Gradient Boosting sin y con meteorología,
-  bootstrap, avisos a igual presupuesto y error en días críticos.
+  (secciones 1–12): persistencia, Gradient Boosting sin y con meteorología,
+  bootstrap, avisos a igual presupuesto, error en días críticos y SHAP
+  (sección 11, con la comparación de pesos de Baena-Salazar en 11.1).
 
 **Cifras vigentes (2022–2025, fuera de muestra).**
 
 | Resultado | Persistencia | GB sin meteo | GB con meteo |
 | --- | --- | --- | --- |
-| MAE (µg/m³) | 3,37 | 2,76 | 2,73 |
-| R² | 0,56 | 0,71 | 0,72 |
-| MAE en días en prevención | 5,88 | 6,85 | 6,53 |
-| Inicios avisados a igual presupuesto (de 123) | 0 | 30 | 28 |
+| MAE (µg/m³) | 3,37 | 2,77 | 2,74 |
+| R² | 0,56 | 0,71 | 0,71 |
+| MAE en días en prevención | 5,88 | 6,90 | 6,56 |
+| Inicios avisados a igual presupuesto (de 123) | 0 | 29 | 30 |
+
+SHAP (modelo con meteorología): PM2.5 del día `d` 49,5 % de la
+importancia, rezagos y ventanas 19,9 %, calendario 18,2 %, meteorología
+8,6 %, estación 3,9 %. Con entradas tipo Baena-Salazar el PM2.5 de hoy
+concentra el 65,7 % (ellos: 34,2 %).
 
 **Para retomar.** Con los datos ya descargados (ver README), activar
 `.venv`, ejecutar `python -m unittest discover -q` (20 pruebas) y abrir
@@ -230,17 +236,8 @@ resultados. Pendiente preguntar al profesor si se exige abstract.
 
 **Siguientes pasos, en orden.**
 
-1. **SHAP** (nueva sección 11 de `02_modelado.ipynb`). Entrenar el modelo
-   con meteorología en 2018–2021 (el mismo del año de prueba 2022, o repetir
-   por cada año), aplicar `shap.TreeExplainer` sobre el año de prueba y
-   reportar: gráfico de resumen, porcentaje del valor absoluto medio de SHAP
-   de cada variable y, en particular, el de `pm25_mean` (PM2.5 de hoy, que es
-   "el día anterior" respecto al pronosticado) frente al 34,2 % de
-   Baena-Salazar et al. Agrupar también por bloque (PM2.5 de hoy, ventanas,
-   meteorología, calendario, estación). Ya se verificó que `TreeExplainer`
-   funciona con `HistGradientBoostingRegressor` y faltantes. Advertir en el
-   texto que SHAP y los pesos de una red neuronal no son el mismo método.
-2. **Réplica de Baena-Salazar** (sección 12). ITA-CONC y MED-UNNV,
+1. ~~SHAP~~: hecho el 2026-10-18 (sección 11).
+2. **Réplica de Baena-Salazar** (nueva sección 12; hoy la 12 es "Siguientes pasos"). ITA-CONC y MED-UNNV,
    entrenar con 2013–2015 y probar del 1 de enero al 31 de marzo de 2016.
    Comparar persistencia y Gradient Boosting solo con PM2.5 usando sus
    métricas (r² y error porcentual, reportado como MAPE). Cifras de
@@ -338,3 +335,4 @@ La regla de aviso quedó fijada el 2026-10-17 (ver `docs/decisions.md`).
 | 2026-10-01 | Se registró el feedback de la Entrega 1 en `feedback-delivery-01/`: plan para la entrega final (XGBoost con ventanas de tiempo, SHAP, comparación con Baena-Salazar, dos preguntas) y respuestas a las dudas. Verificado: la red tenía 5–9 estaciones hasta 2016 (solo 3 con ≥90 % en 2013–2025) y, en el periodo de validación de Baena-Salazar, la persistencia alcanza r² 0,796 (ITA-CONC) y 0,811 (MED-UNNV) frente a 0,806 y 0,864 de su red neuronal. |
 | 2026-10-17 | Tabla de predictores con ventanas de tiempo en `src/features/build_features.py` (5 pruebas nuevas, 16 en total) y notebook `02_modelado.ipynb` ejecutado: reproduce los 44.399 registros del EDA; persistencia por año de prueba con MAE de 2,95 a 3,61 µg/m³ y R² de 0,44 a 0,65; las presiones de 0 hPa se tratan como faltantes. |
 | 2026-10-17 | Modelado con origen móvil en `02_modelado.ipynb` y `src/models/evaluation.py` (20 pruebas). En 2022–2025 el MAE baja de 3,37 (persistencia) a 2,76 (Gradient Boosting sin meteorología) y 2,73 µg/m³ (con meteorología); ambas mejoras con IC 95 % por bootstrap de bloques que excluye el cero, la de la meteorología en las 16 estaciones. A igual presupuesto de avisos, Gradient Boosting anticipa 28–30 de 123 inicios de episodio y la persistencia ninguno. La meteorología reduce el error en días en prevención de 6,85 a 6,53 µg/m³. |
+| 2026-10-18 | SHAP en `02_modelado.ipynb` (sección 11): el PM2.5 del día `d` es la entrada dominante (49,5 %; 65,7 % con entradas tipo Baena-Salazar, que reportó 34,2 %), seguido de la media de siete días, el día de la semana y el mes; la meteorología suma 8,6 %. La estación pasó a one-hot porque SHAP no reproduce las divisiones categóricas nativas; las cifras del modelado cambiaron en centésimas (MAE con meteorología 2,74 µg/m³; mejora por meteorología en 14 de 16 estaciones). |

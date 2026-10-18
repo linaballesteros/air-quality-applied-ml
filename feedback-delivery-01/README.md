@@ -86,7 +86,7 @@ Cada tarea apunta a una observación concreta.
       meteorología y Gradient Boosting con meteorología (responde las dos preguntas, ver C).
 - [x] Calibrar el umbral de aviso solo con train/validación y comparar con
       persistencia a igual número de avisos (decisión vigente).
-- [ ] **SHAP** (`shap.TreeExplainer`) sobre el modelo con meteorología:
+- [x] **SHAP** (`shap.TreeExplainer`) sobre el modelo con meteorología:
       porcentaje de importancia del PM2.5 de ayer frente al 34,2 % de
       Baena-Salazar, y figura de resumen.
 
