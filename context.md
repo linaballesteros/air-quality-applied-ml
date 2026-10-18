@@ -190,7 +190,8 @@ regenera las figuras del paper en `paper/figuras/`.
 
 Pendiente antes de modelar: resolver los huecos meteorológicos documentados
 en [`docs/station_matching.md`](docs/station_matching.md) y validar las
-presiones de 0 hPa que la bandera de calidad no marcó.
+presiones de 0 hPa que la bandera de calidad no marcó (resuelto el
+2026-10-17: se tratan como faltantes en `src/features`).
 
 ## Siguientes pasos por persona
 
@@ -235,7 +236,7 @@ no se lleva a `main`).
 
 **Antes de la Entrega 2 (cualquiera de los dos).** Resolver los huecos
 meteorológicos de [`docs/station_matching.md`](docs/station_matching.md),
-filtrar las 7 presiones de 0 hPa y fijar la regla de aviso (umbral calibrado
+fijar la regla de aviso (umbral calibrado
 o probabilidad de exceder 38) según
 [`docs/decisions.md`](docs/decisions.md).
 
@@ -266,3 +267,4 @@ o probabilidad de exceder 38) según
 | 2026-09-17 | Revisión previa a la entrega: el notebook exporta las figuras del paper de forma reproducible (sección 16, PNG idénticos a los versionados), el paper explica los 753 registros con media sin target, se corrigieron cifras desactualizadas en `context.md`, `eda_plan.md`, `methodology_notes.md` y `docs/README.md`, el README reporta 11 pruebas y `requirements.txt` incluye `numpy`. |
 | 2026-09-20 | Revisión externa de formato: las figuras del paper pasan a PDF vectorial dibujado al ancho de columna IEEE (antes PNG reducidos), la Fig. 2 apila sus dos paneles y se coloca junto a su primera mención, las citas de la sección II aparecen junto al nombre de los autores y el documento usa EB Garamond (`ebgaramond-maths` + `newtxmath`) en vez de la Times de IEEEtran. Compila en 4 páginas con referencias y sin citas sin resolver. |
 | 2026-10-01 | Se registró el feedback de la Entrega 1 en `feedback-delivery-01/`: plan para la entrega final (XGBoost con ventanas de tiempo, SHAP, comparación con Baena-Salazar, dos preguntas) y respuestas a las dudas. Verificado: la red tenía 5–9 estaciones hasta 2016 (solo 3 con ≥90 % en 2013–2025) y, en el periodo de validación de Baena-Salazar, la persistencia alcanza r² 0,796 (ITA-CONC) y 0,811 (MED-UNNV) frente a 0,806 y 0,864 de su red neuronal. |
+| 2026-10-17 | Tabla de predictores con ventanas de tiempo en `src/features/build_features.py` (5 pruebas nuevas, 16 en total) y notebook `02_modelado.ipynb` ejecutado: reproduce los 44.399 registros del EDA; persistencia por año de prueba con MAE de 2,95 a 3,61 µg/m³ y R² de 0,44 a 0,65; las presiones de 0 hPa se tratan como faltantes. |

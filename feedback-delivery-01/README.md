@@ -72,13 +72,13 @@ Cada tarea apunta a una observación concreta.
 
 ### B. Modelado (núcleo de la entrega final)
 
-- [ ] Construir la tabla de predictores con **ventanas de tiempo**: rezagos
+- [x] Construir la tabla de predictores con **ventanas de tiempo**: rezagos
       de PM2.5 de 1 a 7 días, medias y desviación móviles de 3 y 7 días,
       máximo y media de las últimas horas del día `d`, meteorología del día
       `d` y lluvia acumulada de 3 días (entrada que usó Baena-Salazar).
-- [ ] Entrenar **Gradient Boosting de scikit-learn** (como la clase 5:
-      `GradientBoostingRegressor`, o `HistGradientBoostingRegressor` si hay
-      que conservar días con meteorología incompleta) con origen móvil: probar en
+- [ ] Entrenar **`HistGradientBoostingRegressor`** de scikit-learn
+      (decidido el 2026-10-17; se verificó que `shap.TreeExplainer` lo
+      admite con faltantes) con origen móvil: probar en
       2022, 2023, 2024 y 2025 entrenando con los años anteriores.
       `HistGradientBoostingRegressor` acepta faltantes sin imputar, lo que encaja con la decisión
       de no imputar.
@@ -110,9 +110,9 @@ Cada tarea apunta a una observación concreta.
 
 - [ ] Añadir tras la sección 4.1 una tabla o figura de **estaciones activas
       por año**, para que la duda del profesor quede resuelta al leerlo.
-- [ ] Nuevo notebook `02_modelado.ipynb` para B, con las cifras que citará
+- [x] Nuevo notebook `02_modelado.ipynb` (tabla y persistencia; falta el modelado) para B, con las cifras que citará
       el paper.
-- [ ] Añadir `scikit-learn` y `shap` a `requirements.txt`.
+- [x] Añadir `scikit-learn` y `shap` a `requirements.txt`.
 
 ### E. Presentación
 
@@ -125,7 +125,7 @@ Cada tarea apunta a una observación concreta.
 
 - [ ] Resolver los huecos meteorológicos de `docs/station_matching.md`
       (viento de 206, presión de 252, lluvia de 229, estación 271).
-- [ ] Filtrar las 7 horas con presión de 0 hPa.
+- [x] Filtrar las 7 horas con presión de 0 hPa (se tratan como faltantes).
 
 ## 4. Dificultades a decidir entre los dos
 

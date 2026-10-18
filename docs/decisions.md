@@ -20,6 +20,9 @@
 | 2026-09-14 | Trabajar inicialmente con 2018–2025 y 16 estaciones con cobertura ≥90%. | Conserva ocho años completos y entre 92,67% y 97,41% de cobertura por estación. |
 | 2026-09-14 | No imputar faltantes en el EDA; excluir solo pares sin medición actual o target de la tabla supervisada. | Mantiene transparentes los datos observados y deja 1.050.341 pares utilizables. |
 | 2026-09-14 | Conservar ceros y valores fuera de límites IQR. | SIATA reporta mínimos horarios de 0,0 y los extremos pueden ser episodios reales; no existe evidencia para eliminarlos. |
+| 2026-10-17 | Tratar como faltantes las 7 horas con presión de 0 hPa antes de la media diaria. | No son físicas (la presión en el valle ronda 840 hPa) y la bandera de calidad no las marca. |
+| 2026-10-17 | Predictores con ventanas de tiempo: media de hoy y de 1 a 6 días antes, medias móviles de 3 y 7 días, desviación de 7 días, cambio respecto a ayer, máximo horario y media de 18–23 h del día `d`; meteorología diaria con lluvia de 3 días; mes y día de la semana del día pronosticado. | Recomendación del profesor (ventanas de tiempo) y entradas de Baena-Salazar et al. (PM2.5 de 1–3 días antes, lluvia acumulada de 3 días). Todo se observa hasta el final de `d`; una prueba unitaria lo verifica. |
+| 2026-10-17 | Usar `HistGradientBoostingRegressor` de scikit-learn y conservar los registros con predictores faltantes. | El curso usa Gradient Boosting de scikit-learn; esta variante admite faltantes sin imputar, y exigir meteorología completa descartaría el 27 % de la tabla supervisada. |
 
 ## Decisiones reemplazadas
 
@@ -40,7 +43,6 @@
   persistencia se calibra únicamente con train/validación y se congela antes
   de tocar el periodo de prueba; ajustarlo sobre el test sería fuga de
   información (observación de la revisión externa del 2026-09-16).
-- Filtrar las 7 horas con presión de 0 hPa que la bandera de calidad no marcó.
 - Evaluar sensibilidad a ceros, valores extremos, definición de media diaria
   (calendario vs. máximo de media móvil) y exclusión de BEL-FEVE y MED-SCRI,
   sin usar información del periodo de prueba.

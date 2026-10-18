@@ -42,7 +42,7 @@ Ejecutar en este orden desde la raíz del repositorio (tiempos aproximados):
 python scripts/download_pm25_dataset.py --all   # 162 archivos, 15 MB, ~1 min
 python scripts/download_meteo_dataset.py        # 1.131 archivos, 3 GB, ~10 min
 python scripts/build_meteo_hourly.py            # tabla horaria en data/interim, ~2 min
-python -m unittest discover -q                  # 11 pruebas
+python -m unittest discover -q                  # 16 pruebas
 jupyter lab                                     # abrir notebooks/01_eda_pm25.ipynb
 ```
 
@@ -63,9 +63,9 @@ para reejecutarlo se necesitan las tres primeras líneas.
 ```text
 data/       archivos originales de PM2.5, meteorología y redes (excluidos de Git)
 docs/       decisiones, diccionario, cruce de estaciones, guía de la entrega y fuentes
-notebooks/  EDA ejecutado de la Entrega 1
+notebooks/  EDA de la Entrega 1 (01) y modelado de la entrega final (02)
 paper/      borrador IEEEtran del short paper y referencias
 scripts/    descarga, perfil y agregación de los datasets
-src/        funciones reutilizables de carga, validación y correspondencia de estaciones
+src/        carga, validación, correspondencia de estaciones y tabla de predictores
 tests/      pruebas unitarias de los loaders
 ```
