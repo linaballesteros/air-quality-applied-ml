@@ -253,12 +253,24 @@ sección 12 necesita además la meteorología 2013–2016 de las estaciones 203 
 4. ~~Diagramas de flujo~~: hechos el 2026-10-18 en TikZ
    (`paper/figuras/diagramas/`, PDF en `paper/figuras/`): `flujo_datos`,
    `flujo_metodologia` y `origen_movil`, al ancho de una columna IEEE.
-5. **Paper** (`paper/main.tex`): dividir la pregunta en dos (borrador en
-   `respuestas.md` §5), aplicar los textos de §2 y §4, y escribir
-   metodología, resultados, discusión y conclusiones. Las figuras deben
-   salir del notebook, como en la Entrega 1.
-6. **Presentación**: cuatro bloques, reutilizando las figuras del paper;
-   en el EDA, explicar la composición de estaciones (`respuestas.md` §1).
+5. **Paper** (`paper/main.tex`): primer borrador completo el 2026-10-18
+   (resumen, P1 y P2, ventana, faltantes con diagrama, Tabla II ampliada y
+   secciones VI–IX). Falta: revisión de Lina, decidir la extensión con el
+   profesor (8 páginas con referencias), subir a Overleaf y compilar con
+   EB Garamond (localmente no está instalada).
+6. **Presentación — es lo siguiente (no se ha empezado).** Cuatro
+   bloques exigidos por el profesor: introducción con el planteamiento del
+   problema, EDA con insights y particularidades de los datos, metodología
+   con diagramas de flujo y resultados. Material listo para reutilizar:
+   - EDA: composición de estaciones por año (`respuestas.md` §1), por qué
+     2018–2025 (§2), Tabla II ampliada (§4) y figuras
+     `distribucion_target` y `extension_eventos`.
+   - Metodología: `flujo_datos`, `flujo_metodologia` y `origen_movil`
+     (este último no está en el paper; pensado para la presentación).
+   - Resultados: Tablas IV–VI del paper y figuras `importancia_shap` y
+     `replica_baena`.
+   Todos los PDF están en `paper/figuras/`; usar los mismos para que las
+   cifras coincidan con el paper.
 
 **Decisiones abiertas.**
 
@@ -346,3 +358,4 @@ La regla de aviso quedó fijada el 2026-10-17 (ver `docs/decisions.md`).
 | 2026-10-18 | SHAP en `02_modelado.ipynb` (sección 11): el PM2.5 del día `d` es la entrada dominante (49,5 %; 65,7 % con entradas tipo Baena-Salazar, que reportó 34,2 %), seguido de la media de siete días, el día de la semana y el mes; la meteorología suma 8,6 %. La estación pasó a one-hot porque SHAP no reproduce las divisiones categóricas nativas; las cifras del modelado cambiaron en centésimas (MAE con meteorología 2,74 µg/m³; mejora por meteorología en 14 de 16 estaciones). |
 | 2026-10-18 | Réplica del periodo de validación de Baena-Salazar et al. (sección 12 de `02_modelado.ipynb`) con ITA-CONC/206 y MED-UNNV/203 (se añadió la 203 a `src/data/stations.py` y se descargó su meteorología 2013-01 a 2016-03 y la de la 206). El modelo de nivel pierde frente a la persistencia porque 22 de 175 días superan el máximo de entrenamiento; predecir el cambio lo corrige (r² 0,80/0,82, MAPE 14,2/11,5 %). Queda abierta la elección entre nivel y cambio. |
 | 2026-10-18 | Diagramas de flujo en TikZ para paper y presentación (`paper/figuras/flujo_datos.pdf`, `flujo_metodologia.pdf` y `origen_movil.pdf`; fuentes en `paper/figuras/diagramas/`). El de datos corrige los registros con meteorología completa a 32.455 (73,1 %), la cifra del notebook de modelado. |
+| 2026-10-18 | Se decidió mantener el modelo de nivel (sección 12.1 de `02_modelado.ipynb`: el de cambio empata en días en prevención y es peor en el resto). Primer borrador completo del paper final: resumen, P1 y P2, ventana y faltantes con diagrama, Tabla II ampliada y secciones VI–IX con figuras exportadas desde la sección 14 del notebook; 8 páginas con referencias. Lo siguiente es la presentación. |

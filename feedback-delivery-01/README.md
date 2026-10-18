@@ -92,20 +92,19 @@ Cada tarea apunta a una observación concreta.
 
 ### C. Paper
 
-- [ ] **Dividir la pregunta en dos** (borrador en
+- [x] **Dividir la pregunta en dos** (borrador en
       [`respuestas.md` §5](respuestas.md#5-dos-preguntas-de-investigación)).
-- [ ] Explicar **por qué 2018–2025** y no todo el histórico (texto en
+- [x] Explicar **por qué 2018–2025** y no todo el histórico (texto en
       [`respuestas.md` §2](respuestas.md#2-por-qué-la-ventana-20182025-y-no-todos-los-años)).
 - [x] Añadir un **diagrama de flujo** de datos: de archivos mensuales a la
       tabla supervisada, con cuántos registros se pierden en cada paso y
       por qué (cifras en [`respuestas.md` §3](respuestas.md#3-faltantes-qué-había-y-qué-se-hizo)).
-      Hecho en `paper/figuras/flujo_datos.pdf`; falta incluirlo en
-      `main.tex`.
-- [ ] Ampliar el párrafo de la **Tabla II** (borrador en
+      Hecho en `paper/figuras/flujo_datos.pdf` e incluido como Fig. 1.
+- [x] Ampliar el párrafo de la **Tabla II** (borrador en
       [`respuestas.md` §4](respuestas.md#4-tabla-ii-explicación-ampliada)).
-- [ ] Secciones nuevas: **Metodología**, **Resultados**, **Discusión**
+- [x] (borrador) Secciones nuevas: **Metodología**, **Resultados**, **Discusión**
       (comparación con todos los trabajos relacionados) y **Conclusiones**.
-- [ ] Dentro de la discusión, **comparación con Baena-Salazar** (réplica
+- [x] (borrador) Dentro de la discusión, **comparación con Baena-Salazar** (réplica
       hecha en la sección 12 de `02_modelado.ipynb`; resumen en
       [`respuestas.md` §6](respuestas.md#6-comparación-con-baena-salazar-et-al)).
 
@@ -144,9 +143,10 @@ Cada tarea apunta a una observación concreta.
 2. **Métricas de Baena-Salazar poco definidas.** No explican cómo calculan el
    "error" porcentual y parecen reportar r² sobre calibración y validación
    juntas. La comparación debe decirlo explícitamente.
-3. **Abstract.** La guía de la Entrega 1 decía que la entrega final
-   incluiría abstract; los requisitos comunicados el 2026-10-17 no lo
-   mencionan. Confirmar con el profesor.
+3. **Abstract y extensión.** La guía de la Entrega 1 decía que la entrega
+   final incluiría abstract (ya hay un borrador) y pedía 3 a 5 páginas sin
+   referencias; el borrador final tiene unas 7,3. Confirmar con el
+   profesor la extensión y si el abstract sigue siendo obligatorio.
 4. **Semestre 2026 disponible.** El dataset llega hasta junio de 2026 e
    incluye la temporada crítica de febrero–marzo. Podría servir como prueba
    final que ningún modelo ha visto, pero exigiría descargar la meteorología

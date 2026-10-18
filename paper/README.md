@@ -7,8 +7,10 @@
   `kleine2017modeling`, `siata2026pm25`, `siata2026meteo`); quedan sin usar
   `ganan2026spatiotemporal` (cita retirada por no tener fuente primaria
   archivada), `gomez2017contaminacion` y `joharestani2019pm25`.
-- `figuras/`: PDF vectoriales exportados del notebook ejecutado
-  (`distribucion_target`, `extension_eventos`). Se dibujan al ancho real de
+- `figuras/`: PDF vectoriales exportados de los notebooks ejecutados
+  (`distribucion_target` y `extension_eventos` de `01_eda_pm25.ipynb`;
+  `importancia_shap` y `replica_baena` de la sección 14 de
+  `02_modelado.ipynb`). Se dibujan al ancho real de
   una columna IEEE (3,5 pulgadas) para incluirlos sin reducir, así el texto
   de los ejes se mantiene nítido y legible.
 - `figuras/diagramas/`: fuentes TikZ de los diagramas de flujo
@@ -42,4 +44,11 @@ basta con subir `main.tex` y `referencias.bib`.
 
 La guía de contenido por sección es [`../docs/entrega1_contenido.md`](../docs/entrega1_contenido.md);
 la pregunta vigente y las cifras verificadas están en [`../context.md`](../context.md).
-Toda cifra del paper debe existir en `notebooks/01_eda_pm25.ipynb`.
+Toda cifra del paper debe existir en `notebooks/01_eda_pm25.ipynb` o en
+`notebooks/02_modelado.ipynb`.
+
+Borrador de la entrega final (2026-10-18): resumen, dos preguntas de
+investigación y secciones VI–IX (metodología, resultados, discusión y
+conclusiones). Compila sin errores en 8 páginas con referencias (unas 7,3
+de contenido). Para Overleaf hay que subir `main.tex`, `referencias.bib`
+(cinco entradas nuevas) y los cinco PDF nuevos de `figuras/`.

@@ -67,6 +67,27 @@ Medellín, Colombia
 
 \maketitle
 
+\begin{abstract}
+Se evaluó si los datos abiertos de SIATA permiten pronosticar, con un día
+de anticipación, la media diaria de PM$_{2.5}$ en 16 estaciones del Valle
+de Aburrá. Con ventanas de PM$_{2.5}$ de los días previos, calendario y
+meteorología observada, un modelo de Gradient Boosting se evaluó con origen
+móvil en 2022--2025 frente a la persistencia. Redujo el error absoluto
+medio de 3,37 a 2,74~$\mu$g/m$^3$ y, con el mismo número de avisos, anticipó
+30 de 123 inicios de episodio en Nivel de Prevención, que la persistencia
+no puede anticipar. La meteorología aportó una mejora pequeña pero
+significativa (0,027~$\mu$g/m$^3$). Según SHAP, el PM$_{2.5}$ del día
+anterior al pronosticado concentra el 49,5\,\% de la importancia. En el
+periodo de validación de un estudio local previo, la persistencia casi
+igualó a su red neuronal, y el modelo de árboles falló en los días más
+altos que todo su entrenamiento.
+\end{abstract}
+
+\begin{IEEEkeywords}
+PM$_{2.5}$, pronóstico, Gradient Boosting, persistencia, SHAP, Valle de
+Aburrá.
+\end{IEEEkeywords}
+
 
 % =================================================
 % I. INTRODUCCIÓN
@@ -191,19 +212,23 @@ de datos abiertos.
 % III. PREGUNTA DE INVESTIGACIÓN
 % =================================================
 
-\section{Pregunta de investigación}
+\section{Preguntas de investigación}
 \label{sec:pregunta}
 
 \begin{quote}
-\textit{¿Es posible predecir, con un día de anticipación, la concentración
-media diaria de PM$_{2.5}$ por estación en el Valle de Aburrá a partir del
-historial del contaminante y variables temporales, y en qué medida las
-variables meteorológicas observadas de SIATA mejoran esa predicción frente
-a un pronóstico de persistencia, en error y en anticipación de días en
-Nivel de Prevención?}
+\textit{\textbf{P1.} ¿Puede un modelo de Gradient Boosting, con ventanas de
+PM$_{2.5}$ de los días previos y variables de calendario, predecir con un
+día de anticipación la concentración media diaria de PM$_{2.5}$ por
+estación en el Valle de Aburrá con menor error que la persistencia, y
+anticipar mejor los días en Nivel de Prevención?}
+
+\textit{\textbf{P2.} ¿Cuánto mejora ese pronóstico al añadir la
+meteorología observada de SIATA, y qué variables explican sus predicciones
+según SHAP? En particular, ¿es el PM$_{2.5}$ del día anterior la entrada
+dominante, como encontraron Baena-Salazar et al.\ \cite{baena2019red}?}
 \end{quote}
 
-La pregunta plantea un problema de \textbf{aprendizaje supervisado de
+Las dos preguntas plantean un problema de \textbf{aprendizaje supervisado de
 regresión}: la variable objetivo, \texttt{pm25\_mean\_d\_plus\_1}, es la
 concentración media diaria de PM$_{2.5}$ del día siguiente, numérica y
 continua, en $\mu$g/m$^3$. La comparación con el umbral de 38~$\mu$g/m$^3$
@@ -230,18 +255,38 @@ códigos históricos de estación, con 30 variantes de esquema por altas y
 retiros de estaciones. No hay filas ni marcas de tiempo duplicadas, el índice
 horario no tiene huecos y no aparecen valores negativos.
 
-Para el análisis se tomó la ventana 2018--2025 (ocho años completos) y las
-16 estaciones con cobertura horaria de al menos 90\,\% en ese periodo (entre
-92,67\,\% y 97,41\,\%). Los datos se transformaron a formato largo, una fila
-por estación-hora (1.122.048 registros), y luego se agregaron por estación y
-día calendario, calculando la media diaria solo cuando el día tiene al menos
-18 horas válidas. Resultan 46.752 combinaciones estación-día, de las cuales
-1.600 (3,4\,\%) no reciben media por falta de horas y 44.399 cuentan con la
-media del día y con la del día siguiente. Los 753 registros restantes tienen
-media propia válida, pero su día siguiente no alcanza las 18 horas: quince
-corresponden al 31 de diciembre de 2025, en el borde de la ventana, y 738 a
-días internos sin cobertura suficiente. No se imputaron faltantes ni se
-eliminaron valores extremos.
+Cada archivo mensual trae solo las estaciones activas ese mes, por lo que
+el número de columnas cambia con el tiempo: la red tenía entre 5 y 9
+estaciones de 2013 a 2016 y creció a 24 entre agosto de 2017 y marzo de
+2018. Por eso no se usó todo el histórico. Con una ventana desde 2013 solo
+tres estaciones alcanzan el 90\,\% de cobertura horaria; desde 2017, cuatro;
+desde 2018, dieciséis, y desde 2019, diecisiete. La ventana 2018--2025
+equilibra el número de estaciones y la longitud de la serie con ocho años
+completos; 2026 queda fuera porque solo tiene seis meses publicados.
+
+Se tomaron las 16 estaciones con cobertura horaria de al menos 90\,\% en la
+ventana (entre 92,67\,\% y 97,41\,\%). La Fig.~\ref{fig:flujo_datos}
+resume el procesamiento y cuántos registros quedan en cada paso. Los datos
+se transformaron a formato largo, una fila por estación-hora (1.122.048
+registros), y se agregaron por estación y día calendario, con media diaria
+solo cuando el día tiene al menos 18 horas válidas. Resultan 46.752
+combinaciones estación-día, de las cuales 1.600 (3,4\,\%) no reciben media
+por falta de horas y 44.399 cuentan con la media del día y con la del día
+siguiente. Los 753 registros restantes tienen media propia válida, pero su
+día siguiente no alcanza las 18 horas: quince corresponden al 31 de
+diciembre de 2025, en el borde de la ventana, y 738 a días internos sin
+cobertura suficiente. Ningún faltante se imputó: un día sin horas
+suficientes no tiene media y un registro sin media de hoy o de mañana sale
+de la tabla. Tampoco se eliminaron valores extremos.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{figuras/flujo_datos.pdf}
+    \caption{Procesamiento de los datos: de los archivos de SIATA a la tabla
+    supervisada, con los registros que se conservan y los que se pierden en
+    cada paso.}
+    \label{fig:flujo_datos}
+\end{figure}
 
 La \textbf{variable objetivo} es \texttt{pm25\_mean\_d\_plus\_1}: la
 concentración media de PM$_{2.5}$ de la misma estación en el día calendario
@@ -300,12 +345,11 @@ minutos válidos por hora. En la mayoría de estaciones y variables la
 cobertura válida está entre 88\,\% y 98\,\% de las horas de la ventana; hay
 huecos estructurales en el viento de la estación 206 (32,8\,\%), la presión
 de la 252 (14,6\,\%) y la precipitación de la 229 (74,3\,\%), y la estación
-271 no tiene datos desde agosto de 2024. Para estos casos se decidirá,
-por variable y estación, entre usar una estación meteorológica alternativa
-del mismo sitio (la 397 opera junto a la 206 desde 2019), tomar la variable
-de una estación vecina cuando es espacialmente suave, como la presión, o
-excluir la combinación con cobertura insuficiente; en ningún caso se imputará
-con información del periodo de prueba.
+271 no tiene datos desde agosto de 2024. Estos huecos se conservan como
+faltantes: el modelo los admite sin imputar (Sección~\ref{sec:metodologia}),
+y el 73,1\,\% de los registros supervisados tiene completa la meteorología
+del día. Las presiones de 0~hPa (7 horas), que la bandera de calidad no
+marca, se tratan como faltantes.
 
 % =================================================
 % V. INSIGHTS PRELIMINARES
@@ -348,29 +392,39 @@ y mínimo a las 15:00 (13,48~$\mu$g/m$^3$), y marzo tiene el mayor promedio
 mensual (28,05~$\mu$g/m$^3$). Los días con alguna estación en Nivel de
 Prevención se concentran en febrero y marzo (179 de 246,
 Fig.~\ref{fig:eventos}). Estos patrones justifican evaluar variables de
-calendario como predictores. Los eventos son, además, muy desiguales entre
-años (Tabla~\ref{tab:eventos}): 412 días-estación en 2020 y solo 4 en 2025,
-lo que obliga a evaluar sobre varios años de prueba.
+calendario como predictores.
+
+Los eventos varían entre años no solo en número sino en duración
+(Tabla~\ref{tab:eventos}). En 2020, 412 días-estación alcanzaron el Nivel
+de Prevención, pero solo el 22\,\% fueron inicios de episodio: los
+episodios duraron varios días seguidos, una situación favorable para la
+persistencia. En 2021, 2023 y 2025, en cambio, entre el 72\,\% y el
+100\,\% de los eventos fueron inicios, es decir, días aislados que la
+persistencia no puede anticipar. Un único año de prueba daría, por tanto,
+una imagen sesgada; en 2025, con solo cuatro eventos, ni siquiera es
+posible estimar la capacidad de anticipación. Por eso la evaluación usa
+cuatro años de prueba (Sección~\ref{sec:metodologia}).
 
 \begin{table}[htbp]
 \centering
 \caption{Días-estación en Nivel de Prevención ($\geq$ 38 $\mu$g/m$^3$) por
-año, 16 estaciones}
+año, 16 estaciones. Un inicio es un día en prevención cuyo día anterior
+estuvo por debajo del umbral.}
 \label{tab:eventos}
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrr}
 \toprule
-\textbf{Año} & \textbf{Registros} & \textbf{En prevención} & \textbf{Inicios de episodio} \\
+\textbf{Año} & \textbf{Registros} & \textbf{En prev.} & \textbf{Inicios} & \textbf{Inicios/prev.} \\
 \midrule
-2018 & 5.477 & 140 & 73 \\
-2019 & 5.698 & 255 & 128 \\
-2020 & 5.677 & 412 & 89 \\
-2021 & 5.607 & 26 & 25 \\
-2022 & 5.546 & 59 & 30 \\
-2023 & 5.465 & 36 & 26 \\
-2024 & 5.520 & 158 & 63 \\
-2025 & 5.409 & 4 & 4 \\
+2018 & 5.477 & 140 & 73 & 52\,\% \\
+2019 & 5.698 & 255 & 128 & 50\,\% \\
+2020 & 5.677 & 412 & 89 & 22\,\% \\
+2021 & 5.607 & 26 & 25 & 96\,\% \\
+2022 & 5.546 & 59 & 30 & 51\,\% \\
+2023 & 5.465 & 36 & 26 & 72\,\% \\
+2024 & 5.520 & 158 & 63 & 40\,\% \\
+2025 & 5.409 & 4 & 4 & 100\,\% \\
 \midrule
-Total & 44.399 & 1.090 & 438 \\
+Total & 44.399 & 1.090 & 438 & 40\,\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -393,6 +447,360 @@ la meteorología diaria y el PM$_{2.5}$ del día siguiente son débiles pero
 con el signo esperado (presión $-0{,}16$, lluvia $-0{,}16$, viento
 $-0{,}07$). Estas asociaciones débiles hacen necesario evaluar empíricamente
 si la meteorología mejora el desempeño frente a la persistencia.
+
+% =================================================
+% VI. METODOLOGÍA
+% =================================================
+
+\section{Metodología}
+\label{sec:metodologia}
+
+La Fig.~\ref{fig:metodologia} resume el procedimiento. El código, las
+pruebas unitarias y el notebook que produce cada cifra de esta sección y
+de la siguiente están en el repositorio del proyecto.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{figuras/flujo_metodologia.pdf}
+    \caption{Metodología: predictores, los tres pronósticos comparados,
+    origen móvil y evaluación. La réplica de Baena-Salazar et al.\ usa los
+    mismos predictores y modelo en otro periodo.}
+    \label{fig:metodologia}
+\end{figure}
+
+\subsection{Predictores}
+
+Cada registro es una estación en un día $d$, y todos los predictores usan
+solo información observada hasta el final de ese día
+(Tabla~\ref{tab:predictores}). Las ventanas de tiempo resumen la
+evolución reciente del PM$_{2.5}$: rezagos de uno a seis días, medias de
+tres y siete días y la media de las últimas horas del día, la más cercana
+al día pronosticado. Las ventanas exigen datos en al menos dos de tres o
+cinco de siete días. El calendario describe el día $d+1$, que se conoce de
+antemano. La meteorología es la observada el día $d$ en la estación
+asignada, no un pronóstico del día siguiente.
+
+\begin{table}[htbp]
+\centering
+\caption{Predictores del día $d$ para pronosticar la media de $d+1$}
+\label{tab:predictores}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.27\columnwidth}>{\raggedright\arraybackslash}p{0.63\columnwidth}}
+\toprule
+\textbf{Grupo} & \textbf{Variables} \\
+\midrule
+PM$_{2.5}$ de hoy & media, máximo y media de 18:00 a 23:00 \\
+Rezagos y ventanas & medias de 1 a 6 días antes; media de 3 y de 7 días;
+desviación estándar de 7 días; cambio respecto a ayer \\
+Calendario & mes y día de la semana de $d+1$ \\
+Estación & 16 variables indicadoras \\
+Meteorología & temperatura, humedad, presión, viento medio y máximo,
+lluvia del día y de 3 días \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Modelos}
+
+Se comparan tres pronósticos de la media de mañana. La
+\textbf{persistencia} repite la media de hoy. Los otros dos son modelos de
+Gradient Boosting \cite{friedman2001greedy}, en la implementación
+\texttt{HistGradientBoostingRegressor} de scikit-learn
+\cite{pedregosa2011scikit}: uno \textbf{sin meteorología} (estación,
+PM$_{2.5}$ y calendario), que responde la pregunta P1, y otro \textbf{con
+meteorología}, cuya diferencia con el anterior responde la P2. Este modelo
+acepta valores faltantes: en cada división aprende hacia qué rama
+enviarlos, lo que permite conservar los registros con meteorología
+incompleta sin imputar.
+
+Ambos modelos usan la misma configuración, para que solo cambien los
+predictores: tasa de aprendizaje 0,03, 300 iteraciones, árboles de 7 hojas
+y al menos 50 registros por hoja. Se eligió con el MAE de validación, que
+apenas cambió entre configuraciones (centésimas de $\mu$g/m$^3$). La
+estación entra como variables indicadoras y no como variable categórica
+nativa, porque el explicador SHAP no reproduce las divisiones categóricas
+del modelo.
+
+\subsection{Origen móvil}
+
+Cada año de 2019 a 2025 se predice con un modelo entrenado solo con los
+años anteriores: 2019 con 2018 y 2025 con 2018--2024. Las predicciones de
+2019--2021 sirven para elegir la configuración y calibrar los avisos; los
+años 2022 a 2025 (21.940 registros) son la prueba. Así ningún pronóstico
+usa información posterior al día que predice, y el resultado no depende de
+un único año con eventos atípicos (Tabla~\ref{tab:eventos}).
+
+\subsection{Evaluación}
+
+El error de concentración se mide con el MAE y el $R^2$. Las diferencias
+de MAE entre modelos se acompañan de un intervalo de confianza del 95\,\%
+por bootstrap de bloques \cite{kunsch1989jackknife}: se remuestrean 5.000
+veces bloques de 14 días consecutivos con todas sus estaciones, porque los
+errores de días cercanos y de estaciones vecinas están correlacionados.
+
+Un pronóstico se convierte en aviso de Nivel de Prevención cuando alcanza
+un umbral. Con el umbral fijo de 38~$\mu$g/m$^3$, un modelo que subestima
+los picos avisa menos que la persistencia y la comparación queda sesgada.
+Por eso cada método recibe además el mismo presupuesto de avisos: para cada
+año de prueba, su umbral se fija para que, en las predicciones fuera de
+muestra de los años anteriores, emita tantos avisos como eventos hubo, y
+se congela antes de ver el año de prueba. Se reportan la precisión, el
+recall y los inicios de episodio avisados, es decir, los avisos emitidos
+un día por debajo del umbral para un día siguiente en prevención.
+
+\subsection{Interpretación con SHAP}
+
+Los valores SHAP reparten cada predicción entre las variables de entrada
+\cite{lundberg2017unified}. Se calcularon con \texttt{TreeExplainer}
+\cite{lundberg2020local} sobre el modelo con meteorología de cada año de
+prueba, y se comprobó que su suma reproduce exactamente cada predicción.
+La importancia de una variable es la media de su valor SHAP absoluto,
+expresada como porcentaje del total; las 16 indicadoras se suman como
+``estación''. Para comparar con el 34,2\,\% de Baena-Salazar et al.\ se
+entrenó además un modelo reducido con entradas parecidas a las suyas
+(PM$_{2.5}$ de uno a tres días antes del pronosticado, temperatura,
+humedad, lluvia del día y de tres días y viento). Como los dos métodos de
+importancia son distintos, se compara el orden y no el número exacto.
+
+\subsection{Réplica de Baena-Salazar et al.}
+
+Se repitió el diseño de \cite{baena2019red} con las dos estaciones de ese
+estudio que siguen en el histórico: ITA-CONC y MED-UNNV, con la
+meteorología de su mismo sitio (estaciones 206 y 203). Se entrenó con
+2013--2015 y se probó del 1 de enero al 31 de marzo de 2016 (89 y 86
+días), con los mismos predictores y configuración del modelo principal.
+El estudio no define su error porcentual y parece reportar el $r^2$ sobre
+calibración y validación juntas; aquí se usan el MAPE y la correlación al
+cuadrado sobre la validación. MED-MANT no está en el histórico, y la
+altura de la capa de mezcla y la radiación no están disponibles.
+
+% =================================================
+% VII. RESULTADOS
+% =================================================
+
+\section{Resultados}
+\label{sec:resultados}
+
+\subsection{Error de concentración}
+
+Gradient Boosting reduce el error de la persistencia en los cuatro años de
+prueba (Tabla~\ref{tab:error}). En 2022--2025 el MAE baja de 3,37 a
+2,77~$\mu$g/m$^3$ sin meteorología ($-18$\,\%) y a 2,74 con meteorología, y
+el $R^2$ sube de 0,56 a 0,71. La reducción frente a la persistencia es de
+0,61~$\mu$g/m$^3$ (IC 95\,\%: 0,53 a 0,68). La meteorología añade una
+reducción de 0,027~$\mu$g/m$^3$ (IC 95\,\%: 0,011 a 0,047): pequeña, pero
+ningún intervalo incluye el cero y aparece en 14 de las 16 estaciones. Las
+dos estaciones donde la meteorología empeora levemente el error son las de
+meteorología más incompleta: BEL-FEVE (su estación 271 no tiene datos
+desde agosto de 2024) e ITA-CONC (la 206 no midió viento entre 2019 y
+2024).
+
+\begin{table}[htbp]
+\centering
+\caption{MAE por año de prueba ($\mu$g/m$^3$) y $R^2$ de 2022--2025}
+\label{tab:error}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Año} & \textbf{Persistencia} & \textbf{GB sin meteo.} & \textbf{GB con meteo.} \\
+\midrule
+2022 & 3,61 & 3,00 & 2,96 \\
+2023 & 3,36 & 2,78 & 2,76 \\
+2024 & 3,56 & 2,85 & 2,83 \\
+2025 & 2,95 & 2,43 & 2,41 \\
+\midrule
+2022--2025 & 3,37 & 2,77 & 2,74 \\
+$R^2$ 2022--2025 & 0,56 & 0,71 & 0,71 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Avisos de Nivel de Prevención}
+
+Con el umbral fijo de 38~$\mu$g/m$^3$, Gradient Boosting emite 157--167
+avisos frente a 259 de la persistencia: es más preciso (0,63 frente a
+0,52) pero detecta menos eventos (recall de 0,39--0,41 frente a 0,52). Con
+el mismo presupuesto (Tabla~\ref{tab:avisos}) su umbral baja a unos
+35~$\mu$g/m$^3$ y detecta tantos eventos como la persistencia, con una
+precisión algo menor porque emite entre 6\,\% y 11\,\% más avisos: el
+presupuesto se calibra con años anteriores y la frecuencia de eventos
+cambia de un año a otro. La diferencia está en qué eventos avisa.
+Gradient Boosting anticipa 29--30 de los 123 inicios de episodio
+(24\,\%); la persistencia no anticipa ninguno, porque con un umbral
+cercano a 38 sus avisos siempre caen en días que ya estaban en
+prevención. La meteorología apenas cambia este resultado (30 frente a 29
+inicios).
+
+\begin{table}[htbp]
+\centering
+\caption{Avisos a igual presupuesto, 2022--2025 (257 eventos y 123
+inicios)}
+\label{tab:avisos}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Pronóstico} & \textbf{Avisos} & \textbf{Precisión} & \textbf{Recall} & \textbf{Inicios} \\
+\midrule
+Persistencia & 259 & 0,52 & 0,52 & 0 \\
+GB sin meteo. & 275 & 0,49 & 0,53 & 29 \\
+GB con meteo. & 288 & 0,49 & 0,55 & 30 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Error en los días críticos}
+
+En los días en prevención Gradient Boosting se equivoca más que la
+persistencia (MAE de 6,90 sin meteorología y 6,56 con ella, frente a
+5,88~$\mu$g/m$^3$), porque subestima los picos en 6,05 y 5,46~$\mu$g/m$^3$
+en promedio. Es lo esperable en un modelo que minimiza el error medio en
+una serie donde solo el 2,5\,\% de los días está en prevención, y explica
+por qué el aviso necesita un umbral menor que 38. La meteorología ayuda
+más justo en esos días: reduce su MAE en 0,34~$\mu$g/m$^3$, más de diez
+veces su mejora en el promedio general.
+
+\subsection{Variables que explican el pronóstico}
+
+El PM$_{2.5}$ del día anterior al pronosticado es la entrada dominante
+(Fig.~\ref{fig:shap}). Las tres variables del día $d$ suman el 49,5\,\% de
+la importancia, y las horas de 18:00 a 23:00 (24,6\,\%) pesan tanto como
+la media completa del día (24,3\,\%). Le siguen la media de siete días
+(13,5\,\%) y el calendario (18,2\,\%): el día de la semana baja la
+predicción los domingos, cuando hay menos tráfico, y el mes la sube de
+enero a marzo. El rezago de seis días (2,1\,\%) es el único rezago suelto
+con peso, porque cae en el mismo día de la semana que el día pronosticado.
+La meteorología suma el 8,6\,\%, sobre todo por la lluvia (3,7\,\%) y la
+presión (3,0\,\%), y la estación el 3,9\,\%. En el modelo reducido con
+entradas tipo Baena-Salazar, el PM$_{2.5}$ de hoy concentra el 65,7\,\%
+y la meteorología el 15\,\%; ese modelo tiene un MAE de
+3,12~$\mu$g/m$^3$, entre la persistencia y el modelo completo.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{figuras/importancia_shap.pdf}
+    \caption{Importancia SHAP de las 12 variables con más peso en el modelo
+    con meteorología, 2022--2025. Entre paréntesis, la suma de cada grupo.}
+    \label{fig:shap}
+\end{figure}
+
+\subsection{Réplica de Baena-Salazar et al.}
+
+En el periodo de validación de \cite{baena2019red}, la persistencia queda
+muy cerca de su red neuronal (Tabla~\ref{tab:baena}). El modelo principal,
+que predice el nivel, es peor que ambos. La causa está en 22 de los 175
+días de prueba, que superan el máximo de entrenamiento (69,4~$\mu$g/m$^3$)
+durante la contingencia de marzo de 2016 (Fig.~\ref{fig:baena}): un
+modelo de árboles predice promedios de valores vistos al entrenar (sin
+meteorología, nunca pronosticó más de 53,9~$\mu$g/m$^3$). En esos días su error medio es de
+36~$\mu$g/m$^3$, frente a 8 de la persistencia; en el resto es mejor que
+ella (5,1 frente a 5,8). Predecir el cambio respecto a hoy corrige el
+problema, porque la predicción parte del nivel actual: alcanza un $r^2$ de
+0,80 y 0,82 y un MAPE de 14,2\,\% y 11,5\,\%. Esta variante se probó
+después de ver el resultado de 2016. En 2022--2025, donde ningún día
+superó el máximo de entrenamiento (73,7~$\mu$g/m$^3$), no mejora los días
+en prevención (MAE de 6,57 frente a 6,56), es peor en el promedio (2,79
+frente a 2,74; IC 95\,\% de la diferencia: 0,024 a 0,070) y anticipa
+menos inicios (25 frente a 30). Por eso el modelo principal sigue
+prediciendo el nivel.
+
+\begin{table}[htbp]
+\centering
+\caption{Periodo de validación de Baena-Salazar et al.\ (enero--marzo de
+2016): $r^2$ y error porcentual}
+\label{tab:baena}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Pronóstico} & \textbf{ITA-CONC} & \textbf{MED-UNNV} \\
+\midrule
+Red neuronal \cite{baena2019red} & 0,806 / 18,5\,\% & 0,864 / 12,4\,\% \\
+Persistencia & 0,796 / 15,6\,\% & 0,811 / 14,1\,\% \\
+GB con meteo., nivel & 0,726 / 16,3\,\% & 0,517 / 17,0\,\% \\
+GB con meteo., cambio & 0,802 / 14,2\,\% & 0,822 / 11,5\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{figuras/replica_baena.pdf}
+    \caption{Observado y pronósticos en el periodo de validación de
+    Baena-Salazar et al. El modelo que predice el nivel no supera el máximo
+    de su entrenamiento (línea punteada).}
+    \label{fig:baena}
+\end{figure}
+
+% =================================================
+% VIII. DISCUSIÓN
+% =================================================
+
+\section{Discusión}
+\label{sec:discusion}
+
+\textbf{Baena-Salazar et al.} Los dos estudios coinciden en que el
+PM$_{2.5}$ del día anterior es la entrada dominante (34,2\,\% en su red;
+49,5\,\% en el modelo completo y 65,7\,\% en el reducido). La magnitud
+difiere porque su red incluía la capa de mezcla y la radiación, y porque
+los métodos de importancia son distintos. La réplica añade tres
+matices. Primero, en su propio periodo de validación la persistencia casi
+iguala a la red neuronal, y ese estudio no se comparó con ella: superar la
+persistencia es la prueba exigente de un pronóstico diario. Segundo, el
+$R^2$ depende de cuánto varía el periodo evaluado: la misma persistencia
+logra 0,79--0,80 en el primer trimestre de 2016 y 0,56 en 2022--2025, así
+que los $R^2$ de estudios distintos no son comparables entre sí; la mejora
+frente a la persistencia en el mismo periodo sí lo es. Tercero, un modelo
+de árboles que predice el nivel subestima los episodios más fuertes que
+todo su entrenamiento, que son los que más importan. Ese riesgo no se
+presentó en 2022--2025, pero sí en 2016.
+
+\textbf{Kleine Deters et al.} En Quito, un modelo solo con viento y
+lluvia alcanzó una correlación de 0,34 entre lo observado y lo predicho, y
+sus predicciones se estancaban por encima de 20~$\mu$g/m$^3$
+\cite{kleine2017modeling}. Es coherente con lo encontrado aquí: la
+meteorología por sí sola explica poco, su peso es del 8,6\,\% cuando se
+dispone del historial del contaminante, y los modelos también subestiman
+los niveles altos. A diferencia de ese trabajo, el pronóstico aquí es a un
+día y se evalúa por estación y año.
+
+\textbf{Parra-Sánchez et al.} Ese estudio asoció el PM$_{2.5}$ diario de
+SIATA con atenciones respiratorias con rezagos de 0 a 7 días y exigió el
+75\,\% de datos válidos por día \cite{parra2020analitica}, el mismo
+criterio de 18 de 24 horas usado aquí. No es un pronóstico, pero muestra
+que la media diaria pronosticada es la escala en la que se han medido los
+efectos en salud del valle.
+
+\textbf{Limitaciones.} La meteorología es la observada el día $d$ y no un
+pronóstico del día siguiente, así que su aporte aquí es una cota inferior
+de lo que podría añadir un pronóstico meteorológico. El 27\,\% de los
+registros tiene la meteorología incompleta, y la ganancia por estación
+sugiere que cubrir esos huecos aumentaría algo su aporte. La media del día
+calendario es una de las medias de 24 horas posibles; la norma usa medias
+móviles. Los resultados corresponden a 16 estaciones y a una sola
+configuración del modelo.
+
+% =================================================
+% IX. CONCLUSIONES
+% =================================================
+
+\section{Conclusiones}
+\label{sec:conclusiones}
+
+\textbf{P1.} Sí. Con ventanas de PM$_{2.5}$ y calendario, Gradient
+Boosting reduce el MAE de la persistencia en 18\,\% en los cuatro años de
+prueba (de 3,37 a 2,77~$\mu$g/m$^3$) y, con el mismo número de avisos,
+anticipa 29 de 123 inicios de episodio en Nivel de Prevención, que la
+persistencia no puede anticipar. Su debilidad son los picos: los
+subestima, y en los días en prevención su error es mayor que el de la
+persistencia.
+
+\textbf{P2.} La meteorología observada mejora el pronóstico poco pero de
+forma significativa: 0,027~$\mu$g/m$^3$ en promedio y 0,34 en los días en
+prevención. Según SHAP, el PM$_{2.5}$ del día anterior al pronosticado es,
+como en Baena-Salazar et al., la entrada dominante (49,5\,\%), seguido de
+la media de siete días y el calendario; la meteorología pesa el 8,6\,\%.
+
+La comparación con el estudio local previo muestra que la persistencia es
+una referencia exigente y que un modelo de árboles no anticipa episodios
+sin precedentes. Como trabajo futuro se propone predecir el cambio
+respecto a hoy o combinarlo con el nivel, usar pronósticos meteorológicos
+en lugar de observaciones y evaluar el primer semestre de 2026, que ningún
+modelo ha visto.
 
 
 % =================================================
