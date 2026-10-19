@@ -118,7 +118,7 @@ para el paper son:
    a 3 km o menos con 88–98% de horas válidas en la mayoría de variables.
 2. **Estructura temporal:** el promedio horario máximo aparece a las 08:00
    (25,79 µg/m³) y el mínimo a las 15:00 (13,48 µg/m³); marzo alcanza el mayor
-   promedio mensual (28,05 µg/m³), y 179 de los 246 días con alguna estación
+   promedio mensual (28,04 µg/m³), y 179 de los 246 días con alguna estación
    en Nivel de Prevención ocurren en febrero–marzo.
 3. **Los episodios son mayoritariamente locales y la persistencia es un
    rival exigente:** en 156 de los 246 días con alguna estación en
