@@ -258,9 +258,13 @@ sección 12 necesita además la meteorología 2013–2016 de las estaciones 203 
    secciones VI–IX). Falta: revisión de Lina, decidir la extensión con el
    profesor (8 páginas con referencias), subir a Overleaf y compilar con
    EB Garamond (localmente no está instalada).
-6. **Presentación**: primera versión completa el 2026-10-19 en
-   `presentacion/index.html` (19 diapositivas, 15 min; Lina: introducción y
-   datos, Alejandro: metodología y resultados; notas con la tecla N). Las
+6. **Presentación**: `presentacion/index.html`, 16 diapositivas para
+   15 min, rehecha el 2026-10-20 con poco texto (afirmación en el título y
+   evidencia visual) y lenguaje sencillo, como pidió el profesor; la
+   explicación completa está en el guion de estudio
+   `presentacion/guion/guion.pdf` (LaTeX), con los textos y notas de Lina.
+   Reparto (solo en el guion): Lina, diapositivas 1–8 (7 min 15 s);
+   Alejandro, 9–15 (7 min 45 s); preguntas, los dos. Las
    cifras de sus gráficos salen de `presentacion/datos.js`, que genera la
    sección 14.1 de `02_modelado.ipynb`. Falta: ensayar con el cronómetro,
    que Lina revise sus diapositivas y exportar un PDF de respaldo.
@@ -353,3 +357,4 @@ La regla de aviso quedó fijada el 2026-10-17 (ver `docs/decisions.md`).
 | 2026-10-18 | Diagramas de flujo en TikZ para paper y presentación (`paper/figuras/flujo_datos.pdf`, `flujo_metodologia.pdf` y `origen_movil.pdf`; fuentes en `paper/figuras/diagramas/`). El de datos corrige los registros con meteorología completa a 32.455 (73,1 %), la cifra del notebook de modelado. |
 | 2026-10-18 | Se decidió mantener el modelo de nivel (sección 12.1 de `02_modelado.ipynb`: el de cambio empata en días en prevención y es peor en el resto). Primer borrador completo del paper final: resumen, P1 y P2, ventana y faltantes con diagrama, Tabla II ampliada y secciones VI–IX con figuras exportadas desde la sección 14 del notebook; 8 páginas con referencias. Lo siguiente es la presentación. |
 | 2026-10-19 | Presentación HTML en `presentacion/` con gráficos dibujados desde `datos.js` (exportado por el notebook de modelado, con comprobaciones contra el EDA). Se corrigió el promedio de marzo: 28,04 µg/m³ y no 28,05 (error de redondeo de la Entrega 1, en el paper, el EDA y `docs/entrega1_contenido.md`). |
+| 2026-10-20 | Presentación rehecha con poco texto: 16 diapositivas (sin separadores ni reparto por persona), diagramas nuevos del valle con la inversión térmica y de un inicio de episodio, y guion de estudio en LaTeX (`presentacion/guion/guion.pdf`, 20 páginas: historia en un minuto, cifras clave, glosario sin tecnicismos y cada diapositiva con miniatura, tiempo, qué decir y preguntas probables), con el texto y las notas que Lina había escrito en las diapositivas. Diapositivas reescritas sin tecnicismos. |

@@ -24,3 +24,8 @@ paper/*.synctex.gz
 paper/*.toc
 paper/figuras/diagramas/*.aux
 paper/figuras/diagramas/*.log
+presentacion/guion/*.aux
+presentacion/guion/*.log
+presentacion/guion/*.fls
+presentacion/guion/*.fdb_latexmk
+presentacion/guion/*.out

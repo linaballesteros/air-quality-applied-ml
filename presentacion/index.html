@@ -6,9 +6,10 @@
 <title>PM2.5 a un día</title>
 <link rel="stylesheet" href="fuentes.css">
 <style>
-/* Concepto: informe de monitoreo atmosférico. Papel frío, tinta azul pizarra y
-   ámbar reservado para el Nivel de Prevención: el ámbar siempre significa
-   "episodio". Escenario fijo de 1600 × 900 que se escala a la pantalla. */
+/* Concepto: informe de monitoreo atmosférico. Cada diapositiva es una
+   afirmación (el título) y su evidencia (un gráfico, un diagrama o una cifra);
+   la explicación va en guion.md. El ámbar se reserva para el Nivel de
+   Prevención. Escenario fijo de 1600 × 900 que se escala a la pantalla. */
 :root {
   --marco: #0f1923;
   --fondo: #f3f5f6;
@@ -26,6 +27,7 @@
   --meteo: #4a8760;
   --calendario: #6b6f9a;
   --cambio: #a8364a;
+  --montana: #c9d3da;
   --f-titulo: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --f-texto: "Public Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --f-datos: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
@@ -35,82 +37,60 @@
 html, body { height: 100%; margin: 0; }
 body { background: var(--marco); color: var(--tinta); font-family: var(--f-texto); overflow: hidden; }
 
-/* Escenario */
 .escenario { position: absolute; width: 1600px; height: 900px; transform-origin: 0 0; }
 .diapo {
-  position: absolute; inset: 0; background: var(--fondo); padding: 64px 96px 96px;
-  display: none; flex-direction: column; gap: 28px; overflow: hidden;
+  position: absolute; inset: 0; background: var(--fondo); padding: 72px 96px 80px;
+  display: none; flex-direction: column; gap: 40px; overflow: hidden;
 }
 .diapo.activa { display: flex; }
-.diapo > header { display: flex; flex-direction: column; gap: 10px; }
-.ceja {
-  font-family: var(--f-datos); font-size: 16px; font-weight: 500; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--tenue);
-}
-h1, h2, h3 { font-family: var(--f-titulo); font-weight: 500; margin: 0; text-wrap: balance; }
-h1 { font-size: 76px; line-height: 1.04; letter-spacing: -.01em; }
-h2 { font-size: 50px; line-height: 1.1; }
-h3 { font-size: 30px; line-height: 1.2; }
+h1, h2 { font-family: var(--f-titulo); font-weight: 500; margin: 0; text-wrap: balance; }
+h1 { font-size: 80px; line-height: 1.03; letter-spacing: -.01em; }
+h2 { font-size: 52px; line-height: 1.1; max-width: 26ch; }
 p { margin: 0; }
-.lead { font-size: 28px; line-height: 1.4; color: var(--tinta-2); max-width: 44ch; }
-.texto { font-size: 23px; line-height: 1.45; color: var(--tinta-2); }
-.pequeno { font-size: 18px; line-height: 1.45; color: var(--tenue); }
-.puntos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-.puntos li { font-size: 22px; line-height: 1.4; color: var(--tinta-2); padding-left: 26px; position: relative; }
-.puntos li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 8px; height: 8px; background: var(--gb); }
-.dato { font-family: var(--f-datos); font-variant-numeric: tabular-nums; }
 sub { font-size: .7em; vertical-align: -.25em; line-height: 0; }
-em { font-style: italic; }
 strong { font-weight: 600; color: var(--tinta); }
 .ambar { color: var(--prevencion); }
-.cuerpo { flex: 1; min-height: 0; display: grid; gap: 56px; align-items: center; align-content: center; }
-.diapo > .pila { flex: 1; justify-content: center; }
+.dato { font-family: var(--f-datos); font-variant-numeric: tabular-nums; }
+.nota { font-size: 19px; line-height: 1.45; color: var(--tenue); }
+.frase { font-size: 26px; line-height: 1.4; color: var(--tinta-2); }
+.etiqueta { font-family: var(--f-datos); font-size: 16px; color: var(--tenue); }
+
+.cuerpo { flex: 1; min-height: 0; display: grid; gap: 64px; align-items: center; align-content: center; }
 .dos { grid-template-columns: 1fr 1fr; }
-.dos-1 { grid-template-columns: 1.35fr 1fr; }
-.dos-2 { grid-template-columns: 1fr 1.35fr; }
-.tres { grid-template-columns: repeat(3, 1fr); }
-.pila { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.dos-1 { grid-template-columns: 1.5fr 1fr; }
+.dos-2 { grid-template-columns: 1fr 1.4fr; }
+.pila { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
 .figura { min-width: 0; }
 .figura svg { display: block; width: 100%; height: auto; overflow: visible; }
-.pie-figura { font-size: 17px; color: var(--tenue); margin-top: 10px; line-height: 1.4; }
+.num-diapo { position: absolute; right: 96px; bottom: 34px; font-family: var(--f-datos); font-size: 15px; color: var(--tenue); }
 
-/* Pie de cada diapositiva: bloque, quién presenta y número */
-.pie {
-  position: absolute; left: 96px; right: 96px; bottom: 30px; display: flex; align-items: center;
-  gap: 24px; font-family: var(--f-datos); font-size: 15px; color: var(--tenue); letter-spacing: .04em;
-}
-.pie .bloques { display: flex; gap: 6px; }
-.pie .bloques span { width: 34px; height: 4px; background: var(--linea); }
-.pie .bloques span.hecho { background: var(--tinta-2); }
-.pie .num { margin-left: auto; min-width: 64px; text-align: right; }
-
-/* Pasos dentro de una diapositiva */
 [data-paso] { opacity: 0; transform: translateY(8px); transition: opacity .35s ease, transform .35s ease; }
 [data-paso].visible { opacity: 1; transform: none; }
 
-/* Tarjetas y tablas */
-.tarjeta { background: var(--superficie); border: 1px solid var(--linea); padding: 26px 28px; display: flex; flex-direction: column; gap: 12px; }
-.tarjeta h3 { font-size: 27px; }
-.etiqueta { font-family: var(--f-datos); font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--tenue); }
+/* Cifras */
+.cifra { display: flex; flex-direction: column; gap: 6px; }
+.cifra .n { font-family: var(--f-titulo); font-size: 92px; line-height: .95; font-variant-numeric: lining-nums tabular-nums; }
+.cifra .u { font-size: 20px; line-height: 1.35; color: var(--tinta-2); max-width: 22ch; }
+.cifras { display: flex; gap: 56px; flex-wrap: wrap; }
+
 table { border-collapse: collapse; font-size: 21px; width: 100%; }
 th, td { padding: 9px 12px; text-align: right; border-bottom: 1px solid var(--linea); font-variant-numeric: tabular-nums; }
 th:first-child, td:first-child { text-align: left; }
-th { font-family: var(--f-datos); font-size: 14px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--tenue); }
-td.dato { font-family: var(--f-datos); }
+th { font-family: var(--f-datos); font-size: 15px; font-weight: 500; color: var(--tenue); }
+td.dato { font-family: var(--f-datos); white-space: nowrap; }
 tr.destacada td { font-weight: 600; color: var(--tinta); }
 
-/* Leyendas */
-.leyenda { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 18px; color: var(--tinta-2); }
+.leyenda { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 18px; color: var(--tinta-2); margin-bottom: 14px; }
 .leyenda span { display: inline-flex; align-items: center; gap: 8px; }
 .leyenda i { width: 16px; height: 16px; display: inline-block; }
 .leyenda i.raya { height: 4px; width: 26px; }
 
-/* SVG */
 svg text { font-family: var(--f-datos); fill: var(--tenue); font-size: 15px; }
 svg .eje { stroke: var(--linea); stroke-width: 1; }
 svg .rejilla { stroke: var(--linea); stroke-width: 1; stroke-dasharray: 2 4; }
-svg .valor { fill: var(--tinta-2); font-size: 14px; }
+svg .valor { fill: var(--tinta-2); font-size: 15px; }
 svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
+svg .rotulo { font-family: var(--f-texto); fill: var(--tinta-2); font-size: 18px; }
 .c-tinta { fill: var(--tinta); stroke: var(--tinta); }
 .c-persistencia { fill: var(--persistencia); stroke: var(--persistencia); }
 .c-gb { fill: var(--gb); stroke: var(--gb); }
@@ -121,114 +101,130 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
 .c-calendario { fill: var(--calendario); stroke: var(--calendario); }
 .c-cambio { fill: var(--cambio); stroke: var(--cambio); }
 .c-banda { fill: var(--banda); stroke: none; }
-.c-linea { fill: var(--linea); stroke: var(--linea); }
+.c-montana { fill: var(--montana); stroke: none; }
 .sin-trazo { stroke: none; }
 .sin-relleno { fill: none; }
 .bg-tinta { background: var(--tinta); } .bg-persistencia { background: var(--persistencia); }
 .bg-gb { background: var(--gb); } .bg-gb-claro { background: var(--gb-claro); }
 .bg-prevencion { background: var(--prevencion); } .bg-prevencion-suave { background: var(--prevencion-suave); }
 .bg-meteo { background: var(--meteo); } .bg-calendario { background: var(--calendario); }
-.bg-cambio { background: var(--cambio); } .bg-linea { background: var(--linea); }
+.bg-cambio { background: var(--cambio); }
 
 /* Portada */
-.portada { justify-content: space-between; padding-top: 80px; }
-.portada .autores { display: flex; gap: 56px; font-size: 22px; color: var(--tinta-2); }
-.portada .autores strong { display: block; font-size: 26px; margin-bottom: 4px; }
-.portada h1 { max-width: 15ch; }
-.portada .curva { position: absolute; right: 96px; top: 250px; width: 640px; }
-
-/* Separador de bloque */
-.bloque { justify-content: center; gap: 22px; }
-.bloque .numeral { font-family: var(--f-titulo); font-style: italic; font-size: 150px; line-height: .9; color: var(--prevencion); }
-.bloque h2 { font-size: 72px; }
+.portada { justify-content: space-between; padding-top: 96px; }
+.portada h1 { max-width: 14ch; }
+.portada .autores { display: flex; gap: 56px; font-size: 24px; color: var(--tinta-2); }
+.portada .autores span:first-child, .portada .autores span:nth-child(2) { font-weight: 600; color: var(--tinta); }
+.portada .curva { position: absolute; right: 96px; top: 270px; width: 640px; margin: 0; }
+.portada .curso { font-size: 20px; color: var(--tenue); }
 
 /* Escala de la norma */
-.escala { display: grid; grid-template-columns: 37fr 18fr 95fr 30fr; height: 64px; font-family: var(--f-datos); font-size: 15px; }
-.escala div { display: flex; flex-direction: column; justify-content: center; padding: 0 12px; border-right: 2px solid var(--fondo); }
+.escala { display: grid; grid-template-columns: 37fr 18fr 95fr 30fr; height: 58px; font-family: var(--f-datos); font-size: 15px; }
+.escala div { display: flex; align-items: center; padding: 0 12px; border-right: 2px solid var(--fondo); }
 .escala .n0 { background: var(--banda); color: var(--tinta-2); }
-.escala .n1 { background: var(--prevencion); color: #fff; }
+.escala .n1 { background: var(--prevencion); color: #fff; font-weight: 500; }
 .escala .n2 { background: #8f4513; color: #fff; }
 .escala .n3 { background: #4f250b; color: #fff; }
-.escala-ticks { display: grid; grid-template-columns: 37fr 18fr 95fr 30fr; font-family: var(--f-datos); font-size: 15px; color: var(--tenue); margin-top: 6px; }
+.escala-ticks { display: grid; grid-template-columns: 37fr 18fr 95fr 30fr; font-family: var(--f-datos); font-size: 15px; color: var(--tenue); margin-top: 8px; }
 
-/* Preguntas */
-.pregunta { border-left: 3px solid var(--tinta); padding: 6px 0 6px 26px; display: flex; flex-direction: column; gap: 8px; }
-.pregunta .etiqueta { color: var(--tinta-2); }
-.pregunta p { font-family: var(--f-titulo); font-size: 29px; line-height: 1.3; }
+/* Planteamiento */
+.ecuacion { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 22px; }
+.caja { border: 1px solid var(--linea); background: var(--superficie); padding: 26px 28px; display: flex; flex-direction: column; gap: 8px; }
+.caja b { font-family: var(--f-titulo); font-weight: 500; font-size: 32px; line-height: 1.15; }
+.caja span { font-size: 19px; color: var(--tenue); }
+.caja.modelo { border-color: var(--gb); border-width: 2px; }
+.caja.objetivo { background: var(--prevencion-suave); border-color: var(--prevencion); }
+.caja.objetivo b { color: var(--prevencion); }
+.flecha { font-size: 36px; color: var(--tenue); }
+.rival { font-size: 22px; color: var(--tinta-2); display: flex; gap: 14px; align-items: baseline; }
+.preguntas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.pregunta { border-top: 3px solid var(--tinta); padding-top: 16px; display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: baseline; }
+.pregunta .etq { font-family: var(--f-titulo); font-size: 40px; }
+.pregunta p { font-family: var(--f-titulo); font-size: 30px; line-height: 1.25; }
+
+/* Ventanas de estudio */
+.ventanas { display: flex; flex-direction: column; gap: 14px; }
+.ventana { display: grid; grid-template-columns: 130px 1fr 44px; align-items: center; gap: 14px; font-family: var(--f-datos); font-size: 19px; color: var(--tinta-2); }
+.ventana .b { height: 30px; background: var(--banda); position: relative; }
+.ventana .b i { position: absolute; inset: 0 auto 0 0; background: var(--persistencia); }
+.ventana.elegida { color: var(--tinta); font-weight: 500; }
+.ventana.elegida .b i { background: var(--gb); }
 
 /* Flujo de datos */
 .flujo { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; }
 .flujo .col { display: flex; flex-direction: column; }
-.paso-flujo { background: var(--superficie); border: 1px solid var(--linea); padding: 16px 20px; font-size: 20px; line-height: 1.35; position: relative; }
-.paso-flujo .cifra { font-family: var(--f-datos); font-size: 22px; color: var(--tinta); font-weight: 500; }
+.paso-flujo { background: var(--superficie); border: 1px solid var(--linea); padding: 16px 20px; font-size: 20px; line-height: 1.35; }
+.paso-flujo .cifra-f { font-family: var(--f-datos); font-size: 22px; color: var(--tinta); font-weight: 500; }
 .paso-flujo .perdida { font-family: var(--f-datos); font-size: 16px; color: var(--prevencion); display: block; margin-top: 4px; }
 .conector { height: 26px; width: 2px; background: var(--tenue); margin-left: 40px; position: relative; }
 .conector::after { content: ""; position: absolute; left: -5px; bottom: -1px; border: 6px solid transparent; border-top-color: var(--tenue); border-bottom: 0; }
-.col-titulo { font-family: var(--f-datos); font-size: 15px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+.col-titulo { font-family: var(--f-datos); font-size: 16px; margin-bottom: 10px; }
 .flujo .union { grid-column: 1 / -1; }
 .paso-flujo.final { border-color: var(--tinta); border-width: 2px; }
 
-/* Línea de tiempo de predictores */
-.dias { display: grid; grid-template-columns: repeat(7, 1fr) 24px 1.15fr; gap: 6px; align-items: end; }
-.dia { height: 92px; background: var(--superficie); border: 1px solid var(--linea); display: flex; flex-direction: column; justify-content: space-between; padding: 10px 12px; font-family: var(--f-datos); font-size: 16px; color: var(--tinta-2); position: relative; }
-.dia b { font-family: var(--f-titulo); font-weight: 500; font-size: 26px; color: var(--tinta); }
+/* Semana de predictores */
+.dias { display: grid; grid-template-columns: repeat(7, 1fr) 28px 1.15fr; gap: 6px; align-items: end; }
+.dia { height: 96px; background: var(--superficie); border: 1px solid var(--linea); display: flex; flex-direction: column; justify-content: space-between; padding: 10px 12px; font-family: var(--f-datos); font-size: 16px; color: var(--tinta-2); position: relative; }
+.dia b { font-family: var(--f-titulo); font-weight: 500; font-size: 28px; color: var(--tinta); }
 .dia.hoy { border-color: var(--tinta); border-width: 2px; }
-.dia.hoy::after { content: "18–23 h"; position: absolute; right: -1px; bottom: -1px; width: 44%; height: 26px; background: var(--gb); color: #fff; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+.dia.hoy::after { content: "18–23 h"; position: absolute; right: -1px; bottom: -1px; width: 46%; height: 28px; background: var(--gb); color: #fff; font-size: 13px; display: flex; align-items: center; justify-content: center; }
 .dia.manana { background: var(--prevencion-suave); border-color: var(--prevencion); }
 .dia.manana b { color: var(--prevencion); }
-.flecha-dia { align-self: center; font-size: 26px; color: var(--tenue); text-align: center; }
-.tramos { display: grid; grid-template-columns: repeat(7, 1fr) 24px 1.15fr; gap: 6px; margin-top: 14px; font-family: var(--f-datos); font-size: 15px; color: var(--tinta-2); }
-.tramo { border-top: 2px solid var(--gb); padding-top: 6px; }
+.flecha-dia { align-self: center; font-size: 28px; color: var(--tenue); text-align: center; }
+.tramos { display: grid; grid-template-columns: repeat(7, 1fr) 28px 1.15fr; gap: 6px; margin-top: 14px; font-family: var(--f-datos); font-size: 16px; color: var(--tinta-2); }
+.tramo { border-top: 3px solid var(--gb); padding-top: 6px; }
 .tramo.claro { border-color: var(--gb-claro); }
 .tramo.ambar { border-color: var(--prevencion); color: var(--prevencion); }
-.grupos-pred { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
-.grupo-pred { border-top: 4px solid var(--tinta); padding-top: 12px; display: flex; flex-direction: column; gap: 6px; }
-.grupo-pred .etiqueta { color: var(--tinta); }
-.grupo-pred p { font-size: 19px; line-height: 1.4; color: var(--tinta-2); }
+.grupos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+.grupo { border-top: 5px solid var(--tinta); padding-top: 12px; display: flex; flex-direction: column; gap: 4px; }
+.grupo b { font-size: 21px; font-weight: 600; }
+.grupo span { font-size: 18px; color: var(--tenue); line-height: 1.35; }
 
-/* Origen móvil */
+/* Modelos y origen móvil */
+.modelos { display: flex; flex-direction: column; gap: 16px; }
+.modelo-f { border-left: 6px solid var(--persistencia); background: var(--superficie); padding: 18px 22px; }
+.modelo-f.m1 { border-color: var(--gb-claro); } .modelo-f.m2 { border-color: var(--gb); }
+.modelo-f b { font-family: var(--f-titulo); font-weight: 500; font-size: 28px; display: block; }
+.modelo-f span { font-size: 19px; color: var(--tenue); }
 .rejilla-om { display: grid; grid-template-columns: 150px repeat(8, 1fr); gap: 4px; font-family: var(--f-datos); font-size: 15px; }
 .rejilla-om .cab { text-align: center; color: var(--tenue); padding-bottom: 4px; }
 .rejilla-om .fila { color: var(--tinta-2); display: flex; align-items: center; }
-.rejilla-om .c { height: 40px; display: flex; align-items: center; justify-content: center; color: #fff; background: var(--banda); }
+.rejilla-om .c { height: 42px; display: flex; align-items: center; justify-content: center; color: #fff; background: var(--banda); }
 .rejilla-om .c.ent { background: var(--gb-claro); color: var(--tinta); }
 .rejilla-om .c.val { background: var(--persistencia); }
 .rejilla-om .c.pru { background: var(--gb); }
 .animar .rejilla-om .c:not(.vacia) { animation: entra .45s ease both; animation-delay: calc(var(--i) * 70ms); }
 @keyframes entra { from { opacity: 0; transform: scaleX(.6); } to { opacity: 1; transform: none; } }
-.modelos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.modelo { border-top: 6px solid var(--persistencia); background: var(--superficie); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
-.modelo.m1 { border-color: var(--gb-claro); } .modelo.m2 { border-color: var(--gb); }
-.modelo h3 { font-size: 25px; }
-.modelo p { font-size: 18px; color: var(--tinta-2); line-height: 1.4; }
 
-/* Cifras grandes */
-.cifras { display: flex; gap: 48px; align-items: flex-end; }
-.cifra-g { display: flex; flex-direction: column; gap: 4px; }
-.cifra-g .n { font-family: var(--f-titulo); font-size: 78px; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
-.cifra-g .u { font-size: 18px; color: var(--tenue); }
+/* Lista de lo que se mide */
+.medidas { display: flex; flex-direction: column; gap: 18px; }
+.medida { display: grid; grid-template-columns: 150px 1fr; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--linea); font-size: 20px; color: var(--tinta-2); line-height: 1.35; }
+.medida b { font-weight: 600; color: var(--tinta); }
 
-/* Barras de inicios */
-.inicios { display: flex; flex-direction: column; gap: 20px; }
-.inicio-fila { display: grid; grid-template-columns: 210px 1fr 90px; align-items: center; gap: 16px; font-size: 21px; }
-.inicio-fila .barra { height: 34px; background: var(--banda); position: relative; }
+.pronosticos { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; padding-left: 20px; }
+.pronosticos p { font-size: 22px; color: var(--tinta-2); }
+.pronosticos i { width: 18px; height: 18px; display: inline-block; vertical-align: -2px; margin-right: 12px; }
+/* Inicios */
+.inicios { display: flex; flex-direction: column; gap: 22px; }
+.inicio-fila { display: grid; grid-template-columns: 300px 1fr 110px; align-items: center; gap: 18px; font-size: 23px; }
+.inicio-fila .barra { height: 44px; background: var(--banda); position: relative; }
 .inicio-fila .barra i { position: absolute; inset: 0 auto 0 0; }
-.inicio-fila .n { font-family: var(--f-datos); font-size: 24px; text-align: right; }
+.inicio-fila .n { font-family: var(--f-titulo); font-size: 52px; text-align: right; line-height: 1; }
 
-/* Botones de estación */
 .selector { display: flex; gap: 8px; }
 .selector button { font-family: var(--f-datos); font-size: 16px; padding: 8px 16px; border: 1px solid var(--tinta-2); background: transparent; color: var(--tinta-2); cursor: pointer; }
 .selector button[aria-pressed="true"] { background: var(--tinta); border-color: var(--tinta); color: #fff; }
-.selector button:focus-visible, .ayuda button:focus-visible { outline: 3px solid var(--prevencion); outline-offset: 2px; }
+.selector button:focus-visible { outline: 3px solid var(--prevencion); outline-offset: 2px; }
 
 /* Conclusiones */
-.respuesta { display: grid; grid-template-columns: 90px 1fr; gap: 20px; padding-bottom: 22px; border-bottom: 1px solid var(--linea); }
-.respuesta .etq { font-family: var(--f-titulo); font-size: 46px; line-height: 1; color: var(--tinta); }
-.respuesta p { font-size: 26px; line-height: 1.45; color: var(--tinta-2); }
+.respuestas { display: flex; flex-direction: column; gap: 30px; }
+.respuesta { display: grid; grid-template-columns: 96px 1fr; gap: 24px; align-items: baseline; padding-bottom: 28px; border-bottom: 1px solid var(--linea); }
+.respuesta:last-child { border: 0; }
+.respuesta .etq { font-family: var(--f-titulo); font-size: 52px; line-height: 1; }
+.respuesta p { font-family: var(--f-titulo); font-size: 36px; line-height: 1.25; }
 
-/* Cierre */
-.cierre { justify-content: center; align-items: flex-start; gap: 26px; }
-.cierre h1 { font-size: 96px; }
+.cierre { justify-content: center; gap: 26px; }
+.cierre h1 { font-size: 104px; }
 
 /* Notas del presentador (tecla N) */
 .notas { display: none; }
@@ -240,15 +236,10 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
 #panel-notas.abierto { display: block; }
 #panel-notas .cabeza { display: flex; gap: 24px; font-family: var(--f-datos); font-size: 14px; color: #8fa0ae; margin-bottom: 8px; }
 #panel-notas ul { margin: 0; padding-left: 20px; }
-.ayuda { position: fixed; right: 16px; bottom: 12px; font-family: var(--f-datos); font-size: 12px; color: #6d7d8b; z-index: 10; }
-.ayuda button { background: none; border: 0; color: inherit; font: inherit; cursor: pointer; padding: 4px; }
-.barra-progreso { position: fixed; left: 0; top: 0; height: 3px; background: var(--prevencion); z-index: 10; transition: width .3s ease; }
 
 @media (prefers-reduced-motion: reduce) {
   [data-paso], .animar .rejilla-om .c:not(.vacia) { transition: none; animation: none; }
 }
-
-/* Imprimir o guardar como PDF desde el navegador: una diapositiva por página, todo visible */
 @media print {
   @page { size: 1600px 900px; margin: 0; }
   body { background: none; overflow: visible; }
@@ -256,282 +247,152 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
   .diapo { display: flex !important; position: relative; width: 1600px; height: 900px; break-after: page; }
   .diapo:last-of-type { break-after: auto; }
   [data-paso] { opacity: 1 !important; transform: none !important; }
-  #panel-notas, .ayuda, .barra-progreso, .selector { display: none !important; }
+  #panel-notas, .selector { display: none !important; }
 }
 </style>
 </head>
 <body>
-<div class="barra-progreso" id="progreso"></div>
 <main class="escenario" id="escenario">
 
-<!-- 1 · Portada -->
-<section class="diapo portada" data-bloque="0">
-  <div class="ceja">Aprendizaje de Máquina Aplicado · ST1631 · Universidad EAFIT</div>
-  <div class="pila" style="gap:26px">
-    <h1>Pronóstico de PM<sub>2.5</sub> a un día por estación en el Valle de Aburrá</h1>
-    <p class="lead">El PM<sub>2.5</sub> es el contaminante más vigilado del aire. Este trabajo busca predecir su concentración media del día siguiente en cada estación de monitoreo del Valle de Aburrá, a partir de los registros públicos de la red SIATA.</p>
-  </div>
-  <div class="autores">
-    <div><strong>Lina Sofía Ballesteros Merchán</strong></div>
-    <div><strong>Alejandro Ríos Muñoz</strong></div>
-    <div><strong class="dato" style="font-weight:500">Octubre de 2026</strong></div>
-  </div>
-  <figure class="curva figura" style="margin:0">
+<section class="diapo portada">
+  <span class="curso">Aprendizaje de Máquina Aplicado · Universidad EAFIT</span>
+  <h1>Pronóstico de PM<sub>2.5</sub> a un día por estación en el Valle de Aburrá</h1>
+  <div class="autores"><span>Lina Sofía Ballesteros Merchán</span><span>Alejandro Ríos Muñoz</span><span>Octubre de 2026</span></div>
+  <figure class="curva figura">
     <div id="g-portada"></div>
-    <figcaption class="pie-figura">Concentración media de PM<sub>2.5</sub> según la hora del día, promedio de 16 estaciones entre 2018 y 2025 (µg/m³).</figcaption>
+    <figcaption class="nota" style="margin-top:8px">PM<sub>2.5</sub> promedio por hora del día, 16 estaciones, 2018–2025 (µg/m³)</figcaption>
   </figure>
   <aside class="notas"><ul>
-    <li>Presentarnos y enunciar el objetivo en una frase: predecir la contaminación por PM2.5 del día siguiente en cada estación del Valle de Aburrá, usando datos públicos de SIATA.</li>
-    <li>La curva de la portada es real: el PM2.5 sube con el tráfico de la mañana (máximo hacia las 08:00) y baja en la tarde, cuando la atmósfera se mezcla mejor.</li>
+    <li>Objetivo en una frase: predecir la media de PM2.5 de mañana en cada estación con datos públicos de SIATA.</li>
+    <li>La curva es real: pico a las 08:00 con el tráfico, mínimo a las 15:00.</li>
   </ul></aside>
 </section>
 
-<!-- 2 · Por qué anticipar -->
-<section class="diapo" data-bloque="1">
-  <header>
-    <div class="ceja">I · Introducción</div>
-    <h2>Por qué importa anticipar la contaminación por PM<sub>2.5</sub></h2>
-  </header>
-  <div class="cuerpo dos-2" style="gap:64px">
-    <div class="pila" style="gap:26px">
-      <div class="pila" style="gap:14px">
-        <span class="etiqueta">Salud y geografía</span>
-        <ul class="puntos">
-          <li>El PM<sub>2.5</sub> es el material particulado fino, de menos de 2,5 µm; por su tamaño penetra hasta el fondo del sistema respiratorio.</li>
-          <li>En el Valle de Aburrá se asocia con atenciones por infección respiratoria aguda, EPOC y asma.</li>
-          <li>La geografía agrava el problema: un valle estrecho donde el contaminante se acumula cuando no logra dispersarse.</li>
-        </ul>
-      </div>
-    </div>
-    <div class="pila" style="gap:22px">
-      <span class="etiqueta">Resolución 2254 de 2017 · PM<sub>2.5</sub>, media de 24 horas</span>
-      <div>
-        <div class="escala">
-          <div class="n0">Bajo el umbral</div>
-          <div class="n1">Prevención</div>
-          <div class="n2">Alerta</div>
-          <div class="n3">Emerg.</div>
-        </div>
-        <div class="escala-ticks"><span>0</span><span class="ambar">38</span><span>56</span><span>≥151 µg/m³</span></div>
-      </div>
-      <ul class="puntos">
-        <li>La norma exige evaluar los niveles <strong>por punto de monitoreo</strong>, no con un valor único para todo el valle.</li>
-        <li>Permite <strong>declarar un nivel de forma anticipada</strong> si un modelo de pronóstico lo indica.</li>
-        <li>Por eso pronosticamos por estación, con el Nivel de Prevención (<strong class="ambar">38 µg/m³</strong>) como umbral de interés.</li>
-      </ul>
-    </div>
-  </div>
-  <aside class="notas"><ul>
-    <li>Idea de la diapositiva: anticipar un día importa por tres motivos que se refuerzan — salud, geografía y marco normativo.</li>
-    <li>Salud: el "2,5" son micras; son tan pequeñas que esquivan las defensas de las vías altas y llegan al pulmón profundo. Las referencias locales (Parra-Sánchez, Grisales) las asocian con más atenciones respiratorias.</li>
-    <li>Geografía: el valle actúa como una "olla"; en inversiones térmicas el aire frío queda atrapado abajo y el contaminante no se dispersa. Es el mismo argumento de Baena-Salazar.</li>
-    <li>La escala del gráfico no está a proporción en el último tramo: Emergencia empieza en 151, muy lejos de los demás cortes.</li>
-    <li>Punto clave para defender: el art. 11 de la norma admite declarar un nivel por pronóstico. Ahí está la utilidad práctica de este trabajo — no reemplazamos el monitoreo, le damos una señal anticipada por estación.</li>
-  </ul></aside>
-</section>
-
-<!-- 3 · Planteamiento y preguntas -->
-<section class="diapo" data-bloque="1">
-  <header>
-    <div class="ceja">I · Planteamiento del problema</div>
-    <h2>Con lo medido hasta hoy, ¿cuál será la media de PM<sub>2.5</sub> de mañana?</h2>
-  </header>
-  <div class="cuerpo dos" style="gap:64px">
-    <div class="pila" style="gap:18px">
-      <p class="texto">El monitoreo nos dice lo que ya pasó; la gestión preventiva necesita saber qué viene. Planteamos esa brecha como un problema de predicción:</p>
-      <ul class="puntos">
-        <li><strong>Aprendizaje supervisado de regresión:</strong> cada registro es una estación en un día <em>d</em>.</li>
-        <li><strong>Variable objetivo:</strong> la concentración media del día siguiente (<em>d</em>+1), en µg/m³.</li>
-        <li><strong>Referencia, la persistencia:</strong> suponer que mañana será igual a hoy. Es el rival a vencer, porque el PM<sub>2.5</sub> cambia poco de un día al otro.</li>
-        <li><strong>Lectura como aviso:</strong> miramos los <em>inicios de episodio</em>, el primer día que el nivel cruza 38 µg/m³.</li>
-      </ul>
-    </div>
+<section class="diapo">
+  <h2>Un valle que atrapa el aire, y una norma que permite avisar antes</h2>
+  <div class="cuerpo dos-1">
+    <div class="figura" id="g-valle"></div>
     <div class="pila" style="gap:30px">
-      <div class="pregunta" data-paso="1">
-        <span class="etiqueta">Pregunta 1 · ¿Le ganamos a la persistencia?</span>
-        <p>Usando solo el historial de PM<sub>2.5</sub> y el calendario, ¿puede Gradient Boosting pronosticar con menos error y anticipar más días en Nivel de Prevención que la persistencia?</p>
+      <div>
+        <div class="escala"><div class="n0"></div><div class="n1">Prevención</div><div class="n2">Alerta</div><div class="n3"></div></div>
+        <div class="escala-ticks"><span>0</span><span class="ambar">38</span><span>56</span><span>151 µg/m³</span></div>
       </div>
-      <div class="pregunta" data-paso="2">
-        <span class="etiqueta">Pregunta 2 · ¿Aporta la meteorología?</span>
-        <p>Al sumar las variables del clima medidas por SIATA, ¿mejora el pronóstico? Y según SHAP, ¿qué variables pesan más? ¿Domina el PM<sub>2.5</sub> del día anterior, como halló Baena-Salazar et al.?</p>
-      </div>
+      <p class="frase">Resolución 2254 de 2017: niveles <strong>por estación</strong>, y se pueden declarar <strong>por pronóstico</strong>.</p>
     </div>
   </div>
   <aside class="notas"><ul>
-    <li>Marco de clase: esto es aprendizaje supervisado de regresión. La etiqueta (y) es la media de PM2.5 de mañana; las características (X) son todo lo medido hasta hoy. Vale la pena nombrarlo así para conectar con lo visto en el curso.</li>
-    <li>La comparación con el umbral de 38 NO es un segundo problema de clasificación: es una lectura derivada de la misma predicción numérica. Esto lo pregunta a veces el jurado.</li>
-    <li>Por qué la persistencia es tan buena: el PM2.5 de hoy correlaciona 0,805 con el de mañana. Por eso cualquier modelo tiene que demostrar que la supera.</li>
-    <li>Siguiendo la sugerencia del profesor en la Entrega 1, la pregunta se dividió en dos: P1 (modelo vs persistencia solo con PM2.5 y calendario) y P2 (cuánto suma la meteorología, e interpretación con SHAP).</li>
-    <li>Inicio de episodio: el día en que se cruza el umbral. Es el aviso útil, porque si ya se está en prevención, la persistencia acierta sola.</li>
+    <li>Salud: partículas de menos de 2,5 µm llegan al pulmón profundo (IRA, EPOC, asma).</li>
+    <li>Geografía: la inversión térmica deja el aire frío y el contaminante atrapados abajo. Esquema, no a escala.</li>
+    <li>Art. 11: se puede declarar un nivel con anticipación por pronóstico. Ahí está la utilidad del trabajo.</li>
   </ul></aside>
 </section>
 
-<!-- 4 · Bloque II -->
-<section class="diapo bloque" data-bloque="2">
-  <div class="numeral">II</div>
-  <h2>Los datos</h2>
-  <p class="lead">Qué mide SIATA, cómo preparamos la tabla para entrenar el modelo y qué patrones del aire descubrimos por el camino.</p>
-  <aside class="notas"><ul><li>Transición al análisis exploratorio.</li></ul></aside>
+<section class="diapo">
+  <h2>Con lo medido hasta hoy, ¿cuál será la media de mañana?</h2>
+  <div class="pila" style="gap:44px; flex:1; justify-content:center">
+    <div class="ecuacion">
+      <div class="caja"><b>Lo medido hasta hoy</b><span>PM<sub>2.5</sub>, fecha y clima</span></div>
+      <span class="flecha">→</span>
+      <div class="caja modelo"><b>Modelo</b><span>aprende de ocho años de ejemplos</span></div>
+      <span class="flecha">→</span>
+      <div class="caja objetivo"><b>Media de mañana</b><span>por estación, en µg/m³</span></div>
+    </div>
+    <p class="rival"><span class="etiqueta">rival</span>Persistencia: suponer que mañana será igual a hoy</p>
+    <div class="preguntas">
+      <div class="pregunta" data-paso="1"><span class="etq">P1</span><p>¿Se equivoca menos que la persistencia y avisa antes?</p></div>
+      <div class="pregunta" data-paso="2"><span class="etq">P2</span><p>¿Cuánto ayuda el clima, y qué datos pesan más?</p></div>
+    </div>
+  </div>
+  <aside class="notas"><ul>
+    <li>y = media de PM2.5 de mañana; X = todo lo medido hasta hoy.</li>
+    <li>El aviso de 38 µg/m³ es una lectura de la misma predicción, no un segundo problema de clasificación.</li>
+    <li>La pregunta se dividió en dos por sugerencia del profesor.</li>
+  </ul></aside>
 </section>
 
-<!-- 5 · Estaciones por año -->
-<section class="diapo" data-bloque="2">
-  <header>
-    <div class="ceja">II · Fuente de datos</div>
-    <h2>La red de estaciones creció con los años, y eso define el periodo de estudio</h2>
-  </header>
-  <div class="cuerpo dos-1" style="gap:56px">
+<section class="diapo">
+  <h2>La red pasó de 5 estaciones en 2013 a 24 en 2018</h2>
+  <div class="cuerpo dos-1">
     <div class="figura">
-      <div class="leyenda" style="margin-bottom:12px">
-        <span><i class="bg-gb-claro"></i>Estaciones con alguna medición</span>
-        <span><i class="bg-gb"></i>Estaciones con datos casi completos (≥ 90 % de las horas)</span>
-      </div>
+      <div class="leyenda"><span><i class="bg-gb-claro"></i>Con alguna medición</span><span><i class="bg-gb"></i>Con datos casi completos (90 % de las horas)</span></div>
       <div id="g-estaciones"></div>
-      <p class="pie-figura">Número de estaciones de monitoreo activas cada año. El dato de 2026 llega solo hasta junio.</p>
     </div>
-    <div class="pila" style="gap:18px">
-      <ul class="puntos">
-        <li><strong>SIATA</strong> es el sistema público de monitoreo del Valle de Aburrá: mide la calidad del aire hora a hora.</li>
-        <li>La red creció con el tiempo: de cinco estaciones en 2013 a treinta y tres a lo largo del histórico.</li>
-        <li data-paso="1">Las estaciones nuevas no tienen datos previos, así que el periodo elegido fija con cuántas podemos trabajar.</li>
-        <li data-paso="1">Exigiendo ≥ 90 % de horas medidas, desde 2013 solo hay tres estaciones completas; desde 2018, dieciséis.</li>
-      </ul>
-      <p class="texto" data-paso="1">Por eso estudiamos <strong>2018–2025</strong>: dieciséis estaciones con ocho años completos.</p>
-      <div data-paso="1">
-        <table>
-          <thead><tr><th>Periodo de estudio</th><th>Estaciones completas</th></tr></thead>
-          <tbody id="t-ventanas"></tbody>
-        </table>
-      </div>
+    <div class="pila" data-paso="1">
+      <span class="etiqueta">Estaciones con datos completos si el estudio empieza en…</span>
+      <div class="ventanas" id="g-ventanas"></div>
     </div>
   </div>
   <aside class="notas"><ul>
-    <li>Primero explicar qué es SIATA: la red oficial de monitoreo ambiental del Valle de Aburrá. El público puede no conocerla.</li>
-    <li>Esta diapositiva responde la duda del profesor en el PDF: "¿por qué 5 estaciones en un archivo y después un montón?". La causa es que la red fue creciendo; las estaciones nuevas no tienen historia hacia atrás.</li>
-    <li>Idea clave: por eso no usamos todo el histórico. Con la ventana desde 2018 tenemos 16 estaciones con 8 años completos; empezar antes deja solo 3 o 4 estaciones utilizables, y 2026 queda fuera porque solo tiene medio año publicado.</li>
-    <li>En el gráfico: la barra clara es "tuvo alguna medición ese año" y la oscura es "tuvo datos casi completos". Señalar el salto grande entre 2017 y 2018.</li>
+    <li>Duda del profesor: un archivo por mes con las estaciones activas; enero de 2013 tenía 5. En total, 33.</li>
+    <li>Desde 2018: 16 estaciones con ocho años completos. 2026 fuera: solo medio año.</li>
   </ul></aside>
 </section>
 
-<!-- 6 · Flujo de datos y faltantes -->
-<section class="diapo" data-bloque="2">
-  <header>
-    <div class="ceja">II · Datos faltantes</div>
-    <h2>De los archivos de SIATA a la tabla final: qué conservamos y qué dejamos fuera</h2>
-  </header>
-  <div class="cuerpo dos-1" style="gap:56px">
-    <div class="flujo">
+<section class="diapo">
+  <h2>De 162 archivos a 44.399 registros, sin inventar datos</h2>
+  <div class="cuerpo" style="grid-template-columns:1fr">
+    <div class="flujo" style="max-width:1100px">
       <div class="col">
         <div class="col-titulo" style="color:var(--gb)">PM<sub>2.5</sub> horario</div>
-        <div class="paso-flujo"><span class="cifra">162</span> archivos mensuales, 2013–2026, 33 estaciones</div>
+        <div class="paso-flujo"><span class="cifra-f">162</span> archivos mensuales · 33 estaciones</div>
         <div class="conector" data-paso="1"></div>
-        <div class="paso-flujo" data-paso="1">Ventana 2018–2025, cobertura ≥ 90 %<br><span class="cifra">16</span> estaciones · <span class="cifra">1.122.048</span> estación-hora</div>
+        <div class="paso-flujo" data-paso="1">2018–2025, estaciones casi completas<br><span class="cifra-f">16</span> estaciones · <span class="cifra-f">1.122.048</span> horas</div>
         <div class="conector" data-paso="2"></div>
-        <div class="paso-flujo" data-paso="2">Media diaria con ≥ 18 h válidas<br><span class="cifra">45.152</span> estación-día<span class="perdida">−1.600 días con menos de 18 h</span></div>
+        <div class="paso-flujo" data-paso="2">Promedio del día si hay 18 de 24 horas<br><span class="cifra-f">45.152</span> días con promedio<span class="perdida">−1.600 días incompletos</span></div>
       </div>
       <div class="col">
         <div class="col-titulo" style="color:var(--meteo)">Meteorología</div>
-        <div class="paso-flujo" data-paso="3">Datos minutales de las 12 estaciones asignadas (15 de 16 a ≤ 3 km)</div>
+        <div class="paso-flujo" data-paso="3">Mediciones cada minuto · <span class="cifra-f">12</span> estaciones</div>
         <div class="conector" data-paso="3"></div>
-        <div class="paso-flujo" data-paso="3">Bandera de calidad y ≥ 45 min válidos por hora<br><span class="cifra">801.839</span> filas horarias</div>
+        <div class="paso-flujo" data-paso="3">Hora válida si tiene 45 minutos medidos<br><span class="cifra-f">801.839</span> horas</div>
         <div class="conector" data-paso="3"></div>
-        <div class="paso-flujo" data-paso="3">Media diaria con ≥ 18 h por variable<span class="perdida">presión de 0 hPa → faltante</span></div>
+        <div class="paso-flujo" data-paso="3">Promedio del día si hay 18 de 24 horas<span class="perdida">valores imposibles → vacíos</span></div>
       </div>
       <div class="union" data-paso="4">
         <div class="conector"></div>
-        <div class="paso-flujo final">Tabla supervisada: media de hoy y de mañana<br><span class="cifra">44.399</span> registros<span class="perdida">−753 sin media del día siguiente</span></div>
+        <div class="paso-flujo final">Días con promedio de hoy y de mañana · <span class="cifra-f">44.399</span> registros<span class="perdida">−753 sin mañana · 73,1 % con el clima completo</span></div>
       </div>
-    </div>
-    <div class="pila" style="gap:18px">
-      <p class="texto">No rellenamos con valores inventados ningún dato que falte:</p>
-      <ul class="puntos">
-        <li>Un día tiene promedio solo si tiene al menos 18 de sus 24 horas (criterio del 75 %, igual que Parra-Sánchez et al.).</li>
-        <li>Un registro entra al modelo solo si tiene promedio de hoy y de mañana: así quedan 44.399 de 46.752.</li>
-        <li data-paso="4">El <strong>73,1 %</strong> tiene la meteorología del día completa; el resto se conserva con huecos, que el modelo admite sin rellenar.</li>
-        <li data-paso="4">Huecos conocidos (una limitación): viento de la 206, presión de la 252, lluvia de la 229 y la 271 sin datos desde 2024.</li>
-      </ul>
     </div>
   </div>
   <aside class="notas"><ul>
-    <li>Esta diapositiva responde la otra pregunta del profesor en el PDF: "¿existían faltantes y qué se hizo con ellos?". Y él mismo sugirió mostrarlo como diagrama de flujo — por eso está así.</li>
-    <li>Avanzar el diagrama paso a paso con la flecha: primero la rama de PM2.5, luego la de meteorología, y al final la unión.</li>
-    <li>Decisión defendible: no imputar es coherente con "no inventar datos". El modelo (HistGradientBoosting) aprende en cada corte hacia qué lado mandar los faltantes, así que no necesitamos rellenarlos.</li>
-    <li>Las cifras rojas son lo que se pierde en cada paso: 1.600 días sin suficientes horas y 753 sin el día siguiente. Todo está en el notebook, es reproducible.</li>
+    <li>Pregunta del profesor: ¿había faltantes y qué se hizo? No se inventan valores; 18 de 24 h, el 75 % de Parra-Sánchez.</li>
+    <li>El modelo admite vacíos: no hace falta imputar la meteorología incompleta.</li>
   </ul></aside>
 </section>
 
-<!-- 7 · Estructura temporal -->
-<section class="diapo" data-bloque="2">
-  <header>
-    <div class="ceja">II · Patrones temporales</div>
-    <h2>Un ciclo diario marcado y episodios concentrados en febrero y marzo</h2>
-  </header>
-  <div class="cuerpo dos" style="gap:64px">
-    <div class="figura">
-      <span class="etiqueta">PM<sub>2.5</sub> promedio por hora del día <span style="text-transform:none">(µg/m³)</span></span>
-      <div id="g-horario" style="margin-top:14px"></div>
-      <p class="pie-figura">Máximo a las 08:00 con el tráfico de la mañana; mínimo a las 15:00, cuando la atmósfera se mezcla mejor.</p>
-    </div>
-    <div class="figura">
-      <span class="etiqueta">Días con al menos una estación en Nivel de Prevención, por mes</span>
-      <div id="g-meses" style="margin-top:14px"></div>
-      <p class="pie-figura"><strong>179 de 246</strong> días de evento caen en febrero y marzo, la transición a la temporada de lluvias.</p>
-    </div>
+<section class="diapo">
+  <h2>El PM<sub>2.5</sub> sigue al tráfico y se dispara en febrero y marzo</h2>
+  <div class="cuerpo dos">
+    <div class="figura"><span class="etiqueta">Promedio por hora (µg/m³)</span><div id="g-horario" style="margin-top:14px"></div></div>
+    <div class="figura"><span class="etiqueta">Días con alguna estación en prevención, por mes</span><div id="g-meses" style="margin-top:14px"></div></div>
   </div>
   <aside class="notas"><ul>
-    <li>Dos patrones claros. Ciclo diario: pico a las 08:00 (hora pico de tráfico, 25,8 µg/m³) y mínimo a las 15:00 (13,5), cuando la atmósfera se mezcla mejor. Estacionalidad: 179 de los 246 días de evento caen en febrero–marzo, la transición a la temporada de lluvias.</li>
-    <li>Para qué sirve esto en el modelo: justifica meter el calendario (mes y día de la semana) como predictor, y justifica usar la media de 18:00–23:00, que es el tramo del día más cercano al día que queremos pronosticar.</li>
-    <li>Si preguntan por qué marzo: es la primera temporada de lluvias; hay más nubosidad y condiciones que atrapan el contaminante.</li>
+    <li>179 de 246 días de evento en febrero–marzo, transición a la temporada de lluvias.</li>
+    <li>Justifica el calendario como predictor y la media de 18:00–23:00.</li>
   </ul></aside>
 </section>
 
-<!-- 8 · Episodios -->
-<section class="diapo" data-bloque="2">
-  <header>
-    <div class="ceja">II · Episodios de contaminación</div>
-    <h2>Los episodios de contaminación varían mucho de un año a otro</h2>
-  </header>
-  <div class="cuerpo dos-1" style="gap:56px">
+<section class="diapo">
+  <h2>Cada año los episodios son distintos</h2>
+  <div class="cuerpo dos-1">
     <div class="figura">
-      <div class="leyenda" style="margin-bottom:12px">
-        <span><i class="bg-prevencion"></i>Inicio de episodio</span>
-        <span><i class="bg-prevencion-suave"></i>Continuación de un episodio</span>
-      </div>
+      <div class="leyenda"><span><i class="bg-prevencion"></i>Inicio de episodio</span><span><i class="bg-prevencion-suave"></i>Continuación</span></div>
       <div id="g-eventos"></div>
-      <p class="pie-figura">Días-estación en prevención por año, 16 estaciones. Sobre cada barra, el porcentaje que son inicios.</p>
     </div>
-    <div class="pila" style="gap:18px">
-      <p class="texto">Los años cambian no solo en número de eventos, sino en cuánto duran:</p>
-      <ul class="puntos">
-        <li>En <strong>2020</strong>, 412 días en prevención pero solo 22 % fueron inicios: episodios largos, fáciles para la persistencia.</li>
-        <li>En <strong>2021, 2023 y 2025</strong>, casi todo fueron días aislados, que la persistencia no anticipa. Por eso medimos en <strong>cuatro años de prueba</strong>.</li>
-        <li data-paso="1">Los episodios son <strong>locales</strong>: en el 45 % de los días solo una estación llegó a prevención. Justifica pronosticar por estación.</li>
-        <li data-paso="1">El PM<sub>2.5</sub> de hoy anticipa bien el de mañana (correlación <strong class="dato">0,805</strong>): la persistencia es difícil de superar.</li>
-      </ul>
+    <div class="pila" style="gap:44px" data-paso="1">
+      <div class="cifra"><span class="n">45 %</span><span class="u">de los días de evento, en una sola estación</span></div>
+      <div class="cifra"><span class="n">0,805</span><span class="u">qué tanto se parece mañana a hoy (1 sería idéntico)</span></div>
     </div>
   </div>
   <aside class="notas"><ul>
-    <li>Atiende la anotación del profesor: desarrollar la idea de la Tabla II.</li>
-    <li>2025 tiene solo 4 eventos: un solo año de prueba daría una imagen sesgada.</li>
-    <li>Cierre de Lina; pasa la palabra a Alejandro.</li>
+    <li>2020: episodios largos (22 % inicios), fáciles para la persistencia. 2021, 2023, 2025: días aislados.</li>
+    <li>Por eso cuatro años de prueba, pronóstico por estación y la persistencia como rival exigente.</li>
   </ul></aside>
 </section>
 
-<!-- 9 · Bloque III -->
-<section class="diapo bloque" data-bloque="3">
-  <div class="numeral">III</div>
-  <h2>Metodología</h2>
-  <p class="lead">Qué información le damos al modelo, qué modelos comparamos y cómo los evaluamos sin dejar que vean el futuro.</p>
-  <aside class="notas"><ul><li>Alejandro toma la palabra.</li></ul></aside>
-</section>
-
-<!-- 10 · Predictores -->
-<section class="diapo" data-bloque="3">
-  <header>
-    <div class="ceja">III · Predictores</div>
-    <h2>Qué información usa el modelo: solo lo conocido hasta el final de hoy</h2>
-  </header>
-  <div class="pila" style="gap:44px">
+<section class="diapo">
+  <h2>El modelo solo ve lo medido hasta el final de hoy</h2>
+  <div class="pila" style="gap:56px; flex:1; justify-content:center">
     <div>
       <div class="dias">
         <div class="dia"><span>d−6</span><b>Lun</b></div>
@@ -540,304 +401,179 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
         <div class="dia"><span>d−3</span><b>Jue</b></div>
         <div class="dia"><span>d−2</span><b>Vie</b></div>
         <div class="dia"><span>d−1</span><b>Sáb</b></div>
-        <div class="dia hoy"><span>d · hoy</span><b>Dom</b></div>
+        <div class="dia hoy"><span>hoy</span><b>Dom</b></div>
         <div class="flecha-dia">→</div>
-        <div class="dia manana"><span>d+1 · objetivo</span><b>Lun</b></div>
+        <div class="dia manana"><span>mañana</span><b>Lun</b></div>
       </div>
       <div class="tramos">
-        <div class="tramo" style="grid-column:1 / 8">Media y desviación de 7 días · rezagos de 1 a 6 días</div>
-        <div style="grid-column:9" class="tramo ambar">Media diaria</div>
+        <div class="tramo" style="grid-column:1 / 8">la semana: promedio, variación y cada día</div>
+        <div class="tramo ambar" style="grid-column:9">lo que se predice</div>
       </div>
       <div class="tramos" style="margin-top:8px">
-        <div class="tramo claro" style="grid-column:5 / 8">Media de 3 días</div>
-        <div class="tramo claro" style="grid-column:7 / 8">Hoy</div>
-        <div class="tramo claro" style="grid-column:9">Mes, día de la semana</div>
+        <div class="tramo claro" style="grid-column:5 / 8">promedio de 3 días</div>
+        <div class="tramo claro" style="grid-column:9">mes y día de la semana</div>
       </div>
     </div>
-    <div class="grupos-pred">
-      <div class="grupo-pred"><span class="etiqueta">PM<sub>2.5</sub> de hoy</span><p>Media, máximo y media de 18:00 a 23:00.</p></div>
-      <div class="grupo-pred"><span class="etiqueta">Ventanas</span><p>Rezagos de 1 a 6 días, medias de 3 y 7 días, cambio frente a ayer.</p></div>
-      <div class="grupo-pred"><span class="etiqueta">Calendario</span><p>Mes y día de la semana de mañana, que se conocen de antemano.</p></div>
-      <div class="grupo-pred"><span class="etiqueta">Estación</span><p>16 variables indicadoras (one-hot).</p></div>
-      <div class="grupo-pred" style="border-color:var(--meteo)"><span class="etiqueta" style="color:var(--meteo)">Meteorología</span><p>Temperatura, humedad, presión, viento, lluvia del día y de 3 días.</p></div>
+    <div class="grupos">
+      <div class="grupo"><b>PM<sub>2.5</sub> de hoy</b><span>promedio, máximo y noche</span></div>
+      <div class="grupo"><b>Días anteriores</b><span>cada día y promedios</span></div>
+      <div class="grupo"><b>Fecha</b><span>mes y día de mañana</span></div>
+      <div class="grupo"><b>Estación</b><span>cuál de las 16</span></div>
+      <div class="grupo" style="border-color:var(--meteo)"><b style="color:var(--meteo)">Clima</b><span>medido hoy</span></div>
     </div>
   </div>
   <aside class="notas"><ul>
-    <li>Esta diapositiva atiende la recomendación explícita del profesor: usar "ventanas de tiempo" (rezagos y medias móviles), como hizo Baena-Salazar.</li>
-    <li>Idea que sostiene la línea de tiempo: TODO predictor está medido antes de que termine el día d. Nada del futuro entra. Eso evita la fuga de información (data leakage).</li>
-    <li>Las ventanas resumen la evolución reciente: no solo "ayer", sino la tendencia de 3 y 7 días y la variabilidad (desviación estándar).</li>
-    <li>El calendario describe el día d+1 (mañana), que sí conocemos de antemano porque es solo una fecha.</li>
-    <li>La estación entra como one-hot (16 indicadoras). En clase vimos que los árboles aceptan codificación ordinal, pero aquí usamos one-hot porque el explicador SHAP no reproduce bien las divisiones categóricas nativas.</li>
-    <li>Ojo: la meteorología es la OBSERVADA hoy, no un pronóstico del clima de mañana. Por eso su aporte es una cota inferior de lo que daría un pronóstico meteorológico real.</li>
+    <li>Ventanas de tiempo: recomendación del profesor. Nada del futuro entra (sin fuga de información).</li>
+    <li>Meteorología observada, no pronosticada: su aporte es una cota inferior.</li>
   </ul></aside>
 </section>
 
-<!-- 11 · Modelos y origen móvil -->
-<section class="diapo" data-bloque="3">
-  <header>
-    <div class="ceja">III · Modelos y validación</div>
-    <h2>Tres modelos a comparar y una forma justa de ponerlos a prueba</h2>
-  </header>
-  <div class="cuerpo dos-2" style="gap:56px">
-    <div class="pila" style="gap:22px">
-      <div class="modelos" style="grid-template-columns:1fr">
-        <div class="modelo"><h3>Persistencia (referencia)</h3><p>Supone que mañana será igual a hoy. Es la regla más simple y el rival a vencer.</p></div>
-        <div class="modelo m1"><h3>Modelo sin meteorología</h3><p>Aprende del historial de PM<sub>2.5</sub> y del calendario. Responde si le ganamos a la persistencia (P1).</p></div>
-        <div class="modelo m2"><h3>Modelo con meteorología</h3><p>Añade las variables del clima del día. Al compararlo con el anterior, medimos cuánto aporta el clima (P2).</p></div>
-      </div>
-      <p class="pequeno">Los dos modelos usan <strong>Gradient Boosting</strong> (potenciación de gradiente): un método que combina muchos árboles de decisión sencillos, cada uno entrenado para corregir los errores del conjunto anterior. Elegimos esta familia porque funciona bien con datos en tabla y admite valores faltantes sin rellenarlos. Sus ajustes internos se fijaron con el conjunto de validación, nunca con el de prueba.</p>
+<section class="diapo">
+  <h2>Cada año se predice entrenando solo con los anteriores</h2>
+  <div class="cuerpo dos-2">
+    <div class="modelos">
+      <div class="modelo-f"><b>Persistencia</b><span>mañana igual a hoy</span></div>
+      <div class="modelo-f m1"><b>Modelo sin meteorología</b><span>solo PM<sub>2.5</sub> y fecha · responde P1</span></div>
+      <div class="modelo-f m2"><b>Modelo con meteorología</b><span>añade el clima · la diferencia responde P2</span></div>
     </div>
     <div class="pila" style="gap:16px">
       <div class="rejilla-om" id="rejilla-om"></div>
-      <div class="leyenda">
-        <span><i class="bg-gb-claro"></i>Entrena</span>
-        <span><i class="bg-persistencia"></i>Valida (2019–2021)</span>
-        <span><i class="bg-gb"></i>Prueba (2022–2025, 21.940 pronósticos)</span>
-      </div>
-      <p class="texto">Como es una serie temporal, no repartimos los datos al azar. Usamos <strong>origen móvil</strong>:</p>
-      <ul class="puntos">
-        <li>Cada año se pronostica entrenando solo con los años anteriores, como se haría en la práctica.</li>
-        <li>Ningún pronóstico ve el futuro, y el resultado no depende de un único año atípico.</li>
-        <li>2019–2021 es validación (para ajustar el modelo); 2022–2025 es prueba, que no se miró para decidir nada.</li>
-      </ul>
+      <div class="leyenda" style="margin:0"><span><i class="bg-gb-claro"></i>Aprende</span><span><i class="bg-persistencia"></i>Ajuste</span><span><i class="bg-gb"></i>Examen final · 21.940 pronósticos</span></div>
     </div>
   </div>
   <aside class="notas"><ul>
-    <li>Gradient Boosting en una frase: conjunto de árboles en secuencia; cada árbol aprende el residuo (el error) que dejó el anterior, y la suma de todos da la predicción. La tasa de aprendizaje controla cuánto corrige cada árbol.</li>
-    <li>Por qué árboles y no una red neuronal como Baena-Salazar: con datos tabulares y pocos miles de registros, los árboles potenciados suelen ir mejor y manejan faltantes de forma nativa.</li>
-    <li>Origen móvil concreto: 2022 se predice entrenando con 2018–2021; 2023 con 2018–2022; y así sucesivamente. Es la versión temporal del esquema entrenamiento/validación/prueba que vimos en clase.</li>
-    <li>Punto a defender: no mezclar futuro con pasado. Partir al azar inflaría el desempeño porque el modelo "vería" días vecinos del que predice.</li>
-    <li>Los tres modelos comparten exactamente la misma configuración; lo único que cambia entre el GB sin y con meteorología son los predictores, para que la diferencia sea atribuible solo a la meteorología (eso responde la P2 de forma limpia).</li>
+    <li>Gradient Boosting: árboles en secuencia, cada uno corrige el error del anterior; admite faltantes.</li>
+    <li>Origen móvil: 2022 se entrena con 2018–2021, y así. La prueba no se usó para decidir nada.</li>
   </ul></aside>
 </section>
 
-<!-- 12 · Evaluación -->
-<section class="diapo" data-bloque="3">
-  <header>
-    <div class="ceja">III · Evaluación</div>
-    <h2>Cuatro formas de medir, todas en los años de prueba</h2>
-  </header>
-  <div class="cuerpo" style="grid-template-columns:repeat(4, 1fr); gap:20px">
-    <div class="tarjeta">
-      <span class="etiqueta">Error</span>
-      <h3>MAE y R²</h3>
-      <p class="texto" style="font-size:20px">Medimos cuánto se equivoca el modelo en promedio. A cada diferencia entre modelos le calculamos un intervalo de confianza del 95 % por <strong>remuestreo en bloques</strong> de 14 días, para no exagerar la certeza, ya que los errores de días y estaciones cercanos tienden a parecerse.</p>
-    </div>
-    <div class="tarjeta" data-paso="1">
-      <span class="etiqueta">Avisos</span>
-      <h3>Comparar a igual número de avisos</h3>
-      <p class="texto" style="font-size:20px">Ajustamos el umbral de cada método para que avise <strong>tantas veces como eventos hubo</strong>, de modo que ninguno gane solo por avisar más. Sobre esa base contamos cuántos inicios de episodio logró anticipar cada uno.</p>
-    </div>
-    <div class="tarjeta" data-paso="2">
-      <span class="etiqueta">Interpretación</span>
-      <h3>SHAP</h3>
-      <p class="texto" style="font-size:20px">Reparte cada predicción entre sus variables de entrada, atribuyéndole a cada una cuánto empujó el resultado. La importancia global es el promedio de ese aporte en valor absoluto, expresado como porcentaje del total.</p>
-    </div>
-    <div class="tarjeta" data-paso="3">
-      <span class="etiqueta">Trabajo relacionado</span>
-      <h3>Réplica del estudio local previo</h3>
-      <p class="texto" style="font-size:20px">Repetimos el mismo diseño de Baena-Salazar et al.: entrenar con 2013–2015 y probar en enero–marzo de 2016, en las estaciones ITA-CONC y MED-UNNV, para comparar en igualdad de condiciones.</p>
-    </div>
-  </div>
-  <aside class="notas"><ul>
-    <li>Las métricas son las que vimos en clase: MAE y R² para regresión; precisión y recall para la lectura como aviso (clasificación). MAPE aparece en la réplica.</li>
-    <li>Por qué el intervalo de confianza con bloques y no bootstrap simple: los días vecinos y las estaciones cercanas tienen errores parecidos (están correlacionados). Remuestrear bloques de 14 días respeta esa dependencia y evita decir que tenemos más certeza de la real.</li>
-    <li>El "mismo número de avisos" es la idea más fina de defender: el umbral fijo de 38 favorece a la persistencia, porque un modelo que minimiza el error promedio subestima los picos y por tanto avisa menos. Igualar el presupuesto de avisos nivela la comparación.</li>
-    <li>SHAP: valores de la teoría de juegos (Shapley) que reparten de forma justa la predicción entre las variables. Lo vimos en la Lecture 05. Aquí respondemos con ellos la segunda parte de P2.</li>
-    <li>La réplica de Baena-Salazar atiende el pedido explícito del profesor de comparar con ese estudio.</li>
-  </ul></aside>
-</section>
-
-<!-- 13 · Bloque IV -->
-<section class="diapo bloque" data-bloque="4">
-  <div class="numeral">IV</div>
-  <h2>Resultados</h2>
-  <p class="lead">¿Le ganamos a la persistencia? ¿Anticipamos los episodios? ¿Qué pesa más y cómo nos comparamos con el estudio local previo?</p>
-  <aside class="notas"><ul><li>Transición a resultados.</li></ul></aside>
-</section>
-
-<!-- 14 · Error -->
-<section class="diapo" data-bloque="4">
-  <header>
-    <div class="ceja">IV · Pregunta 1 · Error</div>
-    <h2>Gradient Boosting reduce el error de la persistencia en los cuatro años</h2>
-  </header>
-  <div class="cuerpo dos-1" style="gap:56px">
+<section class="diapo">
+  <h2>Un aviso útil llega el día antes de que empiece el episodio</h2>
+  <div class="cuerpo dos-1">
     <div class="figura">
-      <div class="leyenda" style="margin-bottom:12px">
-        <span><i class="bg-persistencia"></i>Persistencia</span>
-        <span><i class="bg-gb-claro"></i>GB sin meteorología</span>
-        <span><i class="bg-gb"></i>GB con meteorología</span>
+      <div id="g-esquema"></div>
+      <div class="pronosticos">
+        <span class="etiqueta">Esquema ilustrativo · pronóstico hecho hoy para mañana</span>
+        <p><i class="bg-persistencia"></i>Persistencia: 36, bajo 38 → <strong>no avisa</strong></p>
+        <p><i class="bg-gb"></i>Modelo: 37, sobre 35 → <strong>avisa</strong></p>
       </div>
+    </div>
+    <div class="medidas">
+      <div class="medida"><b>Error</b><span>cuánto se equivoca en promedio, en µg/m³</span></div>
+      <div class="medida"><b>Avisos</b><span>todos avisan el mismo número de veces</span></div>
+      <div class="medida"><b>Peso</b><span>cuánto influye cada dato en el pronóstico</span></div>
+      <div class="medida" style="border:0"><b>Estudio previo</b><span>repetimos la prueba de Baena-Salazar en 2016</span></div>
+    </div>
+  </div>
+  <aside class="notas"><ul>
+    <li>Esquema ilustrativo: la persistencia repite 36 y no avisa; el modelo, con umbral ~35, sí.</li>
+    <li>Igual número de avisos: con el umbral fijo de 38 la persistencia saldría favorecida.</li>
+  </ul></aside>
+</section>
+
+<section class="diapo">
+  <h2>P1 · Menos error que la persistencia en los cuatro años de prueba</h2>
+  <div class="cuerpo dos-1">
+    <div class="figura">
+      <div class="leyenda"><span><i class="bg-persistencia"></i>Persistencia</span><span><i class="bg-gb-claro"></i>Modelo sin meteorología</span><span><i class="bg-gb"></i>Modelo con meteorología</span></div>
       <div id="g-mae"></div>
-      <p class="pie-figura">Error absoluto medio por año de prueba (µg/m³).</p>
+      <p class="nota" style="margin-top:8px">Error promedio de cada pronóstico (µg/m³)</p>
     </div>
-    <div class="pila" style="gap:28px">
-      <div class="cifras">
-        <div class="cifra-g"><span class="n" id="n-mae-p"></span><span class="u">MAE persistencia</span></div>
-        <div class="cifra-g"><span class="n" style="color:var(--gb)" id="n-mae-gb"></span><span class="u">MAE GB con meteo.</span></div>
-      </div>
-      <ul class="puntos">
-        <li>Solo con PM<sub>2.5</sub> y calendario, recorta el error un <strong>18 %</strong>: 0,61 µg/m³ menos (IC 95 %: 0,53 a 0,68, sin tocar el cero).</li>
-        <li>El R² sube de <span class="dato" id="n-r2-p"></span> a <span class="dato" id="n-r2-gb"></span>. Esto responde que sí a la primera parte de P1.</li>
-        <li data-paso="1">La meteorología suma otros <strong>0,027 µg/m³</strong> (IC 95 %: 0,011 a 0,047): poco, pero no es azar y aparece en 14 de 16 estaciones.</li>
-        <li data-paso="1">Las dos que empeoran son las de meteorología más incompleta: el límite es la calidad del dato, no el modelo.</li>
-      </ul>
+    <div class="pila" style="gap:44px">
+      <div class="cifra"><span class="n" style="color:var(--gb)">−18 %</span><span class="u">de error frente a la persistencia, y no es casualidad</span></div>
+      <div class="cifra" data-paso="1"><span class="n" style="font-size:64px">−0,027</span><span class="u">µg/m³ menos al añadir el clima: poco, pero en 14 de 16 estaciones</span></div>
     </div>
   </div>
   <aside class="notas"><ul>
-    <li>Respuesta a la P1 en error: sí, en los cuatro años y con intervalo que excluye el cero.</li>
-    <li>Las estaciones que empeoran con meteorología: BEL-FEVE (la 271 sin datos desde 2024) e ITA-CONC (la 206 sin viento 2019–2024).</li>
+    <li>3,37 → 2,77 sin meteorología (IC 0,53–0,68) → 2,74 con meteorología. R² de 0,56 a 0,71.</li>
+    <li>Meteorología: IC 0,011–0,047. Empeora en BEL-FEVE e ITA-CONC, las de meteorología más incompleta.</li>
   </ul></aside>
 </section>
 
-<!-- 15 · Avisos -->
-<section class="diapo" data-bloque="4">
-  <header>
-    <div class="ceja">IV · Pregunta 1 · Avisos de Nivel de Prevención</div>
-    <h2>Con los mismos avisos, anticipa inicios que la persistencia no puede</h2>
-  </header>
-  <div class="cuerpo dos" style="gap:64px">
-    <div class="pila" style="gap:26px">
-      <span class="etiqueta">Inicios de episodio avisados, 2022–2025 (de 123)</span>
+<section class="diapo">
+  <h2>P1 · Con los mismos avisos, anticipa inicios que la persistencia no puede</h2>
+  <div class="cuerpo dos-1">
+    <div class="pila" style="gap:18px">
+      <span class="etiqueta">Inicios de episodio avisados el día antes, 2022–2025 (de 123)</span>
       <div class="inicios" id="g-inicios"></div>
-      <table style="margin-top:8px">
-        <thead><tr><th>A igual presupuesto</th><th>Avisos</th><th>Precisión</th><th>Recall</th></tr></thead>
-        <tbody id="t-avisos"></tbody>
-      </table>
     </div>
-    <div class="pila" style="gap:22px">
-      <ul class="puntos">
-        <li>A igual número de avisos, la precisión y el recall se parecen; lo que cambia es <em>qué</em> eventos avisan.</li>
-        <li>La persistencia solo avisa cuando hoy ya está en prevención: <strong>nunca anticipa un inicio</strong>.</li>
-        <li>Gradient Boosting, con un umbral de unos 35 µg/m³, anticipa uno de cada cuatro inicios: ahí está su valor.</li>
-      </ul>
-      <div data-paso="1" class="pila" style="gap:14px">
-        <span class="etiqueta">Su debilidad: los picos</span>
-        <table>
-          <thead><tr><th>Días en prevención</th><th>MAE</th><th>Sesgo</th></tr></thead>
-          <tbody id="t-criticos"></tbody>
-        </table>
-        <p class="texto">En los días que ya están en prevención se equivoca más que la persistencia: subestima los picos en más de 5 µg/m³. Es esperable al minimizar el error promedio, y es donde la meteorología más ayuda.</p>
-      </div>
-    </div>
+    <div class="cifra" data-paso="1"><span class="n ambar">−5,5</span><span class="u">µg/m³: en los días de prevención el modelo se queda corto</span></div>
   </div>
   <aside class="notas"><ul>
-    <li>Mensaje central: a igual presupuesto de avisos, precisión y recall se empatan; lo que cambia es que GB anticipa inicios (29–30 de 123) y la persistencia ninguno. Ese es el aporte operativo real del modelo.</li>
-    <li>Por qué la persistencia no anticipa inicios: su aviso es "hoy ya pasó el umbral", así que por definición llega tarde, nunca el día antes.</li>
-    <li>Ser honestos con la debilidad: en días de prevención el MAE de GB es mayor (6,9 vs 5,9). No lo escondemos; lo explicamos — minimizar el error medio lleva a subestimar picos raros. Es un trade-off, no un error.</li>
-    <li>Sesgo negativo = subestima. Si el jurado pregunta cómo se mitigaría: umbral de aviso más bajo (lo que hacemos), o predecir el cambio (lo discutimos en la réplica).</li>
+    <li>Precisión y recall empatan a igual presupuesto (0,52/0,52 frente a 0,49/0,55); cambia qué se avisa.</li>
+    <li>Debilidad honesta: en días en prevención, MAE 6,56 frente a 5,88 de la persistencia.</li>
   </ul></aside>
 </section>
 
-<!-- 16 · SHAP -->
-<section class="diapo" data-bloque="4">
-  <header>
-    <div class="ceja">IV · Pregunta 2 · SHAP</div>
-    <h2>Lo que más pesa es el PM<sub>2.5</sub> del día anterior al pronosticado</h2>
-  </header>
-  <div class="cuerpo dos-1" style="gap:56px">
+<section class="diapo">
+  <h2>P2 · Lo que más pesa es el PM<sub>2.5</sub> del día anterior</h2>
+  <div class="cuerpo dos-1">
     <div class="figura">
-      <div class="leyenda" style="margin-bottom:12px" id="leyenda-shap"></div>
+      <div class="leyenda" id="leyenda-shap"></div>
       <div id="g-shap"></div>
-      <p class="pie-figura">Importancia SHAP de las 10 variables con más peso, GB con meteorología, 2022–2025 (% del total).</p>
+      <p class="nota" style="margin-top:8px">Peso de cada dato en el pronóstico, calculado con SHAP (% del total)</p>
     </div>
-    <div class="pila" style="gap:22px">
+    <div class="pila" style="gap:34px">
       <span class="etiqueta">Peso del PM<sub>2.5</sub> del día anterior</span>
-      <table>
-        <tbody>
-          <tr><td>Red neuronal de Baena-Salazar et al.</td><td class="dato">34,2 %</td></tr>
-          <tr class="destacada"><td>Nuestro modelo completo</td><td class="dato" id="n-shap-hoy"></td></tr>
-          <tr><td>Nuestro modelo con entradas tipo Baena</td><td class="dato">65,7 %</td></tr>
-        </tbody>
-      </table>
-      <ul class="puntos">
-        <li>El orden coincide con Baena-Salazar: en ambos, el PM<sub>2.5</sub> reciente es la señal dominante.</li>
-        <li>La magnitud no es comparable: cada trabajo mide la importancia distinto y su red usaba la capa de mezcla.</li>
-        <li data-paso="1">El calendario pesa porque los domingos, con menos tráfico, bajan el pronóstico.</li>
-        <li data-paso="1">El <strong>rezago de 6 días</strong> destaca porque cae en el mismo día de la semana que mañana. La meteorología aporta el <strong class="dato" id="n-shap-meteo"></strong>, sobre todo lluvia y presión.</li>
-      </ul>
+      <div class="cifra"><span class="n" style="font-size:64px; color:var(--tenue)">34,2 %</span><span class="u">red de Baena-Salazar et al.</span></div>
+      <div class="cifra"><span class="n" style="font-size:64px" id="n-shap-hoy"></span><span class="u">nuestro modelo</span></div>
     </div>
   </div>
   <aside class="notas"><ul>
-    <li>Responde directamente la pregunta del profesor: sí, el día anterior domina, igual que en Baena-Salazar. Ese era el punto que pidió verificar con SHAP.</li>
-    <li>Detalle fino: las horas de 18:00–23:00 pesan tanto como la media completa del día; el final del día es el mejor predictor del día siguiente.</li>
-    <li>Las tres filas de la tabla comparan el peso del PM2.5 reciente: 34,2 % (su red), 49,5 % (nuestro modelo completo) y 65,7 % (nuestro modelo reducido con entradas parecidas a las suyas). Cuanto menos variables, más se concentra el peso en el PM2.5.</li>
-    <li>Si preguntan qué es SHAP: reparte cada predicción entre las variables de forma que los aportes suman exactamente la predicción. Verificamos esa propiedad en el notebook.</li>
+    <li>Responde al profesor: sí, el día anterior domina, como en Baena-Salazar. La magnitud no es comparable (otro método, su red tenía capa de mezcla).</li>
+    <li>Rezago de 6 días: mismo día de la semana que mañana. Los domingos bajan el pronóstico.</li>
   </ul></aside>
 </section>
 
-<!-- 17 · Réplica Baena -->
-<section class="diapo" data-bloque="4">
-  <header>
-    <div class="ceja">IV · Comparación con Baena-Salazar et al. · enero–marzo 2016</div>
-    <h2>En su periodo, la persistencia casi iguala a la red neuronal</h2>
-  </header>
+<section class="diapo">
+  <h2>En 2016, la persistencia casi iguala a la red de Baena-Salazar</h2>
   <div class="cuerpo dos-1" style="gap:48px">
     <div class="figura">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:12px">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:16px">
         <div class="leyenda">
-          <span><i class="raya bg-tinta"></i>Observado</span>
-          <span><i class="raya bg-persistencia"></i>Persistencia</span>
-          <span><i class="raya bg-gb"></i>GB nivel</span>
-          <span><i class="raya bg-cambio"></i>GB cambio</span>
+          <span><i class="raya bg-tinta"></i>Observado</span><span><i class="raya bg-persistencia"></i>Persistencia</span>
+          <span><i class="raya bg-gb"></i>Modelo</span><span><i class="raya bg-cambio"></i>Modelo que predice el cambio</span>
         </div>
         <div class="selector" role="group" aria-label="Estación">
-          <button type="button" id="b-ita" data-estacion="ITA-CONC" aria-pressed="false">ITA-CONC</button>
-          <button type="button" id="b-med" data-estacion="MED-UNNV" aria-pressed="true">MED-UNNV</button>
+          <button type="button" data-estacion="ITA-CONC" aria-pressed="false">ITA-CONC</button>
+          <button type="button" data-estacion="MED-UNNV" aria-pressed="true">MED-UNNV</button>
         </div>
       </div>
       <div id="g-replica"></div>
-      <p class="pie-figura">Media diaria de PM<sub>2.5</sub> (µg/m³). La línea punteada es el máximo visto al entrenar con 2013–2015.</p>
     </div>
     <div class="pila" style="gap:20px">
       <table>
-        <thead><tr><th>r² / error %</th><th>ITA-CONC</th><th>MED-UNNV</th></tr></thead>
+        <thead><tr><th>ajuste · error %</th><th>ITA-CONC</th><th>MED-UNNV</th></tr></thead>
         <tbody id="t-replica"></tbody>
       </table>
-      <ul class="puntos">
-        <li data-paso="1">En marzo de 2016 los niveles superaron todo lo visto al entrenar; un modelo de árboles <strong>no pronostica más alto de lo que ha visto</strong> y falla justo ahí.</li>
-        <li data-paso="2">Predecir el <strong>cambio respecto a hoy</strong> lo corrige, pero se probó después de ver 2016 y en 2022–2025 no ayuda.</li>
-        <li data-paso="2">Por eso el modelo principal sigue prediciendo el nivel, y dejamos el cambio como trabajo futuro.</li>
-      </ul>
+      <p class="nota" data-paso="1">El modelo no predice valores más altos que los que vio al aprender.</p>
     </div>
   </div>
   <aside class="notas"><ul>
-    <li>Mensaje principal: en el propio periodo de Baena-Salazar, la persistencia casi iguala a su red neuronal (queda a 0,01–0,05 de su r²), y ellos no se compararon con ella. Eso valida nuestra tesis de que la persistencia es el rival exigente.</li>
-    <li>Advertencia sobre el R²: depende de cuánto varía el periodo. La misma persistencia da R² 0,80 en el trimestre de 2016 y 0,56 en 2022–2025. Por eso NO se pueden comparar R² entre estudios de periodos distintos; lo comparable es la mejora frente a la persistencia en el mismo periodo.</li>
-    <li>La limitación de los árboles (no extrapolar) es honesta y académicamente valiosa: es un hallazgo, no un fracaso. En 2022–2025 ningún día superó el máximo de entrenamiento (73,7, de 2019–2020), por eso ahí no se presenta el problema.</li>
-    <li>El selector ITA-CONC / MED-UNNV cambia la estación del gráfico en vivo; usarlo si preguntan por una estación concreta.</li>
+    <li>Ellos no se compararon con la persistencia. La contingencia de marzo superó el máximo de entrenamiento.</li>
+    <li>Predecir el cambio lo corrige, pero se probó después y en 2022–2025 no ayuda: el modelo principal sigue con el nivel.</li>
   </ul></aside>
 </section>
 
-<!-- 18 · Conclusiones -->
-<section class="diapo" data-bloque="4">
-  <header>
-    <div class="ceja">Conclusiones</div>
-    <h2>Un pronóstico útil, con límites claros</h2>
-  </header>
-  <div class="pila" style="gap:24px">
-    <div class="respuesta"><span class="etq">P1</span><p><strong>Sí.</strong> Con ventanas de PM<sub>2.5</sub> y calendario, Gradient Boosting reduce el error de la persistencia un 18 % en los cuatro años de prueba y, a igual número de avisos, anticipa 29–30 de los 123 inicios de episodio que la persistencia no puede anticipar. Su límite son los picos, que tiende a subestimar.</p></div>
-    <div class="respuesta" data-paso="1"><span class="etq">P2</span><p>La meteorología observada aporta poco pero de forma estadísticamente significativa: 0,027 µg/m³ en el error promedio y 0,34 en los días en prevención, donde más hace falta. Según SHAP, el PM<sub>2.5</sub> del día anterior es la entrada dominante (49,5 %), igual que halló Baena-Salazar et al.</p></div>
-    <div class="respuesta" data-paso="2" style="border:0"><span class="etq ambar">→</span><p><strong>Trabajo futuro:</strong> predecir el cambio respecto a hoy, o combinarlo con el nivel, para episodios sin precedentes; alimentar el modelo con pronósticos meteorológicos en vez de observaciones; y evaluar el primer semestre de 2026, que ningún modelo ha visto.</p></div>
+<section class="diapo">
+  <h2>Conclusiones</h2>
+  <div class="respuestas" style="flex:1; justify-content:center">
+    <div class="respuesta"><span class="etq">P1</span><p>Sí: 18 % menos error y 30 de 123 inicios avisados a tiempo. Se queda corto en los picos.</p></div>
+    <div class="respuesta" data-paso="1"><span class="etq">P2</span><p>El clima ayuda poco pero de verdad. Lo que más pesa es el PM<sub>2.5</sub> del día anterior.</p></div>
+    <div class="respuesta" data-paso="2"><span class="etq ambar">→</span><p>Predecir cuánto sube o baja, usar el pronóstico del clima y probar con 2026.</p></div>
   </div>
   <aside class="notas"><ul>
-    <li>Cerrar con las dos respuestas y el trabajo futuro. No leer palabra por palabra: resumir apoyándose en las cifras clave (18 %, 29–30 inicios, 0,027 µg/m³, 49,5 %).</li>
-    <li>Mensaje de cierre en una frase: "logramos un pronóstico por estación que mejora a la persistencia y anticipa inicios de episodio, con límites claros y honestos".</li>
-    <li>Si solo recuerdan una cosa para defender: superamos la persistencia (que es el rival difícil) y lo demostramos con intervalos de confianza y a igual presupuesto de avisos.</li>
+    <li>No leer: resumir con 18 %, 30 inicios, 0,027 µg/m³ y 49,5 %.</li>
   </ul></aside>
 </section>
 
-<!-- 19 · Cierre -->
-<section class="diapo cierre" data-bloque="4">
-  <div class="ceja">Gracias</div>
+<section class="diapo cierre">
   <h1>Preguntas</h1>
-  <p class="lead">Código, datos de descarga y notebooks: <span class="dato" style="font-size:24px">github.com/linaballesteros/air-quality-applied-ml</span></p>
+  <p class="dato" style="font-size:24px; color:var(--tinta-2)">github.com/linaballesteros/air-quality-applied-ml</p>
   <aside class="notas"><ul><li>Cinco minutos de preguntas.</li></ul></aside>
 </section>
 
 </main>
-
 <div id="panel-notas" aria-live="polite"><div class="cabeza"><span id="notas-num"></span><span id="notas-tiempo">00:00</span></div><div id="notas-texto"></div></div>
 
 <script src="datos.js"></script>
@@ -848,17 +584,16 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
   const fmt = (v, d = 1) => v.toLocaleString('es-CO', { minimumFractionDigits: d, maximumFractionDigits: d });
   const esc = (d0, d1, r0, r1) => v => r0 + (v - d0) / (d1 - d0) * (r1 - r0);
   const svg = (w, h, inner) => `<svg viewBox="0 0 ${w} ${h}" xmlns="${NS}" role="img">${inner}</svg>`;
+  const $ = id => document.getElementById(id);
   const MODELOS = ['persistencia', 'GB sin meteo', 'GB con meteo'];
   const CLASE = { 'persistencia': 'c-persistencia', 'GB sin meteo': 'c-gb-claro', 'GB con meteo': 'c-gb' };
-  const NOMBRE = { 'persistencia': 'Persistencia', 'GB sin meteo': 'GB sin meteorología', 'GB con meteo': 'GB con meteorología' };
+  const NOMBRE = { 'persistencia': 'Persistencia', 'GB sin meteo': 'Modelo sin meteorología', 'GB con meteo': 'Modelo con meteorología' };
 
-  // Eje Y con rejilla y etiquetas
   function ejeY(y, ticks, x0, x1, f = v => v) {
     return ticks.map(t => `<line class="${t === 0 ? 'eje' : 'rejilla'}" x1="${x0}" x2="${x1}" y1="${y(t)}" y2="${y(t)}"/>` +
       `<text x="${x0 - 10}" y="${y(t) + 5}" text-anchor="end">${f(t)}</text>`).join('');
   }
 
-  // Barras agrupadas verticales
   function barras(el, { grupos, series, ymax, ticks, W = 820, H = 430, m = { t: 26, r: 8, b: 40, l: 46 }, f = v => fmt(v, 0), banda, corchete }) {
     const x0 = m.l, x1 = W - m.r, y = esc(0, ymax, H - m.b, m.t);
     const gw = (x1 - x0) / grupos.length, pad = gw * 0.18, bw = (gw - 2 * pad) / series.length;
@@ -881,130 +616,149 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
     el.innerHTML = svg(W, H, s);
   }
 
-  // Portada: ciclo diario
-  (() => {
-    const v = D.perfil_horario, W = 640, H = 300, m = { t: 30, r: 10, b: 34, l: 40 };
+  function curvaHoraria(el, { W, H, puntos }) {
+    const v = D.perfil_horario, m = { t: 30, r: 12, b: 36, l: 44 };
     const x = esc(0, 23, m.l, W - m.r), y = esc(10, 28, H - m.b, m.t);
     const pts = v.map((p, i) => `${x(i)},${y(p)}`).join(' ');
-    const imax = v.indexOf(Math.max(...v)), imin = v.indexOf(Math.min(...v));
     let s = ejeY(y, [10, 15, 20, 25], m.l, W - m.r);
     s += `<polygon class="c-banda" points="${x(0)},${y(10)} ${pts} ${x(23)},${y(10)}"/>`;
     s += `<polyline class="c-gb sin-relleno" stroke-width="3" points="${pts}"/>`;
-    s += `<circle class="c-prevencion" cx="${x(imax)}" cy="${y(v[imax])}" r="6"/><text class="valor fuerte" x="${x(imax) + 12}" y="${y(v[imax]) - 4}">${fmt(v[imax], 1)} a las 08:00</text>`;
-    s += `<circle class="c-tinta" cx="${x(imin)}" cy="${y(v[imin])}" r="5"/><text class="valor" x="${x(imin)}" y="${y(v[imin]) + 24}" text-anchor="middle">${fmt(v[imin], 1)} a las 15:00</text>`;
+    if (puntos) v.forEach((p, i) => s += `<circle class="c-gb" cx="${x(i)}" cy="${y(p)}" r="3.5"/>`);
+    s += `<circle class="c-prevencion" cx="${x(8)}" cy="${y(v[8])}" r="6"/><text class="valor fuerte" x="${x(8) + 12}" y="${y(v[8]) - 4}">${fmt(v[8], 1)} · 08:00</text>`;
+    s += `<circle class="c-tinta" cx="${x(15)}" cy="${y(v[15])}" r="5"/><text class="valor fuerte" x="${x(15)}" y="${y(v[15]) + 26}" text-anchor="middle">${fmt(v[15], 1)} · 15:00</text>`;
     [0, 6, 12, 18, 23].forEach(h => s += `<text x="${x(h)}" y="${H - 8}" text-anchor="middle">${String(h).padStart(2, '0')}:00</text>`);
-    document.getElementById('g-portada').innerHTML = svg(W, H, s);
+    el.innerHTML = svg(W, H, s);
+  }
+  curvaHoraria($('g-portada'), { W: 640, H: 300 });
+  curvaHoraria($('g-horario'), { W: 700, H: 400, puntos: true });
+
+  // Corte esquemático del valle con la capa de inversión
+  (() => {
+    const W = 860, H = 440, piso = 360, inv = 196;
+    const izq = `0,${H} 0,70 90,110 170,150 250,230 330,${piso}`;
+    const der = `${W},${H} ${W},60 780,100 700,160 620,240 540,${piso}`;
+    const interior = `330,${piso} 250,230 170,150 90,110 0,70 0,${H} ${W},${H} ${W},60 780,100 700,160 620,240 540,${piso}`;
+    let s = `<defs><clipPath id="valle"><polygon points="0,0 ${W},0 ${W},60 780,100 700,160 620,240 540,${piso} 330,${piso} 250,230 170,150 90,110 0,70"/></clipPath>` +
+      `<linearGradient id="bruma" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--prevencion)" stop-opacity=".08"/><stop offset="1" stop-color="var(--prevencion)" stop-opacity=".42"/></linearGradient></defs>`;
+    s += `<rect x="0" y="${inv}" width="${W}" height="${piso - inv}" fill="url(#bruma)" clip-path="url(#valle)"/>`;
+    s += `<polygon class="c-montana" points="${izq}"/><polygon class="c-montana" points="${der}"/>`;
+    s += `<rect class="c-montana" x="0" y="${piso}" width="${W}" height="${H - piso}"/>`;
+    [352, 372, 392, 412, 436, 456, 478, 500, 520].forEach((x, i) => {
+      const h = [18, 30, 22, 40, 26, 34, 20, 28, 16][i];
+      s += `<rect class="c-tinta" x="${x}" y="${piso - h}" width="14" height="${h}" opacity=".75"/>`;
+    });
+    s += `<line class="c-tinta" stroke-width="1.5" stroke-dasharray="6 6" x1="120" x2="${W - 120}" y1="${inv}" y2="${inv}"/>`;
+    s += `<text class="rotulo" x="${W / 2}" y="${inv - 14}" text-anchor="middle">inversión térmica</text>`;
+    [400, 460].forEach(x => s += `<path class="c-prevencion sin-relleno" stroke-width="2" d="M${x},${piso - 48} V${inv + 20} M${x - 7},${inv + 30} L${x},${inv + 18} L${x + 7},${inv + 30}"/>`);
+    s += `<text class="rotulo" x="${W / 2}" y="${piso + 46}" text-anchor="middle" style="fill:var(--tinta)">Valle de Aburrá</text>`;
+    s += `<text class="rotulo" x="${W / 2 + 120}" y="${inv + 70}" style="fill:var(--prevencion)">PM2.5 atrapado</text>`;
+    $('g-valle').innerHTML = svg(W, H, s);
   })();
 
-  // Estaciones por año
+  // Estaciones por año y según el año de inicio
   (() => {
     const e = D.estaciones_por_año, i0 = e.findIndex(d => d['año'] === 2018), i1 = e.findIndex(d => d['año'] === 2025) + 1;
-    barras(document.getElementById('g-estaciones'), {
-      grupos: e.map(d => String(d['año']).slice(2)).map((a, i) => i === 0 ? '2013' : '’' + a),
+    barras($('g-estaciones'), {
+      grupos: e.map(d => String(d['año'])).map((a, i) => i === 0 ? a : '’' + a.slice(2)),
       series: [{ valores: e.map(d => d.con_datos), clase: 'c-gb-claro' }, { valores: e.map(d => d.cobertura_90), clase: 'c-gb', fuerte: true }],
-      ymax: 30, ticks: [0, 10, 20, 30], corchete: [i0, i1, 'ventana del estudio · 2018–2025'], W: 860, H: 460, m: { t: 56, r: 8, b: 40, l: 46 },
+      ymax: 30, ticks: [0, 10, 20, 30], corchete: [i0, i1, 'periodo de estudio'], W: 900, H: 460, m: { t: 56, r: 8, b: 40, l: 46 },
     });
-    document.getElementById('t-ventanas').innerHTML = Object.entries(D.estaciones_por_ventana)
-      .map(([a, n]) => `<tr class="${a === '2018' ? 'destacada' : ''}"><td>${a}–2025</td><td class="dato">${n}</td></tr>`).join('');
+    const v = D.estaciones_por_ventana;
+    $('g-ventanas').innerHTML = Object.entries(v).map(([a, n]) =>
+      `<div class="ventana${a === '2018' ? ' elegida' : ''}"><span>desde ${a}</span><span class="b"><i style="width:${100 * n / 17}%"></i></span><span>${n}</span></div>`).join('');
   })();
 
-  // Perfil horario
-  (() => {
-    const v = D.perfil_horario, W = 700, H = 380, m = { t: 20, r: 12, b: 40, l: 46 };
-    const x = esc(0, 23, m.l, W - m.r), y = esc(10, 28, H - m.b, m.t);
-    const pts = v.map((p, i) => `${x(i)},${y(p)}`).join(' ');
-    let s = ejeY(y, [10, 15, 20, 25], m.l, W - m.r);
-    s += `<polyline class="c-gb sin-relleno" stroke-width="3" points="${pts}"/>`;
-    v.forEach((p, i) => s += `<circle class="c-gb" cx="${x(i)}" cy="${y(p)}" r="3.5"/>`);
-    s += `<text class="valor fuerte" x="${x(8) + 10}" y="${y(v[8]) - 6}">${fmt(v[8], 2)}</text>`;
-    s += `<text class="valor fuerte" x="${x(15)}" y="${y(v[15]) + 24}" text-anchor="middle">${fmt(v[15], 2)}</text>`;
-    [0, 4, 8, 12, 16, 20].forEach(h => s += `<text x="${x(h)}" y="${H - 12}" text-anchor="middle">${String(h).padStart(2, '0')}:00</text>`);
-    document.getElementById('g-horario').innerHTML = svg(W, H, s);
-  })();
-
-  // Días de evento por mes
-  barras(document.getElementById('g-meses'), {
+  barras($('g-meses'), {
     grupos: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
     series: [{ valores: D.dias_evento_por_mes, clase: i => (i === 1 || i === 2) ? 'c-prevencion' : 'c-persistencia' }],
-    ymax: 120, ticks: [0, 40, 80, 120], W: 700, H: 380,
+    ymax: 120, ticks: [0, 40, 80, 120], W: 700, H: 400,
   });
 
-  // Eventos por año: inicios y continuaciones apilados
+  // Eventos por año: inicios y continuaciones
   (() => {
-    const a = Object.entries(D.eventos_por_año), W = 860, H = 440, m = { t: 34, r: 8, b: 40, l: 50 };
+    const a = Object.entries(D.eventos_por_año), W = 900, H = 460, m = { t: 34, r: 8, b: 40, l: 50 };
     const x0 = m.l, x1 = W - m.r, y = esc(0, 450, H - m.b, m.t), gw = (x1 - x0) / a.length, bw = gw * 0.6;
     let s = ejeY(y, [0, 150, 300, 450], x0, x1);
     a.forEach(([anio, d], i) => {
       const x = x0 + i * gw + (gw - bw) / 2, ini = d.inicios, tot = d.en_prevencion;
       s += `<rect class="c-prevencion sin-trazo" x="${x}" y="${y(ini)}" width="${bw}" height="${y(0) - y(ini)}"/>`;
       s += `<rect class="c-prevencion-suave sin-trazo" x="${x}" y="${y(tot)}" width="${bw}" height="${y(ini) - y(tot)}"/>`;
-      s += `<text class="valor fuerte" x="${x + bw / 2}" y="${y(tot) - 8}" text-anchor="middle">${Math.round(100 * ini / tot)} %</text>`;
+      s += `<text class="valor fuerte" x="${x + bw / 2}" y="${y(tot) - 8}" text-anchor="middle">${tot}</text>`;
       s += `<text x="${x + bw / 2}" y="${H - m.b + 24}" text-anchor="middle">${anio}</text>`;
     });
-    document.getElementById('g-eventos').innerHTML = svg(W, H, s);
+    $('g-eventos').innerHTML = svg(W, H, s);
   })();
 
   // Rejilla del origen móvil
   (() => {
     const anios = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
-    let h = '<div></div>' + anios.map(a => `<div class="cab">${a}</div>`).join('');
-    let k = 0;
+    let h = '<div></div>' + anios.map(a => `<div class="cab">${a}</div>`).join(''), k = 0;
     for (let p = 2019; p <= 2025; p++) {
       h += `<div class="fila">predice ${p}</div>`;
       anios.forEach(a => {
-        if (a < p) h += `<div class="c ent" style="--i:${k++}">entrena</div>`;
-        else if (a === p) h += `<div class="c ${p < 2022 ? 'val' : 'pru'}" style="--i:${k++}">${p < 2022 ? 'valida' : 'prueba'}</div>`;
+        if (a < p) h += `<div class="c ent" style="--i:${k++}"></div>`;
+        else if (a === p) h += `<div class="c ${p < 2022 ? 'val' : 'pru'}" style="--i:${k++}"></div>`;
         else h += '<div class="c vacia"></div>';
       });
     }
-    document.getElementById('rejilla-om').innerHTML = h;
+    $('rejilla-om').innerHTML = h;
+  })();
+
+  // Esquema ilustrativo de un inicio de episodio (valores inventados)
+  (() => {
+    const W = 860, H = 380, m = { t: 30, r: 20, b: 56, l: 190 }, dias = [29, 33, 36, 44];
+    const x0 = m.l, x1 = W - m.r, y = esc(20, 50, H - m.b, m.t), gw = (x1 - x0) / dias.length, bw = gw * 0.5;
+    let s = '';
+    s += `<line class="c-prevencion" stroke-width="2" x1="${x0 - 170}" x2="${x1}" y1="${y(38)}" y2="${y(38)}"/><text class="valor" x="${x0 - 170}" y="${y(38) - 8}" style="fill:var(--prevencion)">38 · prevención</text>`;
+    s += `<line class="c-gb" stroke-width="2" stroke-dasharray="6 5" x1="${x0 - 170}" x2="${x1}" y1="${y(35)}" y2="${y(35)}"/><text class="valor" x="${x0 - 170}" y="${y(35) + 20}" style="fill:var(--gb)">35 · umbral del modelo</text>`;
+    dias.forEach((v, i) => {
+      const x = x0 + i * gw + (gw - bw) / 2, cls = v >= 38 ? 'c-prevencion' : 'c-persistencia';
+      s += `<rect class="${cls} sin-trazo" x="${x}" y="${y(v)}" width="${bw}" height="${y(20) - y(v)}" opacity="${i === 3 ? 1 : .85}"/>`;
+      s += `<text class="valor fuerte" x="${x + bw / 2}" y="${y(v) - 8}" text-anchor="middle">${v}</text>`;
+      s += `<text class="rotulo" x="${x + bw / 2}" y="${H - m.b + 30}" text-anchor="middle">${['d−2', 'd−1', 'hoy', 'mañana'][i]}</text>`;
+    });
+    s += `<line class="eje" x1="${x0 - 170}" x2="${x1}" y1="${y(20)}" y2="${y(20)}"/>`;
+    $('g-esquema').innerHTML = svg(W, H, s);
   })();
 
   // Error por año
   (() => {
     const anios = Object.keys(D.mae_por_año);
-    barras(document.getElementById('g-mae'), {
+    barras($('g-mae'), {
       grupos: [...anios, '2022–25'],
       series: MODELOS.map(mo => ({ valores: [...anios.map(a => D.mae_por_año[a][mo]), D.mae_prueba[mo]], clase: CLASE[mo], fuerte: mo === 'GB con meteo', etiquetas: mo !== 'GB sin meteo' })),
-      ymax: 4, ticks: [0, 1, 2, 3, 4], f: v => fmt(v, 2), W: 860, H: 440, banda: [4, 5],
+      ymax: 4, ticks: [0, 1, 2, 3, 4], f: v => fmt(v, 2), W: 900, H: 440, banda: [4, 5],
     });
-    document.getElementById('n-mae-p').textContent = fmt(D.mae_prueba['persistencia'], 2);
-    document.getElementById('n-mae-gb').textContent = fmt(D.mae_prueba['GB con meteo'], 2);
-    document.getElementById('n-r2-p').textContent = fmt(D.r2_prueba['persistencia'], 2);
-    document.getElementById('n-r2-gb').textContent = fmt(D.r2_prueba['GB con meteo'], 2);
   })();
 
-  // Avisos e inicios
+  // Inicios avisados
   (() => {
     const A = D.avisos_presupuesto;
-    document.getElementById('g-inicios').innerHTML = MODELOS.map(mo => {
+    $('g-inicios').innerHTML = MODELOS.map(mo => {
       const n = A[mo].inicios_avisados, tot = A[mo].inicios;
       return `<div class="inicio-fila"><span>${NOMBRE[mo]}</span><span class="barra"><i class="bg-${CLASE[mo].slice(2)}" style="width:${100 * n / tot}%"></i></span><span class="n">${n}</span></div>`;
     }).join('');
-    document.getElementById('t-avisos').innerHTML = MODELOS.map(mo =>
-      `<tr><td>${NOMBRE[mo]}</td><td class="dato">${A[mo].avisos}</td><td class="dato">${fmt(A[mo].precision, 2)}</td><td class="dato">${fmt(A[mo].recall, 2)}</td></tr>`).join('');
-    const C = D.dias_criticos;
-    document.getElementById('t-criticos').innerHTML = MODELOS.map(mo =>
-      `<tr><td>${NOMBRE[mo]}</td><td class="dato">${fmt(C[mo].prevencion, 2)}</td><td class="dato">${fmt(C[mo].sesgo_prevencion, 2)}</td></tr>`).join('');
   })();
 
   // SHAP
   (() => {
     const COLOR = { 'PM2.5 de hoy': 'c-gb', 'Rezagos y ventanas': 'c-gb-claro', 'Calendario': 'c-calendario', 'Meteorología': 'c-meteo', 'Estación': 'c-persistencia' };
-    const v = Object.entries(D.shap_variables).slice(0, 10), W = 860, H = 470, m = { t: 6, r: 60, b: 34, l: 250 };
+    const LLANO = { 'Media de hoy, 18–23 h': 'Hoy, de 6 a 11 p. m.', 'Media de hoy': 'Promedio de hoy', 'Media de 7 días': 'Promedio de la semana',
+      'Rezago de 6 días': 'Hace 6 días', 'Rezago de 1 día': 'Ayer', 'Desv. de 7 días': 'Variación de la semana', 'Viento máximo': 'Viento más fuerte' };
+    const GRUPO = { 'PM2.5 de hoy': 'PM2.5 de hoy', 'Rezagos y ventanas': 'Días anteriores', 'Calendario': 'Fecha', 'Meteorología': 'Clima', 'Estación': 'Estación' };
+    const v = Object.entries(D.shap_variables).slice(0, 10), W = 900, H = 480, m = { t: 6, r: 60, b: 34, l: 250 };
     const x = esc(0, 25, m.l, W - m.r), rh = (H - m.t - m.b) / v.length;
-    let s = [0, 5, 10, 15, 20, 25].map(t => `<line class="${t ? 'rejilla' : 'eje'}" x1="${x(t)}" x2="${x(t)}" y1="${m.t}" y2="${H - m.b}"/><text x="${x(t)}" y="${H - 8}" text-anchor="middle">${t}</text>`).join('');
+    let s = [0, 5, 10, 15, 20, 25].map(t => `<line class="${t ? 'rejilla' : 'eje'}" x1="${x(t)}" x2="${x(t)}" y1="${m.t}" y2="${H - m.b}"/><text x="${x(t)}" y="${H - 8}" text-anchor="middle">${t} %</text>`).join('');
     v.forEach(([nom, p], i) => {
       const yy = m.t + i * rh, cls = COLOR[D.shap_grupo_de_variable[nom]];
-      s += `<text x="${m.l - 12}" y="${yy + rh / 2 + 5}" text-anchor="end" style="fill:var(--tinta-2); font-family:var(--f-texto); font-size:17px">${nom}</text>`;
+      s += `<text class="rotulo" x="${m.l - 12}" y="${yy + rh / 2 + 6}" text-anchor="end">${LLANO[nom] || nom}</text>`;
       s += `<rect class="${cls} sin-trazo" x="${x(0)}" y="${yy + rh * 0.18}" width="${x(p) - x(0)}" height="${rh * 0.64}"/>`;
       s += `<text class="valor" x="${x(p) + 8}" y="${yy + rh / 2 + 5}">${fmt(p, 1)}</text>`;
     });
-    document.getElementById('g-shap').innerHTML = svg(W, H, s);
-    document.getElementById('leyenda-shap').innerHTML = Object.entries(D.shap_grupos)
-      .map(([g, p]) => `<span><i class="bg-${COLOR[g].slice(2)}"></i>${g.replace('PM2.5', 'PM<sub>2.5</sub>')} · ${fmt(p, 1)} %</span>`).join('');
-    document.getElementById('n-shap-hoy').textContent = fmt(D.shap_grupos['PM2.5 de hoy'], 1) + ' %';
-    document.getElementById('n-shap-meteo').textContent = fmt(D.shap_grupos['Meteorología'], 1) + ' %';
+    $('g-shap').innerHTML = svg(W, H, s);
+    $('leyenda-shap').innerHTML = Object.entries(D.shap_grupos)
+      .map(([g, p]) => `<span><i class="bg-${COLOR[g].slice(2)}"></i>${GRUPO[g]} ${fmt(p, 1)} %</span>`).join('');
+    $('n-shap-hoy').textContent = fmt(D.shap_grupos['PM2.5 de hoy'], 1) + ' %';
   })();
 
   // Réplica de Baena-Salazar
@@ -1017,35 +771,33 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
     const linea = (k, cls, w) => `<polyline class="${cls} sin-relleno" stroke-width="${w}" stroke-linejoin="round" points="${pts.map((d, i) => `${x(i)},${y(d[k])}`).join(' ')}"/>`;
     s += linea('persistencia', 'c-persistencia', 2) + linea('nivel', 'c-gb', 2.5) + linea('cambio', 'c-cambio', 2.5) + linea('observado', 'c-tinta', 3);
     const meses = { '01': 'ene', '02': 'feb', '03': 'mar' };
-    ['2016-01-01', '2016-01-15', '2016-02-01', '2016-02-15', '2016-03-01', '2016-03-15'].forEach(t => {
+    ['2016-01-01', '2016-02-01', '2016-03-01'].forEach(t => {
       const i = pts.findIndex(d => d.fecha >= t);
-      s += `<text x="${x(i)}" y="${H - 12}" text-anchor="middle">${+t.slice(8)} ${meses[t.slice(5, 7)]}</text>`;
+      s += `<text x="${x(i)}" y="${H - 12}" text-anchor="middle">1 ${meses[t.slice(5, 7)]}</text>`;
     });
-    document.getElementById('g-replica').innerHTML = svg(W, H, s);
+    $('g-replica').innerHTML = svg(W, H, s);
     document.querySelectorAll('.selector button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.estacion === estacion)));
   }
   document.querySelectorAll('.selector button').forEach(b => b.addEventListener('click', () => replica(b.dataset.estacion)));
   replica('MED-UNNV');
   (() => {
-    const T = D.replica_tabla, filas = [['Baena-Salazar et al. (publicado)', 'Red neuronal'], ['persistencia', 'Persistencia'], ['GB con meteo', 'GB nivel'], ['GB con meteo (cambio)', 'GB cambio']];
-    document.getElementById('t-replica').innerHTML = filas.map(([k, nom]) => `<tr class="${k === 'persistencia' ? 'destacada' : ''}"><td>${nom}</td>` +
-      ['ITA-CONC', 'MED-UNNV'].map(st => { const r = T[`${st}|${k}`]; return `<td class="dato">${fmt(r.r2_corr, 2)} / ${fmt(r.MAPE, 1)}</td>`; }).join('') + '</tr>').join('');
+    const T = D.replica_tabla, filas = [['Baena-Salazar et al. (publicado)', 'Red neuronal'], ['persistencia', 'Persistencia'], ['GB con meteo', 'Modelo'], ['GB con meteo (cambio)', 'Predice el cambio']];
+    $('t-replica').innerHTML = filas.map(([k, nom]) => `<tr class="${k === 'persistencia' ? 'destacada' : ''}"><td>${nom}</td>` +
+      ['ITA-CONC', 'MED-UNNV'].map(st => { const r = T[`${st}|${k}`]; return `<td class="dato">${fmt(r.r2_corr, 2)} · ${fmt(r.MAPE, 1)}</td>`; }).join('') + '</tr>').join('');
   })();
 
   // Navegación
   const diapos = [...document.querySelectorAll('.diapo')];
-  const escenario = document.getElementById('escenario');
-  const total = diapos.length, nBloques = 4;
+  const escenario = $('escenario');
+  const total = diapos.length;
   let actual = 0, paso = 0, inicio = null;
   const pasos = d => Math.max(0, ...[...d.querySelectorAll('[data-paso]')].map(e => +e.dataset.paso));
-
   diapos.forEach((d, i) => {
-    const b = +d.dataset.bloque;
-    const pie = document.createElement('div');
-    pie.className = 'pie';
-    pie.innerHTML = `<span class="bloques">${Array.from({ length: nBloques }, (_, k) => `<span class="${k < b ? 'hecho' : ''}"></span>`).join('')}</span>` +
-      `<span>Pronóstico de PM2.5 a un día en el Valle de Aburrá</span><span class="num">${i + 1} / ${total}</span>`;
-    if (i > 0) d.appendChild(pie);
+    if (i === 0) return;
+    const n = document.createElement('span');
+    n.className = 'num-diapo';
+    n.textContent = `${i + 1}`;
+    d.appendChild(n);
   });
 
   function ajustar() {
@@ -1054,7 +806,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
     escenario.style.left = `${(innerWidth - 1600 * s) / 2}px`;
     escenario.style.top = `${(innerHeight - 900 * s) / 2}px`;
   }
-
   function mostrar(i, p) {
     actual = Math.max(0, Math.min(total - 1, i));
     const d = diapos[actual];
@@ -1062,16 +813,14 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
     diapos.forEach((x, k) => x.classList.toggle('activa', k === actual));
     d.querySelectorAll('[data-paso]').forEach(e => e.classList.toggle('visible', +e.dataset.paso <= paso));
     if (d.querySelector('#rejilla-om')) { d.classList.remove('animar'); void d.offsetWidth; d.classList.add('animar'); }
-    document.getElementById('progreso').style.width = `${100 * (actual + 1) / total}%`;
     try { history.replaceState(null, '', `#${actual + 1}`); } catch (e) { /* file:// en algunos navegadores */ }
     const notas = d.querySelector('.notas');
-    document.getElementById('notas-texto').innerHTML = notas ? notas.innerHTML : '';
-    document.getElementById('notas-num').textContent = `Diapositiva ${actual + 1} de ${total}`;
+    $('notas-texto').innerHTML = notas ? notas.innerHTML : '';
+    $('notas-num').textContent = `${actual + 1} / ${total}`;
   }
   const avanzar = () => { if (inicio === null) inicio = Date.now(); paso < pasos(diapos[actual]) ? mostrar(actual, paso + 1) : actual < total - 1 && mostrar(actual + 1, 0); };
   const retroceder = () => paso > 0 ? mostrar(actual, paso - 1) : actual > 0 && mostrar(actual - 1, Infinity);
   const pantalla = () => { (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {}); };
-  const notas = () => document.getElementById('panel-notas').classList.toggle('abierto');
 
   addEventListener('keydown', e => {
     if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
@@ -1081,14 +830,14 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
     else if (k === 'Home') mostrar(0, 0);
     else if (k === 'End') mostrar(total - 1, Infinity);
     else if (k === 'f' || k === 'F') pantalla();
-    else if (k === 'n' || k === 'N') notas();
+    else if (k === 'n' || k === 'N') $('panel-notas').classList.toggle('abierto');
   });
   escenario.addEventListener('click', e => { if (!e.target.closest('button')) (e.clientX > innerWidth / 3 ? avanzar : retroceder)(); });
   addEventListener('resize', ajustar);
   setInterval(() => {
     if (inicio === null) return;
     const s = Math.floor((Date.now() - inicio) / 1000);
-    document.getElementById('notas-tiempo').textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    $('notas-tiempo').textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
   }, 1000);
 
   ajustar();
