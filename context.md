@@ -262,7 +262,9 @@ sección 12 necesita además la meteorología 2013–2016 de las estaciones 203 
    15 min, rehecha el 2026-10-20 con poco texto (afirmación en el título y
    evidencia visual) y lenguaje sencillo, como pidió el profesor; la
    explicación completa está en el guion de estudio
-   `presentacion/guion/guion.pdf` (LaTeX), con los textos y notas de Lina. Las
+   `presentacion/guion/guion.pdf` (LaTeX), con los textos y notas de Lina.
+   Reparto (solo en el guion): Lina, diapositivas 1–8 (7 min 15 s);
+   Alejandro, 9–15 (7 min 45 s); preguntas, los dos. Las
    cifras de sus gráficos salen de `presentacion/datos.js`, que genera la
    sección 14.1 de `02_modelado.ipynb`. Falta: ensayar con el cronómetro,
    que Lina revise sus diapositivas y exportar un PDF de respaldo.

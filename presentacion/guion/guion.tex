@@ -66,9 +66,12 @@
 \newcommand{\pr}[2]{\textbf{¿#1?}\par #2\par\medskip}
 
 % Encabezado de cada diapositiva: número, título, tiempo y miniatura
+% Quién presenta: se cambia con \presenta{...} antes de la primera diapositiva de cada parte
+\newcommand{\quien}{}
+\newcommand{\presenta}[1]{\renewcommand{\quien}{#1}}
 \newcommand{\diapo}[3]{%
   \clearpage
-  {\sffamily\small\color{tenue}Diapositiva #1 \quad·\quad #3}\par\vspace{2pt}
+  {\sffamily\small\color{tenue}Diapositiva #1 \quad·\quad #3 \quad·\quad \textcolor{ambar}{\textbf{Presenta: \quien}}}\par\vspace{2pt}
   {\sffamily\LARGE\bfseries #2\par}\vspace{10pt}
   \fcolorbox{linea}{white}{\includegraphics[page=#1,width=0.72\textwidth]{../presentacion.pdf}}\par\vspace{8pt}
 }
@@ -92,6 +95,16 @@
     las dominan, el resto se sigue solo. Después, cada diapositiva tiene su miniatura, el tiempo sugerido, qué
     decir con palabras sencillas, la idea que el público debe llevarse y cómo responder
     si preguntan. La exposición dura 15 minutos y quedan 5 para preguntas.
+  \end{tcolorbox}
+  \vspace{8pt}
+  \begin{tcolorbox}[colback=ambarsuave, colframe=ambarsuave, arc=0pt, boxrule=0pt, left=12pt, right=12pt, top=10pt, bottom=10pt]
+    \textsf{\textbf{Quién presenta qué}}\par\smallskip
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\linewidth}{>{\bfseries}l X r}
+    Lina & Diapositivas 1 a 8: introducción, datos y qué información usa el modelo & 7 min 15 s \\
+    Alejandro & Diapositivas 9 a 15: modelos, evaluación, resultados y conclusiones & 7 min 45 s \\
+    Los dos & Diapositiva 16: preguntas & 5 min \\
+    \end{tabularx}
   \end{tcolorbox}
 \end{titlepage}
 
@@ -181,9 +194,10 @@ Si hay que usar un término técnico, digan primero la idea sencilla y después 
 }
 
 % ================= DIAPOSITIVAS =================
+\presenta{Lina}
 \diapo{1}{Portada}{30 segundos}
 \decir
-Nos presentamos y decimos el objetivo en una frase: pronosticar la contaminación por \pmd{}
+Lina nos presenta a los dos y dice el objetivo en una frase: pronosticar la contaminación por \pmd{}
 de mañana en cada estación del Valle de Aburrá, usando los datos públicos de SIATA.
 
 La curva de la derecha es real: es la contaminación promedio según la hora del día. Sube con
@@ -350,6 +364,9 @@ el clima medido hoy.
 El modelo ve la semana completa hasta hoy y la fecha de mañana. Nada más.
 \end{idea}
 
+\textbf{Cambio de turno.} Lina cierra con una frase como: ``Con esta información, Alejandro
+les cuenta qué modelos comparamos y cómo les fue''.
+
 \begin{preguntas}
 \pr{Qué son las ventanas de tiempo}{Los valores de los días anteriores y sus promedios. Fue
 una recomendación del profesor, y también las usó Baena-Salazar.}
@@ -359,6 +376,7 @@ mañana el aporte podría ser mayor; lo dejamos como trabajo futuro.}
 Así el método que mide el peso de cada dato (SHAP) funciona sin errores.}
 \end{preguntas}
 
+\presenta{Alejandro}
 \diapo{9}{Tres pronósticos y un examen justo}{1 minuto}
 \decir
 Comparamos tres pronósticos. La persistencia es la referencia. El modelo sin meteorología solo
@@ -540,6 +558,7 @@ En una frase: un pronóstico por estación que le gana a la regla simple y avisa
 límites claros.
 \end{idea}
 
+\presenta{Lina y Alejandro}
 \diapo{16}{Preguntas}{5 minutos}
 Cinco minutos de preguntas. Si piden ver algo, la presentación va a cualquier diapositiva con
 el número en la dirección (por ejemplo, \texttt{index.html\#14}).
