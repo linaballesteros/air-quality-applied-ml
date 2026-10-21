@@ -55,6 +55,9 @@ p { margin: 0; }
 .lead { font-size: 28px; line-height: 1.4; color: var(--tinta-2); max-width: 44ch; }
 .texto { font-size: 23px; line-height: 1.45; color: var(--tinta-2); }
 .pequeno { font-size: 18px; line-height: 1.45; color: var(--tenue); }
+.puntos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.puntos li { font-size: 22px; line-height: 1.4; color: var(--tinta-2); padding-left: 26px; position: relative; }
+.puntos li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 8px; height: 8px; background: var(--gb); }
 .dato { font-family: var(--f-datos); font-variant-numeric: tabular-nums; }
 sub { font-size: .7em; vertical-align: -.25em; line-height: 0; }
 em { font-style: italic; }
@@ -291,9 +294,13 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
   </header>
   <div class="cuerpo dos-2" style="gap:64px">
     <div class="pila" style="gap:26px">
-      <div class="pila" style="gap:6px">
+      <div class="pila" style="gap:14px">
         <span class="etiqueta">Salud y geografía</span>
-        <p class="texto">El PM<sub>2.5</sub> es el material particulado fino, partículas de diámetro menor a 2,5 µm cuyo tamaño les permite penetrar hasta las zonas profundas del sistema respiratorio; en el Valle de Aburrá su exposición se ha asociado con atenciones por infección respiratoria aguda, EPOC y asma. El problema se agrava por la geografía: un valle estrecho rodeado de montañas en el que ciertas condiciones meteorológicas impiden que el contaminante se disperse y favorecen su acumulación.</p>
+        <ul class="puntos">
+          <li>El PM<sub>2.5</sub> es el material particulado fino, de menos de 2,5 µm; por su tamaño penetra hasta el fondo del sistema respiratorio.</li>
+          <li>En el Valle de Aburrá se asocia con atenciones por infección respiratoria aguda, EPOC y asma.</li>
+          <li>La geografía agrava el problema: un valle estrecho donde el contaminante se acumula cuando no logra dispersarse.</li>
+        </ul>
       </div>
     </div>
     <div class="pila" style="gap:22px">
@@ -307,7 +314,11 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
         </div>
         <div class="escala-ticks"><span>0</span><span class="ambar">38</span><span>56</span><span>≥151 µg/m³</span></div>
       </div>
-      <p class="texto">La Resolución 2254 de 2017 no se limita a constatar la calidad del aire: exige evaluar los niveles <strong>por punto de monitoreo</strong> y permite <strong>declarar un nivel de forma anticipada</strong> cuando un modelo de pronóstico indique esa condición. Por eso tiene sentido pronosticar por estación, y no con un único valor agregado para todo el valle, tomando como umbral de interés el Nivel de Prevención, que para la media diaria de PM<sub>2.5</sub> empieza en <strong class="ambar">38 µg/m³</strong>.</p>
+      <ul class="puntos">
+        <li>La norma exige evaluar los niveles <strong>por punto de monitoreo</strong>, no con un valor único para todo el valle.</li>
+        <li>Permite <strong>declarar un nivel de forma anticipada</strong> si un modelo de pronóstico lo indica.</li>
+        <li>Por eso pronosticamos por estación, con el Nivel de Prevención (<strong class="ambar">38 µg/m³</strong>) como umbral de interés.</li>
+      </ul>
     </div>
   </div>
   <aside class="notas"><ul>
@@ -326,9 +337,14 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
     <h2>Con lo medido hasta hoy, ¿cuál será la media de PM<sub>2.5</sub> de mañana?</h2>
   </header>
   <div class="cuerpo dos" style="gap:64px">
-    <div class="pila" style="gap:20px">
-      <p class="texto">El monitoreo nos dice las concentraciones que ya ocurrieron, pero la gestión preventiva necesita saber hacia dónde van. Planteamos esa brecha como un problema de <strong>aprendizaje supervisado de regresión</strong>: cada registro es una estación en un día <em>d</em>, y la variable objetivo es la concentración media del día siguiente, <em>d</em>+1, un número continuo en µg/m³ que estimamos con la información disponible hasta el final de hoy.</p>
-      <p class="texto">Como referencia usamos la <strong>persistencia</strong>, la regla más simple posible: suponer que mañana será igual a hoy. Es un rival exigente porque el PM<sub>2.5</sub> cambia de forma gradual de un día al otro, así que superarla es la verdadera prueba de que el modelo aporta algo. Además de medir el error de concentración, leemos el pronóstico como <strong>aviso de Nivel de Prevención</strong> y prestamos atención a los <em>inicios de episodio</em>: el primer día en que el nivel cruza los 38 µg/m³, que es justo cuando un aviso resulta útil.</p>
+    <div class="pila" style="gap:18px">
+      <p class="texto">El monitoreo nos dice lo que ya pasó; la gestión preventiva necesita saber qué viene. Planteamos esa brecha como un problema de predicción:</p>
+      <ul class="puntos">
+        <li><strong>Aprendizaje supervisado de regresión:</strong> cada registro es una estación en un día <em>d</em>.</li>
+        <li><strong>Variable objetivo:</strong> la concentración media del día siguiente (<em>d</em>+1), en µg/m³.</li>
+        <li><strong>Referencia, la persistencia:</strong> suponer que mañana será igual a hoy. Es el rival a vencer, porque el PM<sub>2.5</sub> cambia poco de un día al otro.</li>
+        <li><strong>Lectura como aviso:</strong> miramos los <em>inicios de episodio</em>, el primer día que el nivel cruza 38 µg/m³.</li>
+      </ul>
     </div>
     <div class="pila" style="gap:30px">
       <div class="pregunta" data-paso="1">
@@ -374,8 +390,13 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       <p class="pie-figura">Número de estaciones de monitoreo activas cada año. El dato de 2026 llega solo hasta junio.</p>
     </div>
     <div class="pila" style="gap:18px">
-      <p class="texto">SIATA es el sistema público de monitoreo del Valle de Aburrá: mide la calidad del aire hora a hora en estaciones repartidas por la región. La red fue creciendo con el tiempo, de cinco estaciones en 2013 hasta treinta y tres a lo largo de todo el histórico.</p>
-      <p class="texto" data-paso="1">Como las estaciones nuevas no tienen datos de años anteriores, el periodo que elijamos fija con cuántas podemos trabajar. Si exigimos que cada estación tenga al menos el 90 % de sus horas medidas, desde 2013 solo tres lo cumplen, pero desde 2018 son dieciséis. Por eso estudiamos <strong>2018–2025</strong>: dieciséis estaciones con ocho años completos.</p>
+      <ul class="puntos">
+        <li><strong>SIATA</strong> es el sistema público de monitoreo del Valle de Aburrá: mide la calidad del aire hora a hora.</li>
+        <li>La red creció con el tiempo: de cinco estaciones en 2013 a treinta y tres a lo largo del histórico.</li>
+        <li data-paso="1">Las estaciones nuevas no tienen datos previos, así que el periodo elegido fija con cuántas podemos trabajar.</li>
+        <li data-paso="1">Exigiendo ≥ 90 % de horas medidas, desde 2013 solo hay tres estaciones completas; desde 2018, dieciséis.</li>
+      </ul>
+      <p class="texto" data-paso="1">Por eso estudiamos <strong>2018–2025</strong>: dieciséis estaciones con ocho años completos.</p>
       <div data-paso="1">
         <table>
           <thead><tr><th>Periodo de estudio</th><th>Estaciones completas</th></tr></thead>
@@ -421,9 +442,14 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
         <div class="paso-flujo final">Tabla supervisada: media de hoy y de mañana<br><span class="cifra">44.399</span> registros<span class="perdida">−753 sin media del día siguiente</span></div>
       </div>
     </div>
-    <div class="pila" style="gap:20px">
-      <p class="texto">A lo largo de todo el proceso decidimos no rellenar los datos que faltan con valores inventados. Calculamos el promedio de un día solo cuando tiene al menos 18 de sus 24 horas medidas, el mismo criterio del 75 % que usó Parra-Sánchez et al., y un registro entra al modelo únicamente si tiene promedio de hoy y de mañana. Así, de las 46.752 combinaciones de estación y día, conservamos las 44.399 que cumplen ambas condiciones.</p>
-      <p class="texto" data-paso="4">Con la meteorología hacemos lo mismo: el <strong>73,1 %</strong> de los registros tiene el día meteorológico completo y el resto se conserva con los huecos vacíos, porque el modelo que usamos sabe trabajar con faltantes sin rellenarlos. Los huecos conocidos son estructurales —viento de la estación 206, presión de la 252, lluvia de la 229 y la 271 sin datos desde agosto de 2024— y los documentamos como una limitación.</p>
+    <div class="pila" style="gap:18px">
+      <p class="texto">No rellenamos con valores inventados ningún dato que falte:</p>
+      <ul class="puntos">
+        <li>Un día tiene promedio solo si tiene al menos 18 de sus 24 horas (criterio del 75 %, igual que Parra-Sánchez et al.).</li>
+        <li>Un registro entra al modelo solo si tiene promedio de hoy y de mañana: así quedan 44.399 de 46.752.</li>
+        <li data-paso="4">El <strong>73,1 %</strong> tiene la meteorología del día completa; el resto se conserva con huecos, que el modelo admite sin rellenar.</li>
+        <li data-paso="4">Huecos conocidos (una limitación): viento de la 206, presión de la 252, lluvia de la 229 y la 271 sin datos desde 2024.</li>
+      </ul>
     </div>
   </div>
   <aside class="notas"><ul>
@@ -474,9 +500,14 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       <div id="g-eventos"></div>
       <p class="pie-figura">Días-estación en prevención por año, 16 estaciones. Sobre cada barra, el porcentaje que son inicios.</p>
     </div>
-    <div class="pila" style="gap:20px">
-      <p class="texto">Los años no se diferencian solo en cuántos eventos tienen, sino en cuánto duran. En <strong>2020</strong> hubo 412 días-estación en prevención pero solo el 22 % fueron inicios: episodios largos, encadenados, fáciles de acertar para la persistencia. En <strong>2021, 2023 y 2025</strong>, en cambio, casi todos los eventos fueron días aislados que la persistencia no puede anticipar. Evaluar en un solo año daría una imagen sesgada, así que medimos sobre <strong>cuatro años de prueba</strong>.</p>
-      <p class="texto" data-paso="1">Dos hechos más guían el diseño. Los episodios son sobre todo <strong>locales</strong>: en el 45 % de los días de evento solo una estación llegó a prevención, lo que justifica pronosticar por estación y no con un aviso único para todo el valle. Y el PM<sub>2.5</sub> de hoy anticipa muy bien el de mañana, con una correlación de <strong class="dato">0,805</strong>, lo que confirma que la persistencia es una línea base difícil de superar.</p>
+    <div class="pila" style="gap:18px">
+      <p class="texto">Los años cambian no solo en número de eventos, sino en cuánto duran:</p>
+      <ul class="puntos">
+        <li>En <strong>2020</strong>, 412 días en prevención pero solo 22 % fueron inicios: episodios largos, fáciles para la persistencia.</li>
+        <li>En <strong>2021, 2023 y 2025</strong>, casi todo fueron días aislados, que la persistencia no anticipa. Por eso medimos en <strong>cuatro años de prueba</strong>.</li>
+        <li data-paso="1">Los episodios son <strong>locales</strong>: en el 45 % de los días solo una estación llegó a prevención. Justifica pronosticar por estación.</li>
+        <li data-paso="1">El PM<sub>2.5</sub> de hoy anticipa bien el de mañana (correlación <strong class="dato">0,805</strong>): la persistencia es difícil de superar.</li>
+      </ul>
     </div>
   </div>
   <aside class="notas"><ul>
@@ -563,7 +594,12 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
         <span><i class="bg-persistencia"></i>Valida (2019–2021)</span>
         <span><i class="bg-gb"></i>Prueba (2022–2025, 21.940 pronósticos)</span>
       </div>
-      <p class="texto">Como trabajamos con una serie temporal, no podemos repartir los datos al azar. Usamos <strong>origen móvil</strong>: cada año se pronostica entrenando solo con los años anteriores, tal como se usaría en la práctica. Así ningún pronóstico ve información del futuro y el resultado no depende de un único año con eventos atípicos. Los años 2019–2021 forman la validación, con la que elegimos los hiperparámetros, y 2022–2025 son la prueba, que no se miró para decidir nada.</p>
+      <p class="texto">Como es una serie temporal, no repartimos los datos al azar. Usamos <strong>origen móvil</strong>:</p>
+      <ul class="puntos">
+        <li>Cada año se pronostica entrenando solo con los años anteriores, como se haría en la práctica.</li>
+        <li>Ningún pronóstico ve el futuro, y el resultado no depende de un único año atípico.</li>
+        <li>2019–2021 es validación (para ajustar el modelo); 2022–2025 es prueba, que no se miró para decidir nada.</li>
+      </ul>
     </div>
   </div>
   <aside class="notas"><ul>
@@ -641,8 +677,12 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
         <div class="cifra-g"><span class="n" id="n-mae-p"></span><span class="u">MAE persistencia</span></div>
         <div class="cifra-g"><span class="n" style="color:var(--gb)" id="n-mae-gb"></span><span class="u">MAE GB con meteo.</span></div>
       </div>
-      <p class="texto">Ya solo con el historial de PM<sub>2.5</sub> y el calendario, Gradient Boosting recorta el error un <strong>18 %</strong>: 0,61 µg/m³ menos que la persistencia, con un intervalo de confianza del 95 % de 0,53 a 0,68 que no toca el cero. El R² sube de <span class="dato" id="n-r2-p"></span> a <span class="dato" id="n-r2-gb"></span>. Esto responde que sí a la primera parte de P1.</p>
-      <p class="texto" data-paso="1">Añadir la meteorología suma otros <strong>0,027 µg/m³</strong> (IC 95 %: 0,011 a 0,047): una mejora pequeña, pero que tampoco es azar y aparece en 14 de las 16 estaciones. Las dos donde empeora levemente son justo las de meteorología más incompleta, lo que refuerza que el límite es la calidad del dato, no el modelo.</p>
+      <ul class="puntos">
+        <li>Solo con PM<sub>2.5</sub> y calendario, recorta el error un <strong>18 %</strong>: 0,61 µg/m³ menos (IC 95 %: 0,53 a 0,68, sin tocar el cero).</li>
+        <li>El R² sube de <span class="dato" id="n-r2-p"></span> a <span class="dato" id="n-r2-gb"></span>. Esto responde que sí a la primera parte de P1.</li>
+        <li data-paso="1">La meteorología suma otros <strong>0,027 µg/m³</strong> (IC 95 %: 0,011 a 0,047): poco, pero no es azar y aparece en 14 de 16 estaciones.</li>
+        <li data-paso="1">Las dos que empeoran son las de meteorología más incompleta: el límite es la calidad del dato, no el modelo.</li>
+      </ul>
     </div>
   </div>
   <aside class="notas"><ul>
@@ -667,14 +707,18 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </table>
     </div>
     <div class="pila" style="gap:22px">
-      <p class="texto">Con el mismo número de avisos, la precisión y el recall de los dos métodos son parecidos; la diferencia está en <em>qué</em> eventos avisan. La persistencia solo dispara su aviso cuando hoy ya está en prevención, de modo que <strong>nunca anticipa un inicio</strong>. Gradient Boosting, con un umbral algo menor (unos 35 µg/m³), anticipa uno de cada cuatro inicios, que es precisamente el caso en que un aviso aporta valor.</p>
+      <ul class="puntos">
+        <li>A igual número de avisos, la precisión y el recall se parecen; lo que cambia es <em>qué</em> eventos avisan.</li>
+        <li>La persistencia solo avisa cuando hoy ya está en prevención: <strong>nunca anticipa un inicio</strong>.</li>
+        <li>Gradient Boosting, con un umbral de unos 35 µg/m³, anticipa uno de cada cuatro inicios: ahí está su valor.</li>
+      </ul>
       <div data-paso="1" class="pila" style="gap:14px">
         <span class="etiqueta">Su debilidad: los picos</span>
         <table>
           <thead><tr><th>Días en prevención</th><th>MAE</th><th>Sesgo</th></tr></thead>
           <tbody id="t-criticos"></tbody>
         </table>
-        <p class="texto">La contrapartida es que en los días que ya están en prevención el modelo se equivoca más que la persistencia, porque subestima los picos en más de 5 µg/m³. Es el comportamiento esperable de un modelo que minimiza el error promedio en una serie donde solo el 2,5 % de los días supera el umbral, y es justo aquí donde la meteorología más ayuda.</p>
+        <p class="texto">En los días que ya están en prevención se equivoca más que la persistencia: subestima los picos en más de 5 µg/m³. Es esperable al minimizar el error promedio, y es donde la meteorología más ayuda.</p>
       </div>
     </div>
   </div>
@@ -707,8 +751,12 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
           <tr><td>Nuestro modelo con entradas tipo Baena</td><td class="dato">65,7 %</td></tr>
         </tbody>
       </table>
-      <p class="texto">El orden coincide con el estudio de Baena-Salazar: en los dos, el PM<sub>2.5</sub> reciente es la señal dominante. La magnitud no es comparable, porque cada trabajo mide la importancia de forma distinta y su red incluía la altura de la capa de mezcla, que aquí no tenemos.</p>
-      <p class="texto" data-paso="1">Las demás variables confirman los patrones del EDA: el calendario pesa porque los domingos, con menos tráfico, bajan el pronóstico, y el <strong>rezago de 6 días</strong> destaca entre los rezagos porque cae en el mismo día de la semana que el día pronosticado. La meteorología aporta en conjunto el <strong class="dato" id="n-shap-meteo"></strong>, sobre todo por la lluvia y la presión.</p>
+      <ul class="puntos">
+        <li>El orden coincide con Baena-Salazar: en ambos, el PM<sub>2.5</sub> reciente es la señal dominante.</li>
+        <li>La magnitud no es comparable: cada trabajo mide la importancia distinto y su red usaba la capa de mezcla.</li>
+        <li data-paso="1">El calendario pesa porque los domingos, con menos tráfico, bajan el pronóstico.</li>
+        <li data-paso="1">El <strong>rezago de 6 días</strong> destaca porque cae en el mismo día de la semana que mañana. La meteorología aporta el <strong class="dato" id="n-shap-meteo"></strong>, sobre todo lluvia y presión.</li>
+      </ul>
     </div>
   </div>
   <aside class="notas"><ul>
@@ -747,8 +795,11 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
         <thead><tr><th>r² / error %</th><th>ITA-CONC</th><th>MED-UNNV</th></tr></thead>
         <tbody id="t-replica"></tbody>
       </table>
-      <p class="texto" data-paso="1">La diferencia la explica la contingencia de marzo de 2016, cuyos niveles superaron todo lo visto al entrenar. Un modelo de árboles predice promedios de valores de su entrenamiento, así que <strong>no puede pronosticar más alto de lo que ha visto</strong>: justo ahí, en los días que más importan, es donde falla.</p>
-      <p class="texto" data-paso="2">Predecir el <strong>cambio respecto a hoy</strong> en vez del nivel corrige el problema, porque la predicción parte del valor actual. Pero esa variante se probó después de ver 2016 y, en nuestra ventana 2022–2025, no mejora los días en prevención y empeora el promedio. Por eso el modelo principal sigue prediciendo el nivel, y dejamos el cambio como trabajo futuro.</p>
+      <ul class="puntos">
+        <li data-paso="1">En marzo de 2016 los niveles superaron todo lo visto al entrenar; un modelo de árboles <strong>no pronostica más alto de lo que ha visto</strong> y falla justo ahí.</li>
+        <li data-paso="2">Predecir el <strong>cambio respecto a hoy</strong> lo corrige, pero se probó después de ver 2016 y en 2022–2025 no ayuda.</li>
+        <li data-paso="2">Por eso el modelo principal sigue prediciendo el nivel, y dejamos el cambio como trabajo futuro.</li>
+      </ul>
     </div>
   </div>
   <aside class="notas"><ul>
