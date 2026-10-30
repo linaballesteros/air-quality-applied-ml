@@ -2,3 +2,5 @@ numpy>=1.26,<3
 pandas>=2.2,<4
 matplotlib>=3.8,<4
 jupyterlab>=4,<5
+scikit-learn>=1.5,<2
+shap>=0.46,<1
