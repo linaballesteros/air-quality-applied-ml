@@ -6,9 +6,8 @@
 <title>PM2.5 a un día</title>
 <link rel="stylesheet" href="fuentes.css">
 <style>
-/* Concepto: informe de monitoreo atmosférico. Papel frío, tinta azul pizarra y
-   ámbar reservado para el Nivel de Prevención: el ámbar siempre significa
-   "episodio". Escenario fijo de 1600 × 900 que se escala a la pantalla. */
+/* El ámbar se reserva para el Nivel de Prevención. Escenario fijo de
+   1600 × 900 que se escala a la pantalla. */
 :root {
   --marco: #0f1923;
   --fondo: #f3f5f6;
@@ -74,7 +73,7 @@ strong { font-weight: 600; color: var(--tinta); }
 .figura svg { display: block; width: 100%; height: auto; overflow: visible; }
 .pie-figura { font-size: 17px; color: var(--tenue); margin-top: 10px; line-height: 1.4; }
 
-/* Pie de cada diapositiva: bloque, quién presenta y número */
+/* Pie de cada diapositiva: bloque y número */
 .pie {
   position: absolute; left: 96px; right: 96px; bottom: 30px; display: flex; align-items: center;
   gap: 24px; font-family: var(--f-datos); font-size: 15px; color: var(--tenue); letter-spacing: .04em;
@@ -282,10 +281,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
     <div id="g-portada"></div>
     <figcaption class="pie-figura">Concentración media de PM<sub>2.5</sub> según la hora del día, promedio de 16 estaciones entre 2018 y 2025 (µg/m³).</figcaption>
   </figure>
-  <aside class="notas"><ul>
-    <li>Presentarnos y enunciar el objetivo en una frase: predecir la contaminación por PM2.5 del día siguiente en cada estación del Valle de Aburrá, usando datos públicos de SIATA.</li>
-    <li>La curva de la portada es real: el PM2.5 sube con el tráfico de la mañana (máximo hacia las 08:00) y baja en la tarde, cuando la atmósfera se mezcla mejor.</li>
-  </ul></aside>
 </section>
 
 <!-- 2 · Por qué anticipar -->
@@ -323,13 +318,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </ul>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Idea de la diapositiva: anticipar un día importa por tres motivos que se refuerzan — salud, geografía y marco normativo.</li>
-    <li>Salud: el "2,5" son micras; son tan pequeñas que esquivan las defensas de las vías altas y llegan al pulmón profundo. Las referencias locales (Parra-Sánchez, Grisales) las asocian con más atenciones respiratorias.</li>
-    <li>Geografía: el valle actúa como una "olla"; en inversiones térmicas el aire frío queda atrapado abajo y el contaminante no se dispersa. Es el mismo argumento de Baena-Salazar.</li>
-    <li>La escala del gráfico no está a proporción en el último tramo: Emergencia empieza en 151, muy lejos de los demás cortes.</li>
-    <li>Punto clave para defender: el art. 11 de la norma admite declarar un nivel por pronóstico. Ahí está la utilidad práctica de este trabajo — no reemplazamos el monitoreo, le damos una señal anticipada por estación.</li>
-  </ul></aside>
 </section>
 
 <!-- 3 · Planteamiento y preguntas -->
@@ -359,13 +347,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </div>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Marco de clase: esto es aprendizaje supervisado de regresión. La etiqueta (y) es la media de PM2.5 de mañana; las características (X) son todo lo medido hasta hoy. Vale la pena nombrarlo así para conectar con lo visto en el curso.</li>
-    <li>La comparación con el umbral de 38 NO es un segundo problema de clasificación: es una lectura derivada de la misma predicción numérica. Esto lo pregunta a veces el jurado.</li>
-    <li>Por qué la persistencia es tan buena: el PM2.5 de hoy correlaciona 0,805 con el de mañana. Por eso cualquier modelo tiene que demostrar que la supera.</li>
-    <li>Siguiendo la sugerencia del profesor en la Entrega 1, la pregunta se dividió en dos: P1 (modelo vs persistencia solo con PM2.5 y calendario) y P2 (cuánto suma la meteorología, e interpretación con SHAP).</li>
-    <li>Inicio de episodio: el día en que se cruza el umbral. Es el aviso útil, porque si ya se está en prevención, la persistencia acierta sola.</li>
-  </ul></aside>
 </section>
 
 <!-- 4 · Bloque II -->
@@ -373,7 +354,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
   <div class="numeral">II</div>
   <h2>Los datos</h2>
   <p class="lead">Qué mide SIATA, cómo preparamos la tabla para entrenar el modelo y qué patrones del aire descubrimos por el camino.</p>
-  <aside class="notas"><ul><li>Transición al análisis exploratorio.</li></ul></aside>
 </section>
 
 <!-- 5 · Estaciones por año -->
@@ -407,12 +387,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </div>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Primero explicar qué es SIATA: la red oficial de monitoreo ambiental del Valle de Aburrá. El público puede no conocerla.</li>
-    <li>Esta diapositiva responde la duda del profesor en el PDF: "¿por qué 5 estaciones en un archivo y después un montón?". La causa es que la red fue creciendo; las estaciones nuevas no tienen historia hacia atrás.</li>
-    <li>Idea clave: por eso no usamos todo el histórico. Con la ventana desde 2018 tenemos 16 estaciones con 8 años completos; empezar antes deja solo 3 o 4 estaciones utilizables, y 2026 queda fuera porque solo tiene medio año publicado.</li>
-    <li>En el gráfico: la barra clara es "tuvo alguna medición ese año" y la oscura es "tuvo datos casi completos". Señalar el salto grande entre 2017 y 2018.</li>
-  </ul></aside>
 </section>
 
 <!-- 6 · Flujo de datos y faltantes -->
@@ -454,12 +428,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </ul>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Esta diapositiva responde la otra pregunta del profesor en el PDF: "¿existían faltantes y qué se hizo con ellos?". Y él mismo sugirió mostrarlo como diagrama de flujo — por eso está así.</li>
-    <li>Avanzar el diagrama paso a paso con la flecha: primero la rama de PM2.5, luego la de meteorología, y al final la unión.</li>
-    <li>Decisión defendible: no imputar es coherente con "no inventar datos". El modelo (HistGradientBoosting) aprende en cada corte hacia qué lado mandar los faltantes, así que no necesitamos rellenarlos.</li>
-    <li>Las cifras rojas son lo que se pierde en cada paso: 1.600 días sin suficientes horas y 753 sin el día siguiente. Todo está en el notebook, es reproducible.</li>
-  </ul></aside>
 </section>
 
 <!-- 7 · Estructura temporal -->
@@ -480,11 +448,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       <p class="pie-figura"><strong>179 de 246</strong> días de evento caen en febrero y marzo, la transición a la temporada de lluvias.</p>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Dos patrones claros. Ciclo diario: pico a las 08:00 (hora pico de tráfico, 25,8 µg/m³) y mínimo a las 15:00 (13,5), cuando la atmósfera se mezcla mejor. Estacionalidad: 179 de los 246 días de evento caen en febrero–marzo, la transición a la temporada de lluvias.</li>
-    <li>Para qué sirve esto en el modelo: justifica meter el calendario (mes y día de la semana) como predictor, y justifica usar la media de 18:00–23:00, que es el tramo del día más cercano al día que queremos pronosticar.</li>
-    <li>Si preguntan por qué marzo: es la primera temporada de lluvias; hay más nubosidad y condiciones que atrapan el contaminante.</li>
-  </ul></aside>
 </section>
 
 <!-- 8 · Episodios -->
@@ -512,11 +475,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </ul>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Atiende la anotación del profesor: desarrollar la idea de la Tabla II.</li>
-    <li>2025 tiene solo 4 eventos: un solo año de prueba daría una imagen sesgada.</li>
-    <li>Cierre de Lina; pasa la palabra a Alejandro.</li>
-  </ul></aside>
 </section>
 
 <!-- 9 · Bloque III -->
@@ -524,7 +482,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
   <div class="numeral">III</div>
   <h2>Metodología</h2>
   <p class="lead">Qué información le damos al modelo, qué modelos comparamos y cómo los evaluamos sin dejar que vean el futuro.</p>
-  <aside class="notas"><ul><li>Alejandro toma la palabra.</li></ul></aside>
 </section>
 
 <!-- 10 · Predictores -->
@@ -564,14 +521,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       <div class="grupo-pred" style="border-color:var(--meteo)"><span class="etiqueta" style="color:var(--meteo)">Meteorología</span><p>Temperatura, humedad, presión, viento, lluvia del día y de 3 días.</p></div>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Esta diapositiva atiende la recomendación explícita del profesor: usar "ventanas de tiempo" (rezagos y medias móviles), como hizo Baena-Salazar.</li>
-    <li>Idea que sostiene la línea de tiempo: TODO predictor está medido antes de que termine el día d. Nada del futuro entra. Eso evita la fuga de información (data leakage).</li>
-    <li>Las ventanas resumen la evolución reciente: no solo "ayer", sino la tendencia de 3 y 7 días y la variabilidad (desviación estándar).</li>
-    <li>El calendario describe el día d+1 (mañana), que sí conocemos de antemano porque es solo una fecha.</li>
-    <li>La estación entra como one-hot (16 indicadoras). En clase vimos que los árboles aceptan codificación ordinal, pero aquí usamos one-hot porque el explicador SHAP no reproduce bien las divisiones categóricas nativas.</li>
-    <li>Ojo: la meteorología es la OBSERVADA hoy, no un pronóstico del clima de mañana. Por eso su aporte es una cota inferior de lo que daría un pronóstico meteorológico real.</li>
-  </ul></aside>
 </section>
 
 <!-- 11 · Modelos y origen móvil -->
@@ -604,13 +553,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </ul>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Gradient Boosting en una frase: conjunto de árboles en secuencia; cada árbol aprende el residuo (el error) que dejó el anterior, y la suma de todos da la predicción. La tasa de aprendizaje controla cuánto corrige cada árbol.</li>
-    <li>Por qué árboles y no una red neuronal como Baena-Salazar: con datos tabulares y pocos miles de registros, los árboles potenciados suelen ir mejor y manejan faltantes de forma nativa.</li>
-    <li>Origen móvil concreto: 2022 se predice entrenando con 2018–2021; 2023 con 2018–2022; y así sucesivamente. Es la versión temporal del esquema entrenamiento/validación/prueba que vimos en clase.</li>
-    <li>Punto a defender: no mezclar futuro con pasado. Partir al azar inflaría el desempeño porque el modelo "vería" días vecinos del que predice.</li>
-    <li>Los tres modelos comparten exactamente la misma configuración; lo único que cambia entre el GB sin y con meteorología son los predictores, para que la diferencia sea atribuible solo a la meteorología (eso responde la P2 de forma limpia).</li>
-  </ul></aside>
 </section>
 
 <!-- 12 · Evaluación -->
@@ -641,13 +583,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       <p class="texto" style="font-size:20px">Repetimos el mismo diseño de Baena-Salazar et al.: entrenar con 2013–2015 y probar en enero–marzo de 2016, en las estaciones ITA-CONC y MED-UNNV, para comparar en igualdad de condiciones.</p>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Las métricas son las que vimos en clase: MAE y R² para regresión; precisión y recall para la lectura como aviso (clasificación). MAPE aparece en la réplica.</li>
-    <li>Por qué el intervalo de confianza con bloques y no bootstrap simple: los días vecinos y las estaciones cercanas tienen errores parecidos (están correlacionados). Remuestrear bloques de 14 días respeta esa dependencia y evita decir que tenemos más certeza de la real.</li>
-    <li>El "mismo número de avisos" es la idea más fina de defender: el umbral fijo de 38 favorece a la persistencia, porque un modelo que minimiza el error promedio subestima los picos y por tanto avisa menos. Igualar el presupuesto de avisos nivela la comparación.</li>
-    <li>SHAP: valores de la teoría de juegos (Shapley) que reparten de forma justa la predicción entre las variables. Lo vimos en la Lecture 05. Aquí respondemos con ellos la segunda parte de P2.</li>
-    <li>La réplica de Baena-Salazar atiende el pedido explícito del profesor de comparar con ese estudio.</li>
-  </ul></aside>
 </section>
 
 <!-- 13 · Bloque IV -->
@@ -655,7 +590,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
   <div class="numeral">IV</div>
   <h2>Resultados</h2>
   <p class="lead">¿Le ganamos a la persistencia? ¿Anticipamos los episodios? ¿Qué pesa más y cómo nos comparamos con el estudio local previo?</p>
-  <aside class="notas"><ul><li>Transición a resultados.</li></ul></aside>
 </section>
 
 <!-- 14 · Error -->
@@ -687,10 +621,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </ul>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Respuesta a la P1 en error: sí, en los cuatro años y con intervalo que excluye el cero.</li>
-    <li>Las estaciones que empeoran con meteorología: BEL-FEVE (la 271 sin datos desde 2024) e ITA-CONC (la 206 sin viento 2019–2024).</li>
-  </ul></aside>
 </section>
 
 <!-- 15 · Avisos -->
@@ -724,12 +654,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </div>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Mensaje central: a igual presupuesto de avisos, precisión y recall se empatan; lo que cambia es que GB anticipa inicios (29–30 de 123) y la persistencia ninguno. Ese es el aporte operativo real del modelo.</li>
-    <li>Por qué la persistencia no anticipa inicios: su aviso es "hoy ya pasó el umbral", así que por definición llega tarde, nunca el día antes.</li>
-    <li>Ser honestos con la debilidad: en días de prevención el MAE de GB es mayor (6,9 vs 5,9). No lo escondemos; lo explicamos — minimizar el error medio lleva a subestimar picos raros. Es un trade-off, no un error.</li>
-    <li>Sesgo negativo = subestima. Si el jurado pregunta cómo se mitigaría: umbral de aviso más bajo (lo que hacemos), o predecir el cambio (lo discutimos en la réplica).</li>
-  </ul></aside>
 </section>
 
 <!-- 16 · SHAP -->
@@ -761,12 +685,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </ul>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Responde directamente la pregunta del profesor: sí, el día anterior domina, igual que en Baena-Salazar. Ese era el punto que pidió verificar con SHAP.</li>
-    <li>Detalle fino: las horas de 18:00–23:00 pesan tanto como la media completa del día; el final del día es el mejor predictor del día siguiente.</li>
-    <li>Las tres filas de la tabla comparan el peso del PM2.5 reciente: 34,2 % (su red), 49,5 % (nuestro modelo completo) y 65,7 % (nuestro modelo reducido con entradas parecidas a las suyas). Cuanto menos variables, más se concentra el peso en el PM2.5.</li>
-    <li>Si preguntan qué es SHAP: reparte cada predicción entre las variables de forma que los aportes suman exactamente la predicción. Verificamos esa propiedad en el notebook.</li>
-  </ul></aside>
 </section>
 
 <!-- 17 · Réplica Baena -->
@@ -804,12 +722,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
       </ul>
     </div>
   </div>
-  <aside class="notas"><ul>
-    <li>Mensaje principal: en el propio periodo de Baena-Salazar, la persistencia casi iguala a su red neuronal (queda a 0,01–0,05 de su r²), y ellos no se compararon con ella. Eso valida nuestra tesis de que la persistencia es el rival exigente.</li>
-    <li>Advertencia sobre el R²: depende de cuánto varía el periodo. La misma persistencia da R² 0,80 en el trimestre de 2016 y 0,56 en 2022–2025. Por eso NO se pueden comparar R² entre estudios de periodos distintos; lo comparable es la mejora frente a la persistencia en el mismo periodo.</li>
-    <li>La limitación de los árboles (no extrapolar) es honesta y académicamente valiosa: es un hallazgo, no un fracaso. En 2022–2025 ningún día superó el máximo de entrenamiento (73,7, de 2019–2020), por eso ahí no se presenta el problema.</li>
-    <li>El selector ITA-CONC / MED-UNNV cambia la estación del gráfico en vivo; usarlo si preguntan por una estación concreta.</li>
-  </ul></aside>
 </section>
 
 <!-- 18 · Conclusiones -->
@@ -823,11 +735,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
     <div class="respuesta" data-paso="1"><span class="etq">P2</span><p>La meteorología observada aporta poco pero de forma estadísticamente significativa: 0,027 µg/m³ en el error promedio y 0,34 en los días en prevención, donde más hace falta. Según SHAP, el PM<sub>2.5</sub> del día anterior es la entrada dominante (49,5 %), igual que halló Baena-Salazar et al.</p></div>
     <div class="respuesta" data-paso="2" style="border:0"><span class="etq ambar">→</span><p><strong>Trabajo futuro:</strong> predecir el cambio respecto a hoy, o combinarlo con el nivel, para episodios sin precedentes; alimentar el modelo con pronósticos meteorológicos en vez de observaciones; y evaluar el primer semestre de 2026, que ningún modelo ha visto.</p></div>
   </div>
-  <aside class="notas"><ul>
-    <li>Cerrar con las dos respuestas y el trabajo futuro. No leer palabra por palabra: resumir apoyándose en las cifras clave (18 %, 29–30 inicios, 0,027 µg/m³, 49,5 %).</li>
-    <li>Mensaje de cierre en una frase: "logramos un pronóstico por estación que mejora a la persistencia y anticipa inicios de episodio, con límites claros y honestos".</li>
-    <li>Si solo recuerdan una cosa para defender: superamos la persistencia (que es el rival difícil) y lo demostramos con intervalos de confianza y a igual presupuesto de avisos.</li>
-  </ul></aside>
 </section>
 
 <!-- 19 · Cierre -->
@@ -835,7 +742,6 @@ svg .valor.fuerte { fill: var(--tinta); font-weight: 500; }
   <div class="ceja">Gracias</div>
   <h1>Preguntas</h1>
   <p class="lead">Código, datos de descarga y notebooks: <span class="dato" style="font-size:24px">github.com/linaballesteros/air-quality-applied-ml</span></p>
-  <aside class="notas"><ul><li>Cinco minutos de preguntas.</li></ul></aside>
 </section>
 
 </main>

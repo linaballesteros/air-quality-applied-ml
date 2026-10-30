@@ -94,7 +94,7 @@ meteorología puede tardar diez minutos o más. `build_meteo_hourly.py` aplica
 las banderas de calidad, exige al menos 45 minutos válidos por hora y genera
 `data/interim/meteo_hourly.csv`.
 
-La réplica de Baena-Salazar et al. (sección 12 de `02_modelado.ipynb`)
+La réplica de Baena-Salazar et al. (sección 11 de `02_modelado.ipynb`)
 necesita además la meteorología 2013–2016 de dos estaciones (78 archivos,
 unos 210 MB):
 

@@ -12,7 +12,6 @@ Abrir `index.html` en Chrome, Edge o Firefox; funciona sin internet.
 | → · espacio · clic a la derecha | Siguiente paso o diapositiva |
 | ← · clic a la izquierda | Anterior |
 | F | Pantalla completa |
-| N | Notas del presentador, con cronómetro desde el primer avance |
 | Inicio · Fin | Primera y última diapositiva |
 
 `index.html#7` abre directamente la diapositiva 7. Algunas diapositivas
@@ -30,7 +29,7 @@ google-chrome --headless=new --no-pdf-header-footer --virtual-time-budget=5000 \
 
 - `index.html`: contenido, estilos y gráficos (SVG dibujado en el navegador).
 - `datos.js`: todas las cifras de los gráficos y tablas. Lo genera la
-  sección 14.1 de `notebooks/02_modelado.ipynb`; no se edita a mano.
+  sección 13.1 de `notebooks/02_modelado.ipynb`; no se edita a mano.
 - `fuentes.css`: Newsreader, Public Sans e IBM Plex Mono (Google Fonts,
   licencia SIL OFL) incrustadas en base64 para presentar sin conexión.
 - `presentacion.pdf`: las diapositivas en PDF.
